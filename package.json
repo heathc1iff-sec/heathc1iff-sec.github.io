@@ -16,7 +16,8 @@
     "biome:format": "biome format ./src",
     "biome:summary": "biome check --reporter summary ./src",
     "format": "biome format --write ./src",
-    "check-all": "pnpm astro-check && pnpm biome:check"
+    "check-all": "pnpm astro-check && pnpm biome:check",
+	"deploy": "pnpm run build && gh-pages -d dist --dotfiles"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.6",
@@ -73,6 +74,7 @@
     "@typescript-eslint/parser": "^8.48.1",
     "cpy-cli": "^5.0.0",
     "daisyui": "^4.12.24",
+    "gh-pages": "^6.3.0",
     "pagefind": "^1.4.0",
     "prettier": "^3.7.4",
     "prettier-plugin-astro": "^0.14.1",
