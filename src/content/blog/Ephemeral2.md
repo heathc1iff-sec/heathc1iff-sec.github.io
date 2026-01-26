@@ -1,8 +1,8 @@
 ---
 title: HMV-Ephemeral2
-description: Enumeration is key.
+description: 'Enumeration is key.'
 pubDate: 2026-01-14
-image: /mechine/Ephemeral2.jpg
+image: /mechine/Ephemeral2.png
 categories:
   - Documentation
 tags:

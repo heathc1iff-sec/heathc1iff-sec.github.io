@@ -1,8 +1,8 @@
 ---
 title: HMV-Drippingblues
-description: Tested on and exported from virtualbox.
+description: 'Tested on and exported from virtualbox.'
 pubDate: 2026-01-13
-image: /mechine/Drippingblues.jpg
+image: /mechine/Drippingblues.png
 categories:
   - Documentation
 tags:

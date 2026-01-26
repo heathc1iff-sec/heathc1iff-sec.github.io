@@ -1,8 +1,8 @@
 ---
 title: HMV-Codeshield
-description: This VM will help prepare you for something like OSCP.
+description: 'This VM will help prepare you for something like OSCP.'
 pubDate: 2026-01-12
-image: /mechine/Codeshield.jpg
+image: /mechine/Codeshield.png
 categories:
   - Documentation
 tags:

@@ -1,8 +1,8 @@
 ---
 title: HMV-Cve1
-description: Identifies vulnerable software and locates a vulnerability to compromise this host.
+description: 'Identifies vulnerable software and locates a vulnerability to compromise this host.'
 pubDate: 2026-01-12
-image: /mechine/Cve1.jpg
+image: /mechine/Cve1.png
 categories:
   - Documentation
 tags:
