@@ -2,7 +2,7 @@
 title: HMV-Venus
 description: 'For people who starts playing CTF and wants to practice Linux skills.'
 pubDate: 2026-01-14
-image: /machine/Aqua.png
+image: /machine/Venus.png
 categories:
   - Documentation
 tags:
