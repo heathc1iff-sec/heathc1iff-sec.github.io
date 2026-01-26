@@ -2,7 +2,7 @@
 title: MazeSec-Happiness
 description: 'QQ Group Virtual Machine'
 pubDate: 2026-01-25
-image: /image/QQ.png
+image: /image/fengmian/QQ.png
 categories:
   - Documentation
 tags:

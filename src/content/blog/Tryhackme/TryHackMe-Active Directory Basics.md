@@ -2,7 +2,7 @@
 title: TryHackMe-Active Directory Basics
 description: 'Windows Exploitation Basics'
 pubDate: 2024-04-06
-image: /image/tryhackme.jpg
+image: /image/fengmian/tryhackme.jpg
 categories:
   - Documentation
 tags:

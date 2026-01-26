@@ -2,7 +2,7 @@
 title: TryHackMe-The Lay of the Land
 description: 'Red Teaming'
 pubDate: 2024-04-09
-image: /image/tryhackme.jpg
+image: /image/fengmian/tryhackme.jpg
 categories:
   - Documentation
 tags:

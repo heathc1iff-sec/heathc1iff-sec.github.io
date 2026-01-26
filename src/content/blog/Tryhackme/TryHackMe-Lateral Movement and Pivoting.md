@@ -2,7 +2,7 @@
 title: TryHackMe-Lateral Movement and Pivoting
 description: 'Red Teaming'
 pubDate: 2024-07-07
-image: /image/tryhackme.jpg
+image: /image/fengmian/tryhackme.jpg
 categories:
   - Documentation
 tags:

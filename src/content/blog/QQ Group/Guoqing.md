@@ -2,7 +2,7 @@
 title: MazeSec-Guoqing
 description: 'QQ Group Virtual Machine'
 pubDate: 2026-01-21
-image: /image/QQ.png
+image: /image/fengmian/QQ.png
 categories:
   - Documentation
 tags:

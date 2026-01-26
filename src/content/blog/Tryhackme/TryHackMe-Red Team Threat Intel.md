@@ -2,7 +2,7 @@
 title: TryHackMe-Red Team Threat Intel
 description: 'Red Teaming'
 pubDate: 2024-04-01
-image: /image/tryhackme.jpg
+image: /image/fengmian/tryhackme.jpg
 categories:
   - Documentation
 tags:

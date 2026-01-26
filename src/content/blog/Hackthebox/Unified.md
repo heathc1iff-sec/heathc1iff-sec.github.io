@@ -21,7 +21,7 @@ tags:
 查看8080网站标题即可
 
 ## TASK 3
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709386103549-2ef74660-c40f-4d7e-aba2-533a4aac94ef.png)
+![](/image/hackthebox/Unified-1.png)
 
 ![](/image/hackthebox/Unified-4.png)
 
@@ -78,7 +78,7 @@ maven需要换国内源
 
 ![](/image/hackthebox/Unified-11.png)
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709462733737-3edad190-f734-496f-8451-8e0bdbc5830d.png)
+![](/image/hackthebox/Unified-2.png)
 
 这时我们成功拿到了RogueJndi的jar包
 

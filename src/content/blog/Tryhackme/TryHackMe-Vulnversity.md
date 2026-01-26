@@ -2,7 +2,7 @@
 title: TryHackMe-Vulnversity
 description: 'Basic Computer Exploitation'
 pubDate: 2024-03-30
-image: /image/tryhackme.jpg
+image: /image/fengmian/tryhackme.jpg
 categories:
   - Documentation
 tags:

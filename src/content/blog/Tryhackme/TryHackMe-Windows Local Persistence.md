@@ -2,7 +2,7 @@
 title: TryHackMe-Windows Local Persistence
 description: 'Red Teaming'
 pubDate: 2024-07-05
-image: /image/tryhackme.jpg
+image: /image/fengmian/tryhackme.jpg
 categories:
   - Documentation
 tags:
