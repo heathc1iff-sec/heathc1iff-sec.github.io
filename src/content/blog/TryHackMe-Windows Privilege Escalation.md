@@ -2,7 +2,7 @@
 title: TryHackMe-Windows Privilege Escalation
 description: 'Red Teaming'
 pubDate: 2025-05-21
-image: /public/tryhackme.jpg
+image: /image/tryhackme.jpg
 categories:
   - Documentation
 tags:

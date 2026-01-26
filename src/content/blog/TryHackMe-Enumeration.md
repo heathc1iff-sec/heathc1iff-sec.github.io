@@ -2,7 +2,7 @@
 title: TryHackMe-Active Directory Basics
 description: 'Red Teaming'
 pubDate: 2025-12-13
-image: /public/tryhackme.jpg
+image: /image/tryhackme.jpg
 categories:
   - Documentation
 tags:
