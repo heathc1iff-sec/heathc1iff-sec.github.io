@@ -74,7 +74,7 @@ uploads网页又不给访问
 
 上传个webshell
 
-> <font style="color:rgb(77, 77, 77);">kali本身自带了一些webshell，位于</font><font style="color:rgb(199, 37, 78);background-color:rgb(249, 242, 244);">/usr/share/webshells</font><font style="color:rgb(77, 77, 77);">目录，php目录下有个php-reverse-shell.php，可以利用它来进行</font>[反弹shell](https://so.csdn.net/so/search?q=%E5%8F%8D%E5%BC%B9shell&spm=1001.2101.3001.7020)
+> kali本身自带了一些webshell，位于/usr/share/webshells目录，php目录下有个php-reverse-shell.php，可以利用它来进行[反弹shell](https://so.csdn.net/so/search?q=%E5%8F%8D%E5%BC%B9shell&spm=1001.2101.3001.7020)
 >
 
 ![](/image/hackthebox/Oopsie-14.png)
@@ -83,21 +83,21 @@ uploads网页又不给访问
 
 之后上传的时候不要填写产品产品名称
 
-访问url+uploads/<font style="color:rgb(77, 77, 77);">php-reverse-shell.php同时监听4444端口</font>
+访问url+uploads/php-reverse-shell.php同时监听4444端口
 
-<font style="color:rgb(77, 77, 77);">成功get shell</font>
+成功get shell
 
 ![](/image/hackthebox/Oopsie-15.png)
 
-根据题目得知还有一个**<font style="color:rgb(255, 255, 255);background-color:rgb(20, 29, 43);">robert 用户</font>**
+根据题目得知还有一个**robert 用户**
 
 **cat /etc/passwd 在靶机中发现robert用户**
 
 ![](/image/hackthebox/Oopsie-16.png)
 
-<font style="color:rgb(77, 77, 77);">信息收集时我们知道靶机用的是apache的服务，那就再去/var/www/html下看看有什么文件</font>
+信息收集时我们知道靶机用的是apache的服务，那就再去/var/www/html下看看有什么文件
 
-<font style="color:rgb(25, 27, 31);">读取web应用下的db.php文件获取到数据库连接信息</font>
+读取web应用下的db.php文件获取到数据库连接信息
 
 ![](/image/hackthebox/Oopsie-17.png)
 
@@ -107,58 +107,58 @@ $conn = mysqli_connect('localhost','robert','M3g4C0rpUs3r!','garage');
 
 ![](/image/hackthebox/Oopsie-18.png)
 
-由于不是交互式shell 使用<font style="color:rgb(25, 27, 31);background-color:rgb(248, 248, 250);">SHELL=/bin/bash script -q /dev/null</font><font style="color:rgb(25, 27, 31);"> :  来调整到交互式shell</font>
+由于不是交互式shell 使用SHELL=/bin/bash script -q /dev/null :  来调整到交互式shell
 
-<font style="color:rgb(25, 27, 31);">这里使用python的pty模块也可以</font>
+这里使用python的pty模块也可以
 
 ![](/image/hackthebox/Oopsie-19.png)
 
  成功登录后先查看下ID
 
-<font style="color:rgb(77, 77, 77);">现robert属于bugtracker这个组</font>
+现robert属于bugtracker这个组
 
 ![](/image/hackthebox/Oopsie-20.png)
 
-<font style="color:rgb(77, 77, 77);">用find看下bugtracker这个组的用户能执行哪些文件</font>
+用find看下bugtracker这个组的用户能执行哪些文件
 
-<font style="color:rgb(25, 27, 31);">find / -group bugtracker 2>/dev/null</font>
+find / -group bugtracker 2>/dev/null
 
-> <font style="color:rgb(77, 77, 77);">（</font><font style="color:rgb(13, 13, 13);">查找属于 "bugtracker" 用户组的文件，并输出它们的路径其中</font>**<font style="color:rgb(13, 13, 13);">2>/dev/null</font>**<font style="color:rgb(13, 13, 13);">: 这部分是将标准错误重定向到 </font>**<font style="color:rgb(13, 13, 13);">/dev/null</font>**<font style="color:rgb(13, 13, 13);">。</font>**<font style="color:rgb(13, 13, 13);">2></font>**<font style="color:rgb(13, 13, 13);">表示将标准错误（stderr）重定向，</font>**<font style="color:rgb(13, 13, 13);">/dev/null</font>**<font style="color:rgb(13, 13, 13);"> 是一个特殊的设备文件，它会丢弃所有写入其中的数据。因此，此部分的作用是将错误信息静默化，这样在执行命令时不会显示错误信息。</font><font style="color:rgb(77, 77, 77);">）</font>
+> （查找属于 "bugtracker" 用户组的文件，并输出它们的路径其中**2>/dev/null**: 这部分是将标准错误重定向到 **/dev/null**。**2>**表示将标准错误（stderr）重定向，**/dev/null** 是一个特殊的设备文件，它会丢弃所有写入其中的数据。因此，此部分的作用是将错误信息静默化，这样在执行命令时不会显示错误信息。）
 >
 
 ![](/image/hackthebox/Oopsie-21.png)
 
-<font style="color:rgb(77, 77, 77);">发现存在一个/usr/bin/bugtracker文件，再看下这个文件有哪些权限</font>
+发现存在一个/usr/bin/bugtracker文件，再看下这个文件有哪些权限
 
-<font style="color:rgb(25, 27, 31);">ls -al /usr/bin/bugtracker</font>
+ls -al /usr/bin/bugtracker
 
-![](/image/hackthebox/Oopsie-22.png)<font style="color:rgb(77, 77, 77);">发现这个文件有s权限即suid权限，所有者为root，suid简单来说就是任何用户执行具有suid权限的文件时都会以它拥有者的权限执行</font>
+![](/image/hackthebox/Oopsie-22.png)发现这个文件有s权限即suid权限，所有者为root，suid简单来说就是任何用户执行具有suid权限的文件时都会以它拥有者的权限执行
 
 ![](/image/hackthebox/Oopsie-23.png)
 
-<font style="color:rgb(13, 13, 13);">"Set Owner User ID"（设置所有者用户标识）是一种文件系统权限设置，通常简写为SUID。当文件的SUID位被设置时，它会允许执行该文件的用户在执行过程中临时拥有文件所有者的权限。</font>
+"Set Owner User ID"（设置所有者用户标识）是一种文件系统权限设置，通常简写为SUID。当文件的SUID位被设置时，它会允许执行该文件的用户在执行过程中临时拥有文件所有者的权限。
 
 ![](/image/hackthebox/Oopsie-24.png)
 
-<font style="color:rgb(77, 77, 77);">我们先执行一下这个文件bugtracke</font>
+我们先执行一下这个文件bugtracke
 
 ![](/image/hackthebox/Oopsie-25.png)
 
-<font style="color:rgb(13, 13, 13);"></font>
 
-<font style="color:rgb(13, 13, 13);">这时候就发现这个文件实际上是用cat命令抓取/root/reports/目录下的指定文件</font>
 
-<font style="color:rgb(13, 13, 13);">我们需要注意的是，它这里是直接调用的cat，所以很依赖环境变量，直接调用cat只会抓取环境变量中的路径下的文件</font>
+这时候就发现这个文件实际上是用cat命令抓取/root/reports/目录下的指定文件
 
-<font style="color:rgb(13, 13, 13);">所以我们可以在环境变量中注入一个自定义的路径，替代掉这个文件真正想要调用的cat</font>
+我们需要注意的是，它这里是直接调用的cat，所以很依赖环境变量，直接调用cat只会抓取环境变量中的路径下的文件
 
-<font style="color:rgb(13, 13, 13);">进入tmp目录下，创建一个会调用bash的cat文件，然后给文件一个执行权限</font>
+所以我们可以在环境变量中注入一个自定义的路径，替代掉这个文件真正想要调用的cat
 
-<font style="color:rgb(77, 77, 77);">使用</font><font style="color:rgb(199, 37, 78);background-color:rgb(249, 242, 244);">export PATH=/tmp:$PATH</font><font style="color:rgb(77, 77, 77);">命令把/tmp加入到环境变量中，再查看一下，发现/tmp已经添加到环境变量中了</font>
+进入tmp目录下，创建一个会调用bash的cat文件，然后给文件一个执行权限
+
+使用export PATH=/tmp:$PATH命令把/tmp加入到环境变量中，再查看一下，发现/tmp已经添加到环境变量中了
 
 ![](/image/hackthebox/Oopsie-26.png)
 
-<font style="color:rgb(77, 77, 77);">这时候我们再执行bugtracker文件时，系统就会先去/tmp目录下找到我们写的cat并以root权限执行我们写的/bin/bash</font>
+这时候我们再执行bugtracker文件时，系统就会先去/tmp目录下找到我们写的cat并以root权限执行我们写的/bin/bash
 
 ![](/image/hackthebox/Oopsie-27.png)
 

