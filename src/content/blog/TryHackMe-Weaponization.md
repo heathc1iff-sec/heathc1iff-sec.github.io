@@ -1,5 +1,5 @@
 ---
-title: TryHackMe-Active Directory Basics
+title: TryHackMe-Weaponization
 description: 'Red Teaming'
 pubDate: 2024-04-02
 image: /image/tryhackme.jpg

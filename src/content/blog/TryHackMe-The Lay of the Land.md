@@ -1,5 +1,5 @@
 ---
-title: TryHackMe-Active Directory Basics
+title: TryHackMe-The Lay of the Land
 description: 'Red Teaming'
 pubDate: 2024-04-09
 image: /image/tryhackme.jpg

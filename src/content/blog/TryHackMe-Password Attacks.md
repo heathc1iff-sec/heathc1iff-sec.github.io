@@ -1,7 +1,7 @@
 ---
-title: TryHackMe-Active Directory Basics
-description: 'Windows Exploitation Basics'
-pubDate: 2025-12-13
+title: TryHackMe-Password Attacks
+description: 'Red Teaming'
+pubDate: 2024-04-05
 image: /image/tryhackme.jpg
 categories:
   - Documentation

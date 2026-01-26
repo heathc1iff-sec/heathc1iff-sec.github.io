@@ -1,5 +1,5 @@
 ---
-title: TryHackMe-Active Directory Basics
+title: TryHackMe-Red Team Threat Intel
 description: 'Red Teaming'
 pubDate: 2024-04-01
 image: /image/tryhackme.jpg

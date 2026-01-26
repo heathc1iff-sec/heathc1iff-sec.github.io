@@ -1,5 +1,5 @@
 ---
-title: TryHackMe-Active Directory Basics
+title: TryHackMe-Windows Local Persistence
 description: 'Red Teaming'
 pubDate: 2024-07-05
 image: /image/tryhackme.jpg

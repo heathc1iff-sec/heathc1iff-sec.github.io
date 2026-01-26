@@ -1,5 +1,5 @@
 ---
-title: TryHackMe-Active Directory Basics
+title: TryHackMe-Enumeration
 description: 'Red Teaming'
 pubDate: 2025-12-13
 image: /image/tryhackme.jpg
