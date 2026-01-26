@@ -2,7 +2,7 @@
 title: HTB-Vaccine
 description: 'Hack the box'
 pubDate: 2024-03-02 
-image: /public/hackthebox/Vaccine.png
+image: /hackthebox/Vaccine.png
 categories:
   - Documentation
 tags:

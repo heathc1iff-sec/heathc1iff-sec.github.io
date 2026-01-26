@@ -2,7 +2,7 @@
 title: HTB-Responder
 description: 'Hack the box'
 pubDate: 2024-02-28 
-image: /public/hackthebox/Responder.png
+image: /hackthebox/Responder.png
 categories:
   - Documentation
 tags:

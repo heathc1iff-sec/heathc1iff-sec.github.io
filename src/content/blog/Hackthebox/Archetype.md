@@ -2,7 +2,7 @@
 title: HTB-Archetype
 description: 'Hack the box'
 pubDate: 2024-03-04 
-image: /public/hackthebox/Archetype.png
+image: /hackthebox/Archetype.png
 categories:
   - Documentation
 tags:

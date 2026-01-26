@@ -2,7 +2,7 @@
 title: HTB-Unified
 description: 'Hack the box'
 pubDate: 2024-03-03 
-image: /public/hackthebox/Unified.png
+image: /hackthebox/Unified.png
 categories:
   - Documentation
 tags:

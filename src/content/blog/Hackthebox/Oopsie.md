@@ -2,7 +2,7 @@
 title: HTB-Oopsie
 description: 'Hack the box'
 pubDate: 2024-03-02 
-image: /public/hackthebox/Oopsie.png
+image: /hackthebox/Oopsie.png
 categories:
   - Documentation
 tags:

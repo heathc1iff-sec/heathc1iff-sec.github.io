@@ -2,7 +2,7 @@
 title: HTB-Three
 description: 'Hack the box'
 pubDate: 2024-02-28 
-image: /public/hackthebox/Three.png
+image: /hackthebox/Three.png
 categories:
   - Documentation
 tags:
