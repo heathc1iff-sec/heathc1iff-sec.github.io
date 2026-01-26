@@ -11,10 +11,10 @@ tags:
 
 靶场网络拓扑：
 
-![](/image/tryhackme/TryHackMe-Lateral Movement and Pivoting-1.png)
+![](/image/tryhackme/TryHackMe-Lateral%20Movement%20and%20Pivoting-1.png)
 
 # Introduction
-![](/image/tryhackme/TryHackMe-Lateral Movement and Pivoting-2.png)  
+![](/image/tryhackme/TryHackMe-Lateral%20Movement%20and%20Pivoting-2.png)  
 
 
 In this room, we will look at lateral movement, a group of techniques used by attackers to move around the network while creating as few alerts as possible. We'll learn about several common techniques used in the wild for this end and the tools involved  
@@ -75,7 +75,7 @@ You should also take the time to make note of your <u>VPN</u> IP. Using **ifconf
 If you are going to use your own attack machine, an OpenVPN configuration file will have been generated for you once you join the room. Go to your [access](https://tryhackme.com/access) page. Select **Lateralmovementandpivoting** from the <u>VPN</u> servers (under the network tab) and download your configuration file.  
 如果您要使用自己的攻击机，则在您加入房间后将为您生成一个OpenVPN配置文件。转到您的访问页面。从 VPN 服务器（在网络选项卡下）中进行选择 **Lateralmovementandpivoting** 并下载配置文件。
 
-![](/image/tryhackme/TryHackMe-Lateral Movement and Pivoting-3.png)  
+![](/image/tryhackme/TryHackMe-Lateral%20Movement%20and%20Pivoting-3.png)  
 
 
 Use an OpenVPN client to connect. This example is shown on a Linux machine; similar guides to connect using Windows or macOS can be found at your [access](https://tryhackme.com/r/access) page.  
@@ -98,7 +98,7 @@ Fri Mar 11 15:06:22 2022 Initialization Sequence Completed
 The message "Initialization Sequence Completed" tells you that you are now connected to the network. Return to your access page. You can verify you are connected by looking on your access page. Refresh the page, and you should see a green tick next to Connected. It will also show you your internal IP address.  
 消息“初始化序列已完成”告诉您现在已连接到网络。返回到您的访问页面。您可以通过查看访问页面来验证您是否已连接。刷新页面，您应该会在“已连接”旁边看到一个绿色勾号。它还将显示您的内部 IP 地址。
 
-![](/image/tryhackme/TryHackMe-Lateral Movement and Pivoting-4.png)  
+![](/image/tryhackme/TryHackMe-Lateral%20Movement%20and%20Pivoting-4.png)  
 
 
 **Note:** You still have to configure <u>DNS</u> similar to what was shown above. It is important to note that although not used, the DC does log <u>DNS</u> requests. If you are using your machine, these logs may include the hostname of your device.  
@@ -146,7 +146,7 @@ For <u>SSH</u> access, you can use the following command:
 If you are using the AttackBox and have joined other network rooms before, be sure to select the IP address assigned to the tunnel interface facing the **lateralmovementandpivoting** network as your ATTACKER_IP, or else your reverse shells/connections won't work properly. For your convenience, the interface attached to this network is called **lateralmovement**, so you should be able to get the right IP address by running **ip add show lateralmovement**:  
 如果您正在使用 AttackBox 并且之前加入过其他网络机房，请务必选择分配给面向 **lateralmovementandpivoting** 网络的隧道接口的 IP 地址作为您的ATTACKER_IP，否则您的反向 shell/连接将无法正常工作。为方便起见，连接到此网络的接口称为 **lateralmovement** ，因此您应该能够通过运行 **ip add show lateralmovement** 以下命令来获取正确的 IP 地址：
 
-![](/image/tryhackme/TryHackMe-Lateral Movement and Pivoting-5.png)
+![](/image/tryhackme/TryHackMe-Lateral%20Movement%20and%20Pivoting-5.png)
 
 This will be helpful whenever needing to do a reverse connection back to your attacker machine throughout the room.  
 每当需要在整个房间内与攻击者计算机进行反向连接时，这将很有帮助。
@@ -168,7 +168,7 @@ Simply put, lateral movement is the group of techniques used by attackers to mov
 While many cyber kill chains reference lateral movement as an additional step on a linear process, it is actually part of a cycle. During this cycle, we use any available credentials to perform lateral movement, giving us access to new machines where we elevate privileges and extract credentials if possible. With the newfound credentials, the cycle starts again.  
 虽然许多网络杀伤链将横向移动称为线性过程的附加步骤，但它实际上是循环的一部分。在此周期中，我们使用任何可用的凭据来执行横向移动，从而使我们能够访问新机器，在其中我们提升权限并在可能的情况下提取凭据。使用新发现的凭据，循环将再次开始。
 
-![](/image/tryhackme/TryHackMe-Lateral Movement and Pivoting-6.png)  
+![](/image/tryhackme/TryHackMe-Lateral%20Movement%20and%20Pivoting-6.png)  
 
 
   
@@ -190,7 +190,7 @@ Marketing workstations will typically be limited through firewall policies to ac
 To reach sensitive hosts and services, we need to move to other hosts and pivot from there to our final goal. To this end, we could try elevating privileges on the Marketing workstation and extracting local users' password hashes. If we find a local administrator, the same account may be present on other hosts. After doing some recon, we find a workstation with the name DEV-001-PC. We use the local administrator's password hash to access DEV-001-PC and confirm it is owned by one of the developers in the company. From there, access to our target code repository is available.  
 为了访问敏感主机和服务，我们需要迁移到其他主机，并从那里转向我们的最终目标。为此，我们可以尝试提升 Marketing 工作站的权限并提取本地用户的密码哈希。如果我们找到本地管理员，则其他主机上可能存在相同的帐户。经过一番侦察后，我们找到了一个名为DEV-001-PC的工作站。我们使用本地管理员的密码哈希来访问 DEV-001-PC，并确认它归公司的一位开发人员所有。从那里，可以访问我们的目标代码存储库。
 
-![](/image/tryhackme/TryHackMe-Lateral Movement and Pivoting-7.png)
+![](/image/tryhackme/TryHackMe-Lateral%20Movement%20and%20Pivoting-7.png)
 
 Notice that while lateral movement might need to be used to circumvent firewall restrictions, it is also helpful in evading detection. In our example, even if the Marketing workstation had direct access to the code repository, it is probably desirable to connect through the developer's PC. This behaviour would be less suspicious from the standpoint of a blue team analyst checking login audit logs.  
 请注意，虽然可能需要使用横向移动来规避防火墙限制，但它也有助于逃避检测。在我们的示例中，即使 Marketing 工作站可以直接访问代码存储库，也可能需要通过开发人员的 PC 进行连接。从蓝队分析师检查登录审核日志的角度来看，这种行为就不那么可疑了。
@@ -258,7 +258,7 @@ psexec 的工作方式如下：
 3. Create some named pipes to handle stdin/stdout/stderr.  
 创建一些命名管道来处理 stdin/stdout/stderr。
 
-![](/image/tryhackme/TryHackMe-Lateral Movement and Pivoting-8.png)  
+![](/image/tryhackme/TryHackMe-Lateral%20Movement%20and%20Pivoting-8.png)  
 
 
 To run psexec, we only need to supply the required administrator credentials for the remote host and the command we want to run (**psexec64.exe**** **is available under **C:\tools** in THMJMP2 for your convenience):  
@@ -336,13 +336,13 @@ We can create a service on a remote host with sc.exe, a standard tool available 
 1. A connection attempt will be made using DCE/RPC. The client will first connect to the Endpoint Mapper (EPM) at port 135, which serves as a catalogue of available RPC endpoints and request information on the SVCCTL service program. The EPM will then respond with the IP and port to connect to SVCCTL, which is usually a dynamic port in the range of 49152-65535.  
 将使用 DCE/RPC 进行连接尝试。客户端将首先连接到端口 135 的端点映射器 （EPM），该端口用作可用 RPC 端点的目录，并请求有关 SVCCTL 服务计划的信息。然后，EPM 将使用 IP 和端口进行响应以连接到 SVCCTL，SVCCTL 通常是 49152-65535 范围内的动态端口。
 
-![](/image/tryhackme/TryHackMe-Lateral Movement and Pivoting-9.png)  
+![](/image/tryhackme/TryHackMe-Lateral%20Movement%20and%20Pivoting-9.png)  
 
 
 2. If the latter connection fails, sc will try to reach SVCCTL through <u>SMB</u> named pipes, either on port 445 (<u>SMB</u>) or 139 (<u>SMB</u> over NetBIOS).  
 如果后一种连接失败，sc 将尝试通过端口 445 （SMB） 或 139 （SMB over NetBIOS） 上的 SMB 命名管道访问 SVCCTL。
 
-![](/image/tryhackme/TryHackMe-Lateral Movement and Pivoting-10.png)  
+![](/image/tryhackme/TryHackMe-Lateral%20Movement%20and%20Pivoting-10.png)  
 
 
 We can create and start a service named "THMservice" using the following commands:  

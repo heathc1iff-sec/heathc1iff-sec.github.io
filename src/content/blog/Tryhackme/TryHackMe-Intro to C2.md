@@ -13,7 +13,7 @@ tags:
 
 几乎所有的 C2 框架都需要一个特殊的有效载荷生成器。这通常是框架本身内置的功能。例如，Metasploit 是一个 C2 框架，它有自己的有效负载生成器 MSFVenom。
 
-![](/image/tryhackme/TryHackMe-Intro to C2-1.png)
+![](/image/tryhackme/TryHackMe-Intro%20to%20C2-1.png)
 
 让我们从最重要的组件开始 - C2 服务器本身。C2 服务器充当代理回调的中心。代理将定期联系 C2 服务器并等待操作员的命令。
 
@@ -72,7 +72,7 @@ Jitter 的示例 Python3 代码可能如下所示：
 无级有效载荷是两者中最简单的;它们包含完整的 C2 代理，并将回调到 C2 服务器并立即开始信标。您可以参考下图，以更好地了解无级有效负载的运行方式。
 >
 
-![](/image/tryhackme/TryHackMe-Intro to C2-2.png)
+![](/image/tryhackme/TryHackMe-Intro%20to%20C2-2.png)
 
 > The steps for establishing <u>C2</u> beaconing with a Stageless payload are as follows:  
 使用无阶段有效负载建立 C2 信标的步骤如下：
@@ -90,7 +90,7 @@ Jitter 的示例 Python3 代码可能如下所示：
 暂存有效负载需要回调到 C2 服务器才能下载 C2 代理的其他部分。这通常被称为“滴管”，因为它被“滴落”到受害机器上，以下载我们暂存有效载荷的第二阶段。这是优于无阶段有效负载的首选方法，因为需要编写少量代码才能从 C2 服务器检索 C2 代理的附加部分。它还使混淆代码以绕过防病毒程序变得更加容易。
 >
 
-![](/image/tryhackme/TryHackMe-Intro to C2-3.png)
+![](/image/tryhackme/TryHackMe-Intro%20to%20C2-3.png)
 
 > The steps for establishing <u>C2</u> beaconing with a Staged payload are as follows:  
 使用暂存有效负载建立 C2 信标的步骤如下：

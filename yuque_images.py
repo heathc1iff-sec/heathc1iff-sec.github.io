@@ -5,6 +5,7 @@
 import os
 import re
 import urllib.request
+import urllib.parse
 import hashlib
 from pathlib import Path
 
@@ -86,8 +87,10 @@ def process_markdown_file(md_path):
         img_filename = f"{article_name}-{idx}.{ext}"
         img_save_path = img_save_dir / img_filename
 
-        # 新的引用路径
-        new_url = f"/image/{category}/{img_filename}"
+        # 新的引用路径（对空格进行URL编码）
+        encoded_category = urllib.parse.quote(category)
+        encoded_filename = urllib.parse.quote(img_filename)
+        new_url = f"/image/{encoded_category}/{encoded_filename}"
 
         # 下载图片
         if img_save_path.exists():

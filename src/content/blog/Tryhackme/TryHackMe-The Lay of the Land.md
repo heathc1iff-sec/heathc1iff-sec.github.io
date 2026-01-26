@@ -92,7 +92,7 @@ Internal Networks 内部网络
 Internal Networks are subnetworks that are segmented and separated based on the importance of the internal device or the importance of the accessibility of its data. The main purpose of the internal network(s) is to share information, faster and easier communications, collaboration tools, operational systems, and network services within an organization. In a corporate network, the network administrators intend to use network segmentation for various reasons, including controlling network traffic, optimizing network performance, and improving security posture.   
 内部网络是根据内部设备的重要性或其数据可访问性的重要性进行分段和分离的子网。内部网络的主要目的是在组织内共享信息、更快、更轻松的通信、协作工具、操作系统和网络服务。在企业网络中，网络管理员出于各种原因打算使用网络分段，包括控制网络流量、优化网络性能和改善安全状况。
 
-![](/image/tryhackme/TryHackMe-The Lay of the Land-1.png)  
+![](/image/tryhackme/TryHackMe-The%20Lay%20of%20the%20Land-1.png)  
 
 
 The previous diagram is an example of the simple concept of network segmentation as the network is divided into two networks. The first one is for employee workstations and personal devices. The second is for private and internal network devices that provide internal services such as <u>DNS</u>, internal web, email services, etc.  
@@ -108,7 +108,7 @@ DMZ 网络是一种边缘网络，可保护公司内部局域网并添加额外�
 Designing a network within the company depends on its requirements and need. For example, suppose a company provides public services such as a website, DNS, <u>FTP</u>, Proxy, VPN, etc. In that case, they may design a <u>DMZ</u> network to isolate and enable access control on the public network traffic, untrusted traffic.  
 在公司内部设计网络取决于其要求和需求。例如，假设一家公司提供公共服务，例如网站、DNS、FTP、代理、VPN 等。在这种情况下，他们可能会设计一个 DMZ 网络来隔离和启用对公共网络流量（不受信任流量）的访问控制。
 
-![](/image/tryhackme/TryHackMe-The Lay of the Land-2.png)  
+![](/image/tryhackme/TryHackMe-The%20Lay%20of%20the%20Land-2.png)  
 
 
 In the previous diagram, we represent the network traffic to the <u>DMZ</u> network in red color, which is untrusted ( comes directly from the internet). The green network traffic between the internal network is the controlled traffic that may go through one or more than one network security device(s).  
@@ -176,13 +176,13 @@ Read the above! 阅读上面的内容！
 What is the Active Directory (AD) environment?  
 什么是 Active Directory （AD） 环境？
 
-![](/image/tryhackme/TryHackMe-The Lay of the Land-3.png)  
+![](/image/tryhackme/TryHackMe-The%20Lay%20of%20the%20Land-3.png)  
 
 
 It is a Windows-based directory service that stores and provides data objects to the internal network environment. It allows for centralized management of authentication and authorization. The AD contains essential information about the network and the environment, including users, computers, printers, etc. For example, AD might have users' details such as job title, phone number, address, passwords, groups, permission, etc.  
 它是一种基于 Windows 的目录服务，用于存储数据对象并将其提供给内部网络环境。它允许集中管理身份验证和授权。AD 包含有关网络和环境的基本信息，包括用户、计算机、打印机等。例如，AD 可能具有用户的详细信息，例如职位、电话号码、地址、密码、组、权限等。
 
-![](/image/tryhackme/TryHackMe-The Lay of the Land-4.png)  
+![](/image/tryhackme/TryHackMe-The%20Lay%20of%20the%20Land-4.png)  
 
 
 The diagram is one possible example of how Active Directory can be designed. The <u>AD</u> controller is placed in a subnet for servers (shown above as server network), and then the <u>AD</u> clients are on a separate network where they can join the domain and use the <u>AD</u> services via the firewall.  
@@ -204,7 +204,7 @@ A **Domain Controller** is a Windows server that provides Active Directory servi
 域控制器是提供 Active Directory 服务并控制整个域的 Windows 服务器。它是一种集中式用户管理形式，可提供用户数据加密以及控制对网络（包括用户、组、策略和计算机）的访问。它还支持资源访问和共享。这些都是攻击者以域中的域控制器为目标的原因，因为它包含大量高价值信息。  
 
 
-![](/image/tryhackme/TryHackMe-The Lay of the Land-5.png)  
+![](/image/tryhackme/TryHackMe-The%20Lay%20of%20the%20Land-5.png)  
 
 
 **Organizational Units (OU's)** are containers within the <u>AD</u> domain with a hierarchical structure.  
@@ -227,7 +227,7 @@ AD 域是 AD 网络中 Microsoft 组件的集合。
 AD Forest 是相互信任的域的集合。
 
   
-![](/image/tryhackme/TryHackMe-The Lay of the Land-6.png)
+![](/image/tryhackme/TryHackMe-The%20Lay%20of%20the%20Land-6.png)
 
 For more information about the basics of Active Directory, we suggest trying the following TryHackMe room: [Active Directory Basics](https://tryhackme.com/room/winadbasics)  
 有关 Active Directory 基础知识的详细信息，建议尝试以下 TryHackMe 聊天室： Active Directory 基础知识.  
@@ -278,7 +278,7 @@ thmredteam.com
 In this task, we will learn more about users and groups, especially within the Active Directory. Gathering information about the compromised machine is essential that could be used in the next stage. Account discovery is the first step once we have gained initial access to the compromised machine to understand what we have and what other accounts are in the system.   
 在此任务中，我们将了解有关用户和组的详细信息，尤其是在 Active Directory 中。收集有关受感染计算机的信息至关重要，这些信息可以在下一阶段使用。一旦我们获得了对受感染机器的初始访问权限，以了解我们拥有的内容以及系统中的其他帐户，帐户发现是第一步。
 
-![](/image/tryhackme/TryHackMe-The Lay of the Land-7.png)
+![](/image/tryhackme/TryHackMe-The%20Lay%20of%20the%20Land-7.png)
 
 An Active Directory environment contains various accounts with the necessary permissions, access, and roles for different purposes. Common Active Directory service accounts include built-in local user accounts, domain user accounts, managed service accounts, and virtual accounts.   
 Active Directory 环境包含各种帐户，这些帐户具有用于不同目的的必要权限、访问权限和角色。常见的 Active Directory 服务帐户包括内置本地用户帐户、域用户帐户、托管服务帐户和虚拟帐户。
@@ -342,7 +342,7 @@ We can also use the [LDAP hierarchical tree structure](http://www.ietf.org/rfc/r
 我们还可以使用 LDAP 分层树结构在 AD 环境中查找用户。可分辨名称 （DN） 是逗号分隔的键和值对的集合，用于标识目录中的唯一记录。DN 由域组件 （DC）、OrganizationalUnitName （OU）、公用名 （CN） 等组成。以下“CN=User1，CN=Users，DC=thmredteam，DC=com”是DN的一个示例，可以可视化如下：  
 
 
-![](/image/tryhackme/TryHackMe-The Lay of the Land-8.png)
+![](/image/tryhackme/TryHackMe-The%20Lay%20of%20the%20Land-8.png)
 
 Using the SearchBase option, we specify a specific Common-Name CN in the active directory. For example, we can specify to list any user(s) that part of Users  
 使用 SearchBase 选项，我们在 Active Directory 中指定特定的公用名 CN。例如，我们可以指定列出用户部分的任何用户.  
@@ -380,7 +380,7 @@ Use the Get-ADUser -Filter * -SearchBase command to list the available user acco
 > Get-ADUser -Filter * -SearchBase "OU=THM,DC=THMREDTEAM,DC=COM"
 >
 
-![](/image/tryhackme/TryHackMe-The Lay of the Land-9.png)
+![](/image/tryhackme/TryHackMe-The%20Lay%20of%20the%20Land-9.png)
 
 Once you run the previous command, what is the UserPrincipalName (email) of the admin account?  
 运行上一个命令后，管理员帐户的 UserPrincipalName（电子邮件）是什么？
@@ -399,7 +399,7 @@ This task will discuss the common security solution used in corporate networks, 
 
 Host Security Solutions 主机安全解决方案
 
-![](/image/tryhackme/TryHackMe-The Lay of the Land-10.png)  
+![](/image/tryhackme/TryHackMe-The%20Lay%20of%20the%20Land-10.png)  
 
 
 It is a set of software applications used to monitor and detect abnormal and malicious activities within the host, including:  
@@ -483,7 +483,7 @@ As a result, MpComputerStatus highlights whether Windows Defender is enabled or 
 3. **Host-based**** ****<u>Firewall</u>**: It is a security tool installed and run on a host machine that can prevent and block attacker or red teamers' attack attempts. Thus, it is essential to enumerate and gather details about the firewall and its rules within the machine we have initial access to.    
 3.基于主机的防火墙：它是在主机上安装和运行的安全工具，可以防止和阻止攻击者或红队的攻击尝试。因此，必须枚举和收集有关我们最初可以访问的计算机中的防火墙及其规则的详细信息。
 
-![](/image/tryhackme/TryHackMe-The Lay of the Land-11.png)  
+![](/image/tryhackme/TryHackMe-The%20Lay%20of%20the%20Land-11.png)  
 
 
 The main purpose of the host-based firewall is to control the inbound and outbound traffic that goes through the device's interface. It protects the host from untrusted devices that are on the same network. A modern host-based firewall uses multiple levels of analyzing traffic, including packet analysis, while establishing the connection.  
@@ -639,7 +639,7 @@ In this task, we will keep discussing host security solutions.
 Security Event Logging and Monitoring   
 安全事件记录和监控
 
-![](/image/tryhackme/TryHackMe-The Lay of the Land-12.png)
+![](/image/tryhackme/TryHackMe-The%20Lay%20of%20the%20Land-12.png)
 
 By default, Operating systems log various activity events in the system using log files. The event logging feature is available to the IT system and network administrators to monitor and analyze important events, whether on the host or the network side. In cooperating networks, security teams utilize the logging event technique to track and investigate security incidents.   
 默认情况下，操作系统使用日志文件记录系统中的各种活动事件。事件记录功能可供 IT 系统和网络管理员使用，以监控和分析主机端或网络端的重要事件。在协作网络中，安全团队利用日志记录事件技术来跟踪和调查安全事件。
@@ -675,7 +675,7 @@ In corporate networks, log agent software is installed on clients to collect and
 
 System Monitor (<u>Sysmon</u>) 系统监视器 （Sysmon）
 
-![](/image/tryhackme/TryHackMe-The Lay of the Land-13.png)  
+![](/image/tryhackme/TryHackMe-The%20Lay%20of%20the%20Land-13.png)  
 
 
 Windows System Monitor sysmon is a service and device driver. It is one of the Microsoft Sysinternals suites. The sysmon tool is not an essential tool (not installed by default), but it starts gathering and logging events once installed. These logs indicators can significantly help system administrators and blue teamers to track and investigate malicious activity and help with general troubleshooting.  
@@ -758,7 +758,7 @@ For more detail about the Windows sysmon tool and how to utilize it within endpo
 Host-based Intrusion Detection/Prevention System (<u>HIDS</u>/<u>HIPS</u>)  
 基于主机的入侵检测/防御系统 （HIDS/HIPS）
 
-![](/image/tryhackme/TryHackMe-The Lay of the Land-14.png)
+![](/image/tryhackme/TryHackMe-The%20Lay%20of%20the%20Land-14.png)
 
 **<u>HIDS</u>**** **stands for Host-based Intrusion Detection System. It is software that has the ability to monitor and detect abnormal and malicious activities in a host. The primary purpose of <u>HIDS</u> is to detect suspicious activities and not to prevent them. There are two methods that the host-based or network intrusion detection system works, including:  
 HIDS 代表基于主机的入侵检测系统。它是能够监视和检测主机中的异常和恶意活动的软件。HIDS 的主要目的是检测可疑活动，而不是阻止它们。基于主机或网络入侵检测系统有两种工作方式，包括：
@@ -784,7 +784,7 @@ There is also a network-based <u>IDS</u>/<u>IPS</u>, which we will be covering i
 Endpoint Detection and Response (<u>EDR</u>)  
 端点检测和响应 （EDR）
 
-![](/image/tryhackme/TryHackMe-The Lay of the Land-15.png)**  
+![](/image/tryhackme/TryHackMe-The%20Lay%20of%20the%20Land-15.png)**  
 **
 
 It is also known as Endpoint Detection and Threat Response (EDTR). The <u>EDR</u> is a cybersecurity solution that defends against malware and other threats. EDRs can look for malicious files, monitor endpoint, system, and network events, and record them in a database for further analysis, detection, and investigation. EDRs are the next generation of antivirus and detect malicious activities on the host in real-time.  
@@ -820,7 +820,7 @@ This task will discuss network security solutions commonly seen and used in ente
 Network Security Solutions  
 网络安全解决方案
 
-![](/image/tryhackme/TryHackMe-The Lay of the Land-16.png)  
+![](/image/tryhackme/TryHackMe-The%20Lay%20of%20the%20Land-16.png)  
 
 
 Network security solutions could be software or hardware appliances used to monitor, detect and prevent malicious activities within the network. It focuses on protecting clients and devices connected to the cooperation network. The network security solution includes but is not limited to:  
@@ -832,7 +832,7 @@ Network security solutions could be software or hardware appliances used to moni
 
 Network <u>Firewall</u> 网络防火墙
 
-![](/image/tryhackme/TryHackMe-The Lay of the Land-17.png)  
+![](/image/tryhackme/TryHackMe-The%20Lay%20of%20the%20Land-17.png)  
 
 
 A firewall is the first checkpoint for untrusted traffic that arrives at a network. The firewall filters the untrusted traffic before passing it into the network based on rules and policies. In addition, Firewalls can be used to separate networks from external traffic sources, internal traffic sources, or even specific applications. Nowadays, firewall products are built-in network routers or other security products that provide various security features. The following are some firewall types that enterprises may use.  
@@ -848,7 +848,7 @@ Web 应用程序防火墙
 Security Information and Event Management (<u>SIEM</u>)  
 安全信息和事件管理 （SIEM）
 
-![](/image/tryhackme/TryHackMe-The Lay of the Land-18.png)  
+![](/image/tryhackme/TryHackMe-The%20Lay%20of%20the%20Land-18.png)  
 
 
 <u>SIEM</u> combines Security Information Management (SIM) and Security Event Management (SEM) to monitor and analyze events and track and log data in real-time. <u>SIEM</u> helps system administrators and blue teamers to monitor and track potential security threats and vulnerabilities before causing damage to an organization.   
@@ -884,7 +884,7 @@ Datadog 安全监控
 Intrusion Detection System and Intrusion Prevention System (<u>NIDS</u>/<u>NIPS</u>)  
 入侵检测系统和入侵防御系统（NIDS/NIPS）
 
-![](/image/tryhackme/TryHackMe-The Lay of the Land-19.png)
+![](/image/tryhackme/TryHackMe-The%20Lay%20of%20the%20Land-19.png)
 
 Network-based <u>IDS</u>/IPS have a similar concept to the host-based <u>IDS</u>/IPS. The main difference is that the network-based products focus on the security of a network instead of a host. The network-based solution will be based on sensors and agents distributed in the network devices and hosts to collect data. <u>IDS</u> and IPS are both detection and monitoring cybersecurity solutions that an enterprise uses to secure its internal systems. They both read network packets looking for abnormal behaviors and known threats pre-loaded into a previous database. The significant difference between both solutions is that the <u>IDS</u> requires human interaction or 3rd party software to analyze the data to take action. The <u>IPS</u> is a control system that accepts or rejects packets based on policies and rules.  
 基于网络的 IDS/IPS 与基于主机的 IDS/IPS 具有类似的概念。主要区别在于，基于网络的产品侧重于网络而不是主机的安全性。基于网络的解决方案将基于分布在网络设备和主机中的传感器和代理来收集数据。IDS 和 IPS 都是检测和监控网络安全解决方案，企业使用它们来保护其内部系统。它们都读取网络数据包，寻找预加载到先前数据库中的异常行为和已知威胁。这两种解决方案之间的显着区别在于，IDS需要人工交互或第三方软件来分析数据以采取行动。IPS 是一种控制系统，它根据策略和规则接受或拒绝数据包。
@@ -948,7 +948,7 @@ For more details about core Windows processes from the blue team perspective, ch
 Sharing files and Printers  
 共享文件和打印机
 
-![](/image/tryhackme/TryHackMe-The Lay of the Land-20.png)
+![](/image/tryhackme/TryHackMe-The%20Lay%20of%20the%20Land-20.png)
 
 Sharing files and network resources is commonly used in personal and enterprise environments. System administrators misconfigure access permissions, and they may have useful information about other accounts and systems. For more information on printer hacking, we suggest trying out the following TryHackMe room: [Printer Hacking 101](https://tryhackme.com/room/printerhacking101).  
 共享文件和网络资源通常用于个人和企业环境。系统管理员错误地配置了访问权限，他们可能拥有有关其他帐户和系统的有用信息。有关打印机黑客攻击的更多信息，我们建议您尝试以下 TryHackMe 房间：打印机黑客攻击 101。

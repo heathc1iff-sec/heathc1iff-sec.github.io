@@ -135,7 +135,7 @@ Nmap done: 1 IP address (1 host up) scanned in 8.26 seconds
 ```
 
 ## 80端口
-![](/image/qq group/Guoqing-1.png)
+![](/image/qq%20group/Guoqing-1.png)
 
 我嘞个豆
 
@@ -210,7 +210,7 @@ Task Completed
 ```
 
 ### /login.php
-![](/image/qq group/Guoqing-2.png)
+![](/image/qq%20group/Guoqing-2.png)
 
 ```plain
 POST /login.php HTTP/1.1
@@ -374,7 +374,7 @@ it is recommended to perform only basic UNION tests if there is not at least one
 ### 图片隐写
 提取首页的todd图片
 
-![](/image/qq group/Guoqing-3.png)
+![](/image/qq%20group/Guoqing-3.png)
 
 ```plain
 ┌──(web)─(root㉿kali)-[/home/kali/Desktop/hmv]
@@ -1199,9 +1199,9 @@ name3.txt Guoqing:/tmp/backup/
 rsync -t name1.txt name2.txt name3.txt Guoqing:/tmp/backup/ 
 ```
 
-![](/image/qq group/Guoqing-4.png)
+![](/image/qq%20group/Guoqing-4.png)
 
-![](/image/qq group/Guoqing-5.png)
+![](/image/qq%20group/Guoqing-5.png)
 
 反弹shell
 

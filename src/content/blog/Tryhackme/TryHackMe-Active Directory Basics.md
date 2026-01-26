@@ -50,7 +50,7 @@ While this sounds like a very relaxed lifestyle, let's suppose your business sud
 To overcome these limitations, we can use a Windows domain. Simply put, a **Windows domain** is a group of users and computers under the administration of a given business. The main idea behind a domain is to centralise the administration of common components of a Windows computer network in a single repository called **Active Directory (****<u>AD</u>****)**. The server that runs the Active Directory services is known as a **Domain Controller (****<u>DC</u>****)**.  
 为了克服这些限制，我们可以使用 Windows 域。简单地说，Windows 域是给定业务管理下的一组用户和计算机。域背后的主要思想是将 Windows 计算机网络的通用组件的管理集中在一个名为 Active Directory （AD） 的存储库中。运行 Active Directory 服务的服务器称为域控制器 （DC）。
 
-![](/image/tryhackme/TryHackMe-Active Directory Basics-1.png)
+![](/image/tryhackme/TryHackMe-Active%20Directory%20Basics-1.png)
 
 The main advantages of having a configured Windows domain are:  
 配置 Windows 域的主要优点是：
@@ -79,7 +79,7 @@ During this task, we'll assume the role of the new IT admin at THM Inc. As our f
 Be sure to click the Start Machine button now, as you'll use the same machine for all tasks. This should open a machine in your browser. Should you prefer to connect to it via <u>RDP</u>, you can use the following credentials:  
 请务必立即单击“启动计算机”按钮，因为您将使用同一台计算机执行所有任务。这应该会在浏览器中打开一台计算机。如果希望通过 RDP 连接到它，可以使用以下凭据：
 
-![](/image/tryhackme/TryHackMe-Active Directory Basics-2.png)
+![](/image/tryhackme/TryHackMe-Active%20Directory%20Basics-2.png)
 
 | **Username**** **** ****用户名** | Administrator 管理员 |
 | :---: | :---: |
@@ -173,7 +173,7 @@ Active Directory 用户和计算机
 To configure users, groups or machines in Active Directory, we need to log in to the Domain Controller and run "Active Directory Users and Computers" from the start menu:  
 要在 Active Directory 中配置用户、组或计算机，我们需要登录到域控制器并从开始菜单运行“Active Directory 用户和计算机”：
 
-![](/image/tryhackme/TryHackMe-Active Directory Basics-3.png)
+![](/image/tryhackme/TryHackMe-Active%20Directory%20Basics-3.png)
 
 This will open up a window where you can see the hierarchy of users, computers and groups that exist in the domain. These objects are organised in **Organizational Units (OUs)** which are container objects that allow you to classify users and machines. OUs are mainly used to define sets of users with similar policing requirements. The people in the Sales department of your organisation are likely to have a different set of policies applied than the people in IT, for example. Keep in mind that a user can only be a part of a single <u>OU</u> at a time.  
 这将打开一个窗口，您可以在其中查看域中存在的用户、计算机和组的层次结构。这些对象在组织单位 （OU） 中组织，这些单位是允许您对用户和计算机进行分类的容器对象。OU 主要用于定义具有类似监管要求的用户集。例如，组织销售部门的人员可能应用了一组与 IT 人员不同的策略。请记住，用户一次只能是单个 OU 的一部分。
@@ -181,12 +181,12 @@ This will open up a window where you can see the hierarchy of users, computers a
 Checking our machine, we can see that there is already an <u>OU</u> called **THM** with four child OUs for the IT, Management, Marketing and Sales departments. It is very typical to see the OUs mimic the business' structure, as it allows for efficiently deploying baseline policies that apply to entire departments. Remember that while this would be the expected model most of the time, you can define OUs arbitrarily. Feel free to right-click the **THM** <u>OU</u> and create a new <u>OU</u> under it called **Students** just for the fun of it.  
 检查我们的机器，我们可以看到已经有一个 OU 调用 **THM** ，其中包含 IT、管理、营销和销售部门的四个子 OU。非常典型的是，OU 模仿业务结构，因为它允许有效地部署适用于整个部门的基线策略。请记住，虽然这在大多数情况下都是预期的模型，但您可以任意定义 OU。随意右键单击 **THM** OU 并在其下创建一个新的 OU，只是为了好玩而调用 **Students** 。
 
-![](/image/tryhackme/TryHackMe-Active Directory Basics-4.png)
+![](/image/tryhackme/TryHackMe-Active%20Directory%20Basics-4.png)
 
 If you open any OUs, you can see the users they contain and perform simple tasks like creating, deleting or modifying them as needed. You can also reset passwords if needed (pretty useful for the helpdesk):  
 如果打开任何 OU，则可以看到它们包含的用户，并根据需要执行简单的任务，例如创建、删除或修改它们。如果需要，您还可以重置密码（对帮助台非常有用）：
 
-![](/image/tryhackme/TryHackMe-Active Directory Basics-5.png)
+![](/image/tryhackme/TryHackMe-Active%20Directory%20Basics-5.png)
 
 You probably noticed already that there are other default containers apart from the THM <u>OU</u>. These containers are created by Windows automatically and contain the following:  
 您可能已经注意到，除了 THM OU 之外，还有其他默认容器。这些容器由 Windows 自动创建，并包含以下内容：
@@ -343,7 +343,7 @@ Answer the questions below
 
 远程连接（在此页面输入Tryhackme提供的域ip即可，点击连接之后 会自动跳转到域成员的登录界面）：
 
-![](/image/tryhackme/TryHackMe-Active Directory Basics-6.png)
+![](/image/tryhackme/TryHackMe-Active%20Directory%20Basics-6.png)
 
 重置THM\sophie用户密码的命令：
 
@@ -353,19 +353,19 @@ Set-ADAccountPassword sophie -Reset -NewPassword (Read-Host -AsSecureString -Pro
 #输入密码：qwert123456* （新密码要符合密码长度和复杂度）
 ```
 
-![](/image/tryhackme/TryHackMe-Active Directory Basics-7.png)
+![](/image/tryhackme/TryHackMe-Active%20Directory%20Basics-7.png)
 
 登录THM\sophie账户，查看flag文件内容：
 
-![](/image/tryhackme/TryHackMe-Active Directory Basics-8.png)
+![](/image/tryhackme/TryHackMe-Active%20Directory%20Basics-8.png)
 
-![](/image/tryhackme/TryHackMe-Active Directory Basics-9.png)
+![](/image/tryhackme/TryHackMe-Active%20Directory%20Basics-9.png)
 
 # Managing Computers in AD
 By default, all the machines that join a domain (except for the DCs) will be put in the container called "Computers". If we check our <u>DC</u>, we will see that some devices are already there:  
 默认情况下，加入域的所有计算机（DC 除外）都将放在名为“计算机”的容器中。如果我们检查我们的 DC，我们会看到一些设备已经存在：
 
-![](/image/tryhackme/TryHackMe-Active Directory Basics-10.png)
+![](/image/tryhackme/TryHackMe-Active%20Directory%20Basics-10.png)
 
 We can see some servers, some laptops and some PCs corresponding to the users in our network. Having all of our devices there is not the best idea since it's very likely that you want different policies for your servers and the machines that regular users use on a daily basis.  
 我们可以看到一些服务器，一些笔记本电脑和一些PC与我们网络中的用户相对应。拥有我们所有的设备并不是最好的主意，因为您很可能希望为您的服务器和普通用户每天使用的机器使用不同的策略。
@@ -392,7 +392,7 @@ Domain Controllers are the third most common device within an Active Directory d
 Since we are tidying up our AD, let's create two separate OUs for **Workstations** and **Servers** (Domain Controllers are already in an <u>OU</u> created by Windows). We will be creating them directly under the **thm.local** domain container. In the end, you should have the following <u>OU</u> structure:  
 由于我们正在整理 AD，因此让我们为 **Workstations** 和 **Servers** 创建两个单独的 OU（域控制器已位于 Windows 创建的 OU 中）。我们将直接在 **thm.local** 域容器下创建它们。最后，您应该具有以下 OU 结构：
 
-![](/image/tryhackme/TryHackMe-Active Directory Basics-11.png)
+![](/image/tryhackme/TryHackMe-Active%20Directory%20Basics-11.png)
 
 Now, move the personal computers and laptops to the Workstations <u>OU</u> and the servers to the Servers <u>OU</u> from the Computers container. Doing so will allow us to configure policies for each <u>OU</u> later.  
 现在，将个人计算机和便携式计算机从“计算机”容器移动到“工作站 OU”，将服务器移动到“服务器 OU”。这样做将允许我们稍后为每个 OU 配置策略。
@@ -424,12 +424,12 @@ Windows 通过组策略对象 （GPO） 管理此类策略。GPO 只是可应用
 To configure GPOs, you can use the **Group Policy Management** tool, available from the start menu:  
 若要配置 GPO，可以使用“开始”菜单中的组策略管理工具：
 
-![](/image/tryhackme/TryHackMe-Active Directory Basics-12.png)
+![](/image/tryhackme/TryHackMe-Active%20Directory%20Basics-12.png)
 
 The first thing you will see when opening it is your complete <u>OU</u> hierarchy, as defined before. To configure Group Policies, you first create a <u>GPO</u> under **Group Policy Objects** and then link it to the <u>OU</u> where you want the policies to apply. As an example, you can see there are some already existing GPOs in your machine:  
 打开它时，首先看到的是完整的 OU 层次结构，如前所述。若要配置组策略，请先在“组策略对象”下创建一个 GPO，然后将其链接到要应用策略的 OU。例如，您可以看到计算机中已经存在一些 GPO：
 
-![](/image/tryhackme/TryHackMe-Active Directory Basics-13.png)  
+![](/image/tryhackme/TryHackMe-Active%20Directory%20Basics-13.png)  
 
 
 We can see in the image above that 3 GPOs have been created. From those, the **Default Domain Policy** and **<u>RDP</u>**** ****Policy** are linked to the **thm.local** domain as a whole, and the **Default Domain Controllers Policy** is linked to the **Domain Controllers** <u>OU</u> only. Something important to have in mind is that any GPO will apply to the linked <u>OU</u> and any sub-OUs under it. For example, the **Sales** <u>OU</u> will still be affected by the **Default Domain Policy**.  
@@ -438,7 +438,7 @@ We can see in the image above that 3 GPOs have been created. From those, the **D
 Let's examine the **Default Domain Policy** to see what's inside a GPO. The first tab you'll see when selecting a <u>GPO</u> shows its **scope**, which is where the GPO is linked in the <u>AD</u>. For the current policy, we can see that it has only been linked to the **thm.local** domain:  
 让我们检查 **Default Domain Policy** 一下 GPO 内部的内容。选择 GPO 时，您将看到的第一个选项卡显示其范围，这是 GPO 在 AD 中链接的位置。对于当前策略，我们可以看到它仅链接到 **thm.local** 域：
 
-![](/image/tryhackme/TryHackMe-Active Directory Basics-14.png)  
+![](/image/tryhackme/TryHackMe-Active%20Directory%20Basics-14.png)  
 
 
 As you can see, you can also apply **Security Filtering** to GPOs so that they are only applied to specific users/computers under an <u>OU</u>. By default, they will apply to the **Authenticated Users** group, which includes all users/PCs.  
@@ -447,30 +447,30 @@ As you can see, you can also apply **Security Filtering** to GPOs so that they a
 The **Settings** tab includes the actual contents of the <u>GPO</u> and lets us know what specific configurations it applies. As stated before, each <u>GPO</u> has configurations that apply to computers only and configurations that apply to users only. In this case, the **Default Domain Policy** only contains Computer Configurations:  
 “设置”选项卡包括 GPO 的实际内容，并让我们知道它应用了哪些特定配置。如前所述，每个 GPO 都具有仅适用于计算机的配置和仅适用于用户的配置。在这种情况下， **Default Domain Policy** 仅包含计算机配置：
 
-![](/image/tryhackme/TryHackMe-Active Directory Basics-15.png)  
+![](/image/tryhackme/TryHackMe-Active%20Directory%20Basics-15.png)  
 
 
 Feel free to explore the GPO and expand on the available items using the "show" links on the right side of each configuration. In this case, the **Default Domain Policy** indicates really basic configurations that should apply to most domains, including password and account lockout policies:  
 随意浏览 GPO 并使用每个配置右侧的“显示”链接扩展可用项目。在这种情况下，表示 **Default Domain Policy** 应适用于大多数域的真正基本配置，包括密码和帐户锁定策略：
 
-![](/image/tryhackme/TryHackMe-Active Directory Basics-16.png)
+![](/image/tryhackme/TryHackMe-Active%20Directory%20Basics-16.png)
 
 Since this GPO applies to the whole domain, any change to it would affect all computers. Let's change the minimum password length policy to require users to have at least 10 characters in their passwords. To do this, right-click the <u>GPO</u> and select **Edit**:  
 由于此 GPO 适用于整个域，因此对它的任何更改都会影响所有计算机。让我们更改最小密码长度策略，要求用户的密码中至少有 10 个字符。为此，请右键单击 GPO 并选择“编辑”：
 
-![](/image/tryhackme/TryHackMe-Active Directory Basics-17.png)  
+![](/image/tryhackme/TryHackMe-Active%20Directory%20Basics-17.png)  
 
 
 This will open a new window where we can navigate and edit all the available configurations. To change the minimum password length, go to **Computer Configurations -> Policies -> Windows Setting -> Security Settings -> Account Policies -> Password Policy** and change the required policy value:  
 这将打开一个新窗口，我们可以在其中导航和编辑所有可用的配置。若要更改最小密码长度，请 **Computer Configurations -> Policies -> Windows Setting -> Security Settings -> Account Policies -> Password Policy** 转到并更改所需的策略值：
 
-![](/image/tryhackme/TryHackMe-Active Directory Basics-18.png)  
+![](/image/tryhackme/TryHackMe-Active%20Directory%20Basics-18.png)  
 
 
 As you can see, plenty of policies can be established in a <u>GPO</u>. While explaining every single of them would be impossible in a single room, do feel free to explore a bit, as some of the policies are straightforward. If more information on any of the policies is needed, you can double-click them and read the **Explain** tab on each of them:  
 如您所见，可以在 GPO 中建立大量策略。虽然在一个房间里解释每一个是不可能的，但请随意探索一下，因为有些政策很简单。如果需要有关任何策略的详细信息，可以双击它们并阅读每个策略上的“解释”选项卡：
 
-![](/image/tryhackme/TryHackMe-Active Directory Basics-19.png)  
+![](/image/tryhackme/TryHackMe-Active%20Directory%20Basics-19.png)  
 
 
 <u>GPO</u> distribution GPO 分发
@@ -512,7 +512,7 @@ We want to restrict access to the Control Panel across all machines to only the 
 Let's create a new <u>GPO</u> called **Restrict Control Panel Access** and open it for editing. Since we want this <u>GPO</u> to apply to specific users, we will look under **User Configuration** for the following policy:  
 让我们创建一个名为 **Restrict Control Panel Access** 的新 GPO 并打开它进行编辑。由于我们希望此 GPO 适用于特定用户，因此我们将查看 **User Configuration** 以下策略：
 
-![](/image/tryhackme/TryHackMe-Active Directory Basics-20.png)  
+![](/image/tryhackme/TryHackMe-Active%20Directory%20Basics-20.png)  
 
 
 Notice we have enabled the **Prohibit Access to Control Panel and PC settings** policy.  
@@ -521,7 +521,7 @@ Notice we have enabled the **Prohibit Access to Control Panel and PC settings** 
 Once the GPO is configured, we will need to link it to all of the OUs corresponding to users who shouldn't have access to the Control Panel of their PCs. In this case, we will link the **Marketing**, **Management** and **Sales** OUs by dragging the <u>GPO</u> to each of them:  
 配置 GPO 后，我们需要将其链接到与不应访问其电脑控制面板的用户对应的所有 OU。在本例中，我们将通过将 GPO 拖动到每个 和 **Sales** OU 来链接 **Marketing** 它们 **Management** ：
 
-![](/image/tryhackme/TryHackMe-Active Directory Basics-21.png)  
+![](/image/tryhackme/TryHackMe-Active%20Directory%20Basics-21.png)  
 
 
 _**Auto Lock Screen**__** **__**<u>GPO</u>**__** **__**自动锁屏 GPO**_
@@ -538,18 +538,18 @@ While this solution should work, an alternative consists of simply applying the 
 Let's create a new <u>GPO</u>, call it **Auto Lock Screen**, and edit it. The policy to achieve what we want is located in the following route:  
 让我们创建一个新的 GPO，将其 **Auto Lock Screen** 命名为 ，然后对其进行编辑。实现我们想要的目标的策略位于以下路线中：
 
-![](/image/tryhackme/TryHackMe-Active Directory Basics-22.png)  
+![](/image/tryhackme/TryHackMe-Active%20Directory%20Basics-22.png)  
 
 
 We will set the inactivity limit to 5 minutes so that computers get locked automatically if any user leaves their session open. After closing the <u>GPO</u> editor, we will link the <u>GPO</u> to the root domain by dragging the <u>GPO</u> to it:  
 我们会将非活动限制设置为 5 分钟，以便在任何用户将其会话保持打开状态时计算机自动锁定。关闭 GPO 编辑器后，我们将通过将 GPO 拖动到根域来链接 GPO：
 
-![](/image/tryhackme/TryHackMe-Active Directory Basics-23.png)
+![](/image/tryhackme/TryHackMe-Active%20Directory%20Basics-23.png)
 
 Once the GPOs have been applied to the correct OUs, we can log in as any users in either Marketing, Sales or Management for verification. For this task, let's connect via RDP using Mark's credentials:  
 将 GPO 应用于正确的 OU 后，我们可以在 Marketing、Sales 或 Management 中以任何用户身份登录以进行验证。对于此任务，让我们使用 Mark 的凭据通过 RDP 进行连接：
 
-![](/image/tryhackme/TryHackMe-Active Directory Basics-24.png)
+![](/image/tryhackme/TryHackMe-Active%20Directory%20Basics-24.png)
 
 | **Username**** **** ****用户名** | Mark 马克 |
 | :---: | :---: |
@@ -606,25 +606,25 @@ When <u>Kerberos</u> is used for authentication, the following process happens:
 KDC 将创建并发回票证授予票证 （TGT），这将允许用户请求额外的票证以访问特定服务。需要票证才能获得更多票证可能听起来有点奇怪，但它允许用户在每次想要连接到服务时都无需传递其凭据即可请求服务票证。与 TGT 一起，将向用户提供会话密钥，他们需要该密钥来生成以下请求。Notice the <u>TGT</u> is encrypted using the **krbtgt** account's password hash, and therefore the user can't access its contents. It is essential to know that the encrypted <u>TGT</u> includes a copy of the Session Key as part of its contents, and the KDC has no need to store the Session Key as it can recover a copy by decrypting the <u>TGT</u> if needed.  
 请注意，TGT 是使用 krbtgt 帐户的密码哈希加密的，因此用户无法访问其内容。必须知道，加密的 TGT 包括会话密钥的副本作为其内容的一部分，并且 KDC 无需存储会话密钥，因为它可以在需要时通过解密 TGT 来恢复副本。
 
-![](/image/tryhackme/TryHackMe-Active Directory Basics-25.png)
+![](/image/tryhackme/TryHackMe-Active%20Directory%20Basics-25.png)
 
 2. When a user wants to connect to a service on the network like a share, website or database, they will use their <u>TGT</u> to ask the KDC for a **Ticket Granting Service (TGS)**. TGS are tickets that allow connection only to the specific service they were created for. To request a TGS, the user will send their username and a timestamp encrypted using the Session Key, along with the <u>TGT</u> and a **Service Principal Name (SPN),** which indicates the service and server name we intend to access.  
 当用户想要连接到网络上的服务（如共享、网站或数据库）时，他们将使用其 TGT 向 KDC 请求票证授予服务 （TGS）。TGS 是仅允许连接到为其创建的特定服务的票证。要请求 TGS，用户将发送其用户名和使用会话密钥加密的时间戳，以及 TGT 和服务主体名称 （SPN），该名称指示我们打算访问的服务和服务器名称。As a result, the KDC will send us a TGS along with a **Service Session Key**, which we will need to authenticate to the service we want to access. The TGS is encrypted using a key derived from the **Service Owner Hash**. The Service Owner is the user or machine account that the service runs under. The TGS contains a copy of the Service Session Key on its encrypted contents so that the Service Owner can access it by decrypting the TGS.  
 因此，KDC 将向我们发送一个 TGS 以及一个服务会话密钥，我们需要对要访问的服务进行身份验证。TGS 使用派生自服务所有者哈希的密钥进行加密。服务所有者是运行服务的用户或计算机帐户。TGS 在其加密内容上包含服务会话密钥的副本，以便服务所有者可以通过解密 TGS 来访问它。
 
-![](/image/tryhackme/TryHackMe-Active Directory Basics-26.png)
+![](/image/tryhackme/TryHackMe-Active%20Directory%20Basics-26.png)
 
 3. The TGS can then be sent to the desired service to authenticate and establish a connection. The service will use its configured account's password hash to decrypt the TGS and validate the Service Session Key.  
 然后，可以将 TGS 发送到所需的服务以进行身份验证并建立连接。该服务将使用其配置的帐户的密码哈希来解密 TGS 并验证服务会话密钥。
 
-![](/image/tryhackme/TryHackMe-Active Directory Basics-27.png)
+![](/image/tryhackme/TryHackMe-Active%20Directory%20Basics-27.png)
 
 NetNTLM Authentication NetNTLM 身份验证
 
 NetNTLM works using a challenge-response mechanism. The entire process is as follows:  
 NetNTLM 使用质询-响应机制工作。整个过程如下：
 
-![](/image/tryhackme/TryHackMe-Active Directory Basics-28.png)
+![](/image/tryhackme/TryHackMe-Active%20Directory%20Basics-28.png)
 
 1. The client sends an authentication request to the server they want to access.  
 客户端向要访问的服务器发送身份验证请求。
@@ -667,7 +667,7 @@ nay
 So far, we have discussed how to manage a single domain, the role of a Domain Controller and how it joins computers, servers and users.  
 到目前为止，我们已经讨论了如何管理单个域、域控制器的角色以及它如何加入计算机、服务器和用户。
 
-![](/image/tryhackme/TryHackMe-Active Directory Basics-29.png)
+![](/image/tryhackme/TryHackMe-Active%20Directory%20Basics-29.png)
 
 As companies grow, so do their networks. Having a single domain for a company is good enough to start, but in time some additional needs might push you into having more than one.  
 随着公司的发展，他们的网络也在发展。为一家公司拥有一个域名就足够了，但随着时间的推移，一些额外的需求可能会促使您拥有多个域名。
@@ -683,7 +683,7 @@ Luckily for us, Active Directory supports integrating multiple domains so that y
 If our **thm.local** domain was split into two subdomains for UK and US branches, you could build a tree with a root domain of **thm.local** and two subdomains called **uk.thm.local** and **us.thm.local**, each with its <u>AD</u>, computers and users:  
 如果我们的 **thm.local** 域被拆分为两个子域，用于英国和美国分支，您可以构建一个树，其根域为 和 **thm.local** 两个子 **uk.thm.local** 域，称为 和 **us.thm.local** ，每个子域都有其 AD、计算机和用户：
 
-![](/image/tryhackme/TryHackMe-Active Directory Basics-30.png)
+![](/image/tryhackme/TryHackMe-Active%20Directory%20Basics-30.png)
 
 This partitioned structure gives us better control over who can access what in the domain. The IT people from the UK will have their own DC that manages the UK resources only. For example, a UK user would not be able to manage US users. In that way, the Domain Administrators of each branch will have complete control over their respective DCs, but not other branches' DCs. Policies can also be configured independently for each domain in the tree.  
 这种分区结构使我们能够更好地控制谁可以访问域中的内容。来自英国的 IT 人员将拥有自己的 DC，仅管理英国资源。例如，英国用户将无法管理美国用户。这样，每个分支的域管理员将完全控制各自的 DC，但不能完全控制其他分支的 DC。
@@ -697,7 +697,7 @@ Forests 森林
 The domains you manage can also be configured in different namespaces. Suppose your company continues growing and eventually acquires another company called **MHT Inc.** When both companies merge, you will probably have different domain trees for each company, each managed by its own IT department. The union of several trees with different namespaces into the same network is known as a **forest**.  
 您管理的域也可以在不同的命名空间中配置。假设您的公司继续发展并最终收购了另一家名为 **MHT Inc.** 当两家公司合并时，您可能为每家公司拥有不同的域树，每个域树都由自己的 IT 部门管理。将具有不同命名空间的多个树合并到同一网络中称为林。
 
-![](/image/tryhackme/TryHackMe-Active Directory Basics-31.png)
+![](/image/tryhackme/TryHackMe-Active%20Directory%20Basics-31.png)
 
 Trust Relationships 信任关系
 
@@ -710,7 +710,7 @@ In simple terms, having a trust relationship between domains allows you to autho
 The simplest trust relationship that can be established is a **one-way trust relationship**. In a one-way trust, if **Domain AAA** trusts **Domain BBB**, this means that a user on BBB can be authorised to access resources on AAA:  
 可以建立的最简单的信任关系是单向信任关系。在单向信任中，如果 **Domain AAA** 信任 **Domain BBB** ，这意味着 BBB 上的用户可以被授权访问 AAA 上的资源：
 
-![](/image/tryhackme/TryHackMe-Active Directory Basics-32.png)
+![](/image/tryhackme/TryHackMe-Active%20Directory%20Basics-32.png)
 
 The direction of the one-way trust relationship is contrary to that of the access direction.  
 单向信任关系的方向与接入方向的方向相反。
