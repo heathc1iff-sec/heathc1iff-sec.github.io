@@ -7,6 +7,7 @@ categories:
   - Documentation
 tags:
   - MazeSec
+  - Linux Machine
 ---
 
 # 信息收集

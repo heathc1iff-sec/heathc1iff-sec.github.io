@@ -8,6 +8,7 @@ categories:
 tags:
   - Hackmyvm
   - HMVLabs
+  - Linux Machine
 ---
 
 #### 一键获取flag
