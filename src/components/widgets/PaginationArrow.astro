@@ -3,9 +3,13 @@ import type { PaginationArrowProps } from "@interfaces/data";
 import { Icon } from "astro-icon/components";
 
 const { url, direction, label } = Astro.props as PaginationArrowProps;
+
+// 规范化 URL：将 /blog/1 或 /blog/1/ 转换为 /blog
+// 修复从第2页返回第1页时 URL 变成 /blog/1 导致 404 的问题
+const normalizedUrl = url?.replace(/\/1\/?$/, '/') || url;
 ---
 
-<a href={url || "#"} class:list={["btn bg-base-100 shadow-xl", !url && "btn-disabled"]}>
+<a href={normalizedUrl || "#"} class:list={["btn bg-base-100 shadow-xl", !url && "btn-disabled"]}>
   {direction === "prev" && <Icon name="ri:arrow-left-s-line" class="h-6 w-6 md:h-8 md:w-8" />}
   <span class="hidden lg:inline">{label}</span>
   {direction === "next" && <Icon name="ri:arrow-right-s-line" class="h-6 w-6 md:h-8 md:w-8" />}
