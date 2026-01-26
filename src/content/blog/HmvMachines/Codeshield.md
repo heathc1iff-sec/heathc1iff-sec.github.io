@@ -10,7 +10,7 @@ tags:
   - Linux Machine
 ---
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768198433349-eed52423-06bc-43fc-9364-2567aa378fb4.png)
+![](/image/hmvmachines/Codeshield-1.png)
 
 # 信息收集
 ## IP定位
@@ -275,7 +275,7 @@ ChangeMe123!
 上面做的字典喷洒失败了
 
 ## https://mail.codeshield.hmv
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768207350084-cdbbb084-e234-4972-91ba-91231b7cf2ff.png)
+![](/image/hmvmachines/Codeshield-2.png)
 
 提取人名作为字典
 
@@ -631,7 +631,7 @@ Passwords.kdbx
 
 [https://app.keeweb.info/](https://app.keeweb.info/)
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768212901853-9b8d2080-8872-4670-92a9-cbb76d18ed11.png)
+![](/image/hmvmachines/Codeshield-3.png)
 
 | ```plain root:7%z5,c9=w6[x8= ```  |
 | --- |

@@ -45,18 +45,18 @@ Nmap done: 1 IP address (1 host up) scanned in 23.22 seconds
 ```
 
 ## 80端口
-![](https://cdn.nlark.com/yuque/0/2025/png/40628873/1765343242652-ccdb15f4-b11e-4b7f-be40-70bae69b7d04.png)
+![](/image/hmvmachines/Alive-1.png)
 
 ### Wireshark
 出现了个url请求界面，发送请求到攻击机并用wireshark抓包
 
-![](https://cdn.nlark.com/yuque/0/2025/png/40628873/1765343287453-8629305c-195a-4b65-a051-48ba42ae7aaf.png)
+![](/image/hmvmachines/Alive-2.png)
 
 没什么用
 
 尝试包含以下自身
 
-![](https://cdn.nlark.com/yuque/0/2025/png/40628873/1765343376157-f9e7a516-5388-4d8a-b771-cf1f47addfa5.png)
+![](/image/hmvmachines/Alive-3.png)
 
 ### 目录扫描
 ```bash
@@ -75,7 +75,7 @@ Extensions: php, aspx, jsp, html, js | HTTP method: GET | Threads: 25 | Wordlist
 ```
 
 ### 访问tmp目录
-![](https://cdn.nlark.com/yuque/0/2025/png/40628873/1765343498332-5256520c-2d14-4207-918e-18ea64c8e71e.png)
+![](/image/hmvmachines/Alive-4.png)
 
 可以发现是一个空目录
 
@@ -109,7 +109,7 @@ Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/) ..
 
 ```
 
-![](https://cdn.nlark.com/yuque/0/2025/png/40628873/1765344177275-952835aa-5004-4417-9fc9-7a00c9f616fa.png)
+![](/image/hmvmachines/Alive-5.png)
 
 已知该页面会包含请求界面
 

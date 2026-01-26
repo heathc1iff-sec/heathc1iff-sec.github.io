@@ -10,7 +10,7 @@ tags:
   - Windows Machine
 ---
 
-![](https://cdn.nlark.com/yuque/0/2025/png/40628873/1765604553052-9740b240-5095-4427-9de3-b8dd17e17c11.png)
+![](/image/hmvmachines/Always-1.png)
 
 # 信息收集
 ## IP定位
@@ -655,7 +655,7 @@ ftpuser ∉ Administrators
 xfreerdp /v:172.16.52.224 /u:ftpuser /p:'KeepGoingBro!!!' /cert:ignore
 ```
 
-![](https://cdn.nlark.com/yuque/0/2025/png/40628873/1765609374074-ddd9fa89-0982-4290-b433-4f1e7d4d6264.png)
+![](/image/hmvmachines/Always-2.png)
 
 # 密码爆破
 ```bash
@@ -699,7 +699,7 @@ SMB         172.16.52.224   445    ALWAYS-PC        [-] Always-PC\Guest:YouCantF
 # ftpuser登录
 我真是没招了，直接虚拟机ftpuser登录
 
-![](https://cdn.nlark.com/yuque/0/2025/png/40628873/1765609543467-041191f0-d010-418a-9338-37de1ea8977f.png)
+![](/image/hmvmachines/Always-3.png)
 
 ## 上马
 ```bash

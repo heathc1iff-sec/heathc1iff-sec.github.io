@@ -316,7 +316,7 @@ Target: http://tmpfile.dsz/
 
 ```
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1769237037448-fc3999df-2d22-4d02-9b26-a8f5c5457fd5.png)
+![](/image/qq group/Happiness-1.png)
 
 ```plain
 <?php
@@ -2512,7 +2512,7 @@ drwx------ 3 Eecho Eecho 4096 Jan 24 02:22 ..
 提权不出来-放弃了
 
 # 提权-wp
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1769343860769-7638832b-756b-494c-9911-a560ee5772f7.png)
+![](/image/qq group/Happiness-2.png)
 
 [潜伏11年的Telnetd核弹漏洞：CVE-2026-24061零认证提权席卷全球，公开PoC触发全网紧急防御-CSDN博客](https://blog.csdn.net/weixin_42376192/article/details/157354343)
 

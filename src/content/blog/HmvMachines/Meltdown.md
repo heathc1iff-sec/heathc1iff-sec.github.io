@@ -153,7 +153,7 @@ Finished
 ```
 
 ### /item.php?id=1
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768292572490-a53abba8-4366-42b7-95a5-e2af250d2fc3.png)
+![](/image/hmvmachines/Meltdown-1.png)
 
 尝试sql注入
 
@@ -301,7 +301,7 @@ Table: users
 ```
 
 ## rin_profile.php
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768293051939-9681c1f3-01a1-4b02-b6ae-4907d8d77e0d.png)
+![](/image/hmvmachines/Meltdown-2.png)
 
 可以添加物品和介绍，尝试反弹shell
 
@@ -524,7 +524,7 @@ rin:b59a85af917afd07
 
 
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768295022439-414b2f7a-9135-4be5-ae6c-e0246a0afb5f.png)
+![](/image/hmvmachines/Meltdown-3.png)
 
 ```plain
 rin@meltdown:~$ sudo -l

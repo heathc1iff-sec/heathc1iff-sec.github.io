@@ -48,7 +48,7 @@ Nmap done: 1 IP address (1 host up) scanned in 23.24 seconds
 ```
 
 # 8009端口
-| **<font style="color:rgb(255, 255, 255);">端口</font>**<br/><font style="color:rgb(255, 255, 255);">8009</font> | **<font style="color:rgb(255, 255, 255);">服务</font>**<br/><font style="color:rgb(255, 255, 255);">AJP13</font> | **<font style="color:rgb(255, 255, 255);">版本</font>**<br/><font style="color:rgb(255, 255, 255);">Apache JServ Protocol</font> | **<font style="color:rgb(255, 255, 255);">Tomcat AJP 反向代理远程文件包含漏洞 (Ghostcat CVE-2020-1938)</font>** |
+| **端口**<br/>8009 | **服务**<br/>AJP13 | **版本**<br/>Apache JServ Protocol | **Tomcat AJP 反向代理远程文件包含漏洞 (Ghostcat CVE-2020-1938)** |
 | --- | --- | --- | --- |
 
 
@@ -143,7 +143,7 @@ Disalow: /SuperCMS
 ```
 
 ## /SuperCMS
-访问![](https://cdn.nlark.com/yuque/0/2025/png/40628873/1765350281344-957d2f19-58da-4ef2-92f8-ac9a0f691f2e.png)
+访问![](/image/hmvmachines/Aqua-1.png)
 
 仅仅得到一张图片，直接目录扫描
 
@@ -199,7 +199,7 @@ Target: http://172.16.52.195/
 ```
 
 ### login.html
-![](https://cdn.nlark.com/yuque/0/2025/png/40628873/1765350575130-8a2f43d0-28e6-4a99-87e0-20f4815282d2.png)
+![](/image/hmvmachines/Aqua-2.png)
 
 
 
@@ -452,7 +452,7 @@ view-source:[http://172.16.52.195/SuperCMS/](http://172.16.52.195/SuperCMS/)
 
 源码最底下有
 
-![](https://cdn.nlark.com/yuque/0/2025/png/40628873/1765354891299-554327ae-fff8-44e7-b15e-1e2b3f953882.png)
+![](/image/hmvmachines/Aqua-3.png)
 
 <!-- MT0yID0gcGFzc3dvcmRfemlwCg==-->
 
@@ -524,7 +524,7 @@ Apache Tomcat 8.5.5
 
 username="aquaMan" password="P4st3lM4n"
 
-![](https://cdn.nlark.com/yuque/0/2025/png/40628873/1765355505960-2c9c6aa1-cbbb-496f-a0d9-87b8ea51dcfb.png)
+![](/image/hmvmachines/Aqua-4.png)
 
 在 Manager 的 Deploy → WAR file to upload 这里上传你自己的 WAR 包即可
 
@@ -590,7 +590,7 @@ mkdir exp && cp exp.jsp exp/ && jar -cvf exp.war -C exp .
 exp.war
 ```
 
-![](https://cdn.nlark.com/yuque/0/2025/png/40628873/1765357235163-421d2ec6-256f-47aa-a261-2f9a031f9faf.png)
+![](/image/hmvmachines/Aqua-5.png)
 
 # tomcat提权
 ## ps进程

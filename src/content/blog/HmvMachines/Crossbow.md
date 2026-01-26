@@ -9,7 +9,7 @@ tags:
   - Hackmyvm
   - Linux Machine
 ---
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768144421033-d69d7ef2-bd27-49e0-9e90-280a2b98ce05.png)
+![](/image/hmvmachines/Crossbow-1.png)
 
 # 信息收集
 ## ip定位
@@ -246,7 +246,7 @@ const SYSTEM_UPGRADE = {
 
 解密地址:[https://md5hashing.net/hash/snefru](https://md5hashing.net/hash/snefru)
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768146756909-206c7922-6b31-4f32-9f06-4e825c27fcbe.png)
+![](/image/hmvmachines/Crossbow-2.png)
 
 解密结果为ELzkRudzaNXRyNuN6
 
@@ -258,13 +258,13 @@ polo/ELzkRudzaNXRyNuN6
 
 # 渗透测试
 ## 终端登录
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768146889427-9d92251a-d465-4409-942a-e03bda8461a7.png)
+![](/image/hmvmachines/Crossbow-3.png)
 
 登录进去了
 
 点击终端
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768147093167-8d482029-4751-46fc-9283-49071faaa017.png)
+![](/image/hmvmachines/Crossbow-4.png)
 
 尝试利用ssh连接
 
@@ -386,15 +386,15 @@ agent.945466: socket
 
 
 ## ssh-agent解释
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768151703863-0d98c04d-5301-4d9f-82ce-d1d63ec00c40.png)
+![](/image/hmvmachines/Crossbow-5.png)
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768151839471-9f5e1815-d72b-4a4e-aa7c-1f80586e8caa.png)
+![](/image/hmvmachines/Crossbow-6.png)
 
 ```plain
 SSH_AUTH_SOCK=/tmp/ssh-XXXXXXcE94FH/agent.1089  ssh lea@192.168.0.105
 ```
 
-### <font style="color:rgb(255, 255, 255);background-color:rgb(33, 33, 33);">第一张图在说什么？</font>
+### 第一张图在说什么？
 它在描述一个正常工作的场景：
 
 Alice 从自己电脑 → 登录到 bastion → 再跳到 server
@@ -531,7 +531,7 @@ for i in {1040..1140}; do SSH_AUTH_SOCK=/tmp/ssh-XXXXXXLi1PX1/agent.$i  ssh pedr
 解释“因为 pedro 的 ssh-agent 被 ssh -A 转发进了 lea 的 SSH 会话，所以它的 socket 被挂载在 lea 的 /tmp/ssh-XXXX 目录下。PID 是 sshd 动态生成的，因此只能枚举。”
 
 ### 关键事实 1
-`**<font style="color:rgb(255, 255, 255);background-color:rgb(66, 66, 66);">/tmp/ssh-XXXXXXLi1PX1</font>**` 这个目录是 sshd 创建的
+`**/tmp/ssh-XXXXXXLi1PX1**` 这个目录是 sshd 创建的
 
 它不是 “lea 的钥匙目录”  
 它是：
@@ -544,7 +544,7 @@ for i in {1040..1140}; do SSH_AUTH_SOCK=/tmp/ssh-XXXXXXLi1PX1/agent.$i  ssh pedr
 ---
 
 ### 关键事实 2
-当 pedro 用 `**<font style="color:rgb(255, 255, 255);background-color:rgb(66, 66, 66);">ssh -A</font>**` 经过 lea → crossbow 时
+当 pedro 用 `**ssh -A**` 经过 lea → crossbow 时
 
 真实链路是：
 
@@ -613,12 +613,12 @@ ssh pedro@192.168.0.105
 
 就等于用 pedro 自己电脑上的钥匙去开门。
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768155940398-2179fe41-e3cc-45bf-b3bf-e28df877ead0.png) 
+![](/image/hmvmachines/Crossbow-7.png) 
 
 # 提权-root
 查看端口连接情况
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768156143953-22ccb58d-7cb7-407f-9e09-2ce40d638c2c.png)
+![](/image/hmvmachines/Crossbow-8.png)
 
 发现不明连接
 
@@ -653,9 +653,9 @@ curl: (1) Received HTTP/0.9 when not allowed
 </html>
 ```
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768156285683-18f9ea21-dde5-4b32-99b2-60d90a5ebaa1.png)
+![](/image/hmvmachines/Crossbow-9.png)
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768156292975-e9edee23-5295-4f73-a752-324452a3a9d5.png)
+![](/image/hmvmachines/Crossbow-10.png)
 
 ```plain
 ╭─pedro@crossbow ~ 
@@ -697,7 +697,7 @@ v2.8.90
 
 google 一下：
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768156352915-0d12fc12-c147-44c5-b070-6c63153c4f7b.png)
+![](/image/hmvmachines/Crossbow-11.png)
 
  找到[攻击方式](https://gist.github.com/Alevsk/1757da24c5fb8db735d392fd4146ca3a)：  
 
@@ -714,19 +714,19 @@ The --extra-vars parameter can be abused by a malicious user with low privileges
 socat TCP-LISTEN:3001,fork TCP:127.0.0.1:3000 
 ```
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768156441934-a34d756a-a6a5-4bcf-8b8d-1ea05393ecdb.png)
+![](/image/hmvmachines/Crossbow-12.png)
 
 尝试弱密码和万能密码，`admin:admin` 登录进去了。
 
 然后设置环境变量：
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768156563654-de50072c-7296-41c4-b601-ce91a8cdf858.png)
+![](/image/hmvmachines/Crossbow-13.png)
 
 ```plain
 sudo pwncat -l 9999 2>/dev/null
 ```
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768156724223-081687f5-8795-4462-8ec3-f736b191b35d.png)
+![](/image/hmvmachines/Crossbow-14.png)
 
 报错了
 
@@ -736,7 +736,7 @@ ERROR: Ansible could not initialize the preferred locale: unsupported locale set
 
 没有设置地区，设置一下：
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768156756535-23095e69-0913-4521-9f8e-d4e847c29265.png)
+![](/image/hmvmachines/Crossbow-15.png)
 
 ```plain
 {
@@ -745,11 +745,11 @@ ERROR: Ansible could not initialize the preferred locale: unsupported locale set
 }
 ```
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768156777829-0a92f258-a36a-468c-98bc-746a4b465c3f.png)
+![](/image/hmvmachines/Crossbow-16.png)
 
 重新运行
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768156813422-d675f81f-12f9-465e-8e3e-b96a69e6df03.png)
+![](/image/hmvmachines/Crossbow-17.png)
 
 ```plain
 root@crossbow:/home/pedro# cat user.txt

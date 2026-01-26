@@ -10,7 +10,7 @@ tags:
   - Linux Machine
 ---
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768471396797-dd2964e0-d4aa-4883-bb76-6417b0cd0ffd.png)
+![](/image/hmvmachines/Literal-1.png)
 
 # 信息收集
 ## ip定位
@@ -146,19 +146,19 @@ Finished
 ### /register
 尝试注册admin失败
 
-注册kali用户![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768473417738-a1bf85f0-9aae-4401-9d03-c45b13e6507a.png)
+注册kali用户![](/image/hmvmachines/Literal-2.png)
 
 ### /login
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768473474062-f0c063ee-b288-4f66-ba1a-5cab298005f3.png)
+![](/image/hmvmachines/Literal-3.png)
 
-> <font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">嗨呀，kali。这是我目前在做的一些项目，还有一些未来的想法。我把接下来要做的事儿都记在这儿了，搞不好都是些不值一提的玩意儿，或者说，是</font>**<font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">烂到家</font>**<font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">的东西 —— 好吧，反正就是不咋样的东西。不过呢，我是一个人单干，所以时间虽然宝贵，但也不算啥大问题，凡事慢慢来，稳着点就好。（顺便说一句，这个页面做得有点丑，我还在学习中呢）</font>
+> 嗨呀，kali。这是我目前在做的一些项目，还有一些未来的想法。我把接下来要做的事儿都记在这儿了，搞不好都是些不值一提的玩意儿，或者说，是**烂到家**的东西 —— 好吧，反正就是不咋样的东西。不过呢，我是一个人单干，所以时间虽然宝贵，但也不算啥大问题，凡事慢慢来，稳着点就好。（顺便说一句，这个页面做得有点丑，我还在学习中呢）
 >
-> **<font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">看看我都在忙些什么项目</font>**
+> **看看我都在忙些什么项目**
 >
-> **<font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">退出登录</font>**
+> **退出登录**
 >
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768473760756-461a73fd-eaf3-4763-8ce4-a57695a2193f.png)
+![](/image/hmvmachines/Literal-4.png)
 
 ```plain
 POST /next_projects_to_do.php HTTP/1.1
@@ -261,7 +261,7 @@ Table: users
 +--------+-----------+----------------------------------+--------------------------------------------------------------+---------------------+
 ```
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768474255665-d9ccfbda-be0e-44df-8652-a45dd4f1d327.png)
+![](/image/hmvmachines/Literal-5.png)
 
 ```plain
 test:$2y$10$wWhvCz1pGsKm..jh/lChIOA7aJoZRAil40YKlGFiw6B.6a77WzNma

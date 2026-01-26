@@ -10,7 +10,7 @@ tags:
   - Linux Machine
 ---
 
-![](https://cdn.nlark.com/yuque/0/2025/png/40628873/1766817268204-27661b68-7309-4286-8b63-372167293e30.png)
+![](/image/hmvmachines/Corrosion3-1.png)
 
 # 信息收集
 ## ip定位

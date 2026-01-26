@@ -10,7 +10,7 @@ tags:
   - Windows Machine
 ---
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768477427944-fd6003a4-0c55-4410-ab07-d187f9f41dd8.png)
+![](/image/hmvmachines/Liar-1.png)
 
 # 信息收集
 ## IP定位

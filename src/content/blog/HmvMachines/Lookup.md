@@ -10,7 +10,7 @@ tags:
   - Linux Machine
 ---
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768617276832-0f4fe3a4-e598-40bf-857d-7c984ac6d003.png)
+![](/image/hmvmachines/Lookup-1.png)
 
 # 信息收集
 ## IP定位
@@ -143,7 +143,7 @@ Finished
 ```
 
 ### [http://lookup.hmv/](http://lookup.hmv/)index.php
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768617988005-d09f43a5-b3b9-4c45-bfb2-db5b0ba4cd47.png)
+![](/image/hmvmachines/Lookup-2.png)
 
 ```plain
 <!DOCTYPE html>
@@ -302,7 +302,7 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2024-09-23 05:40:
 
 登录发现重定向至files.lookup.hmv
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768621681466-06eb7edf-288e-466b-93b1-c4631c8018af.png)
+![](/image/hmvmachines/Lookup-3.png)
 
 ## 添加hosts
 ```plain
@@ -310,10 +310,10 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2024-09-23 05:40:
 ```
 
 ## [files.lookup.hmv](http://files.lookup.hmv/elFinder/elfinder.html)
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768621780529-594dfdae-87ac-47c8-8220-dd00160b2fd7.png)
+![](/image/hmvmachines/Lookup-4.png)
 
 ### elfinder 漏洞
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768621996813-865cee7e-3a28-44b9-b7a9-ebdff6def2d3.png)
+![](/image/hmvmachines/Lookup-5.png)
 
 [https://github.com/hadrian3689/elFinder_2.1.47_php_connector_rce](https://github.com/hadrian3689/elFinder_2.1.47_php_connector_rce)
 

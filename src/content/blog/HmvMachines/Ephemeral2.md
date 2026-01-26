@@ -10,7 +10,7 @@ tags:
   - Linux Machine
 ---
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768319976578-1af8e4cf-13aa-40ac-938c-7ff609969062.png)
+![](/image/hmvmachines/Ephemeral2-1.png)
 
 # 信息收集
 ## IP定位
@@ -752,9 +752,9 @@ magic script = smbscript.elf
 guest ok = no
 ```
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768324505898-7294691a-ecdc-4819-baea-2a65d1295a2f.png)
+![](/image/hmvmachines/Ephemeral2-2.png)
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768324521483-e5b92991-d51b-443c-8241-5a4ff0fb39e8.png)
+![](/image/hmvmachines/Ephemeral2-3.png)
 
 这意味着如果我们上传一个名为smbscript.elf的文件，当该文件被写入到共享目录时，Samba服务器可能会尝试执行它
 

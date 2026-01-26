@@ -10,7 +10,7 @@ tags:
   - Linux Machine
 ---
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768288232424-f832e5f3-f774-4df3-bbbe-71ac13cb1269.png)
+![](/image/hmvmachines/Ephemeral-1.png)
 
 # 信息收集
 ## IP定位
@@ -755,7 +755,7 @@ If you did not receive a copy of the PHP license, or have any questions about PH
 ```
 
 ### /prices
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768290698395-5aa5cd07-7bb2-4c94-907d-0e813391afd4.png)
+![](/image/hmvmachines/Ephemeral-2.png)
 
 列目录中存在filedownload.php
 
@@ -1256,7 +1256,7 @@ https://www.dcode.fr/identification-chiffrement
 在经过base62解码后为nORMAniAntIcINacKLAi
 ```
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768316857921-52d152ab-4fd7-418a-a791-d88f87facf86.png)
+![](/image/hmvmachines/Ephemeral-3.png)
 
 ## 提权-jane
 ```plain

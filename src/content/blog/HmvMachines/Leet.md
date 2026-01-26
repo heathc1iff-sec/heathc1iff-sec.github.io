@@ -10,7 +10,7 @@ tags:
   - Linux Machine
 ---
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768392051169-1e662e4d-62be-4fbb-bd52-9b8257faa96f.png)
+![](/image/hmvmachines/Leet-1.png)
 
 # 信息收集
 ## ip定位
@@ -91,7 +91,7 @@ Starting gobuster in directory enumeration mode
 
 ## 7777端口
 ### /index
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768392683428-e6f75c8d-5b6c-46f7-b85a-5c3d97d940c3.png)
+![](/image/hmvmachines/Leet-2.png)
 
 >  a→4 e→3 i→1 o→0 s→5 t→7 b→8 g→6 l→1 z→2  
 >
@@ -108,7 +108,7 @@ Starting gobuster in directory enumeration mode
 
 [http://192.168.0.197:7777/download?filename=../../../tmp/](http://192.168.0.197:7777/download?filename=../../../tmp/)
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768401147466-afaa66f6-1e88-4881-95c9-3b08ed3ab4a2.png)
+![](/image/hmvmachines/Leet-3.png)
 
 ```c
      var CONSOLE_MODE = false,
@@ -335,7 +335,7 @@ print("Pin: " + rv)
 
 
 ### /console
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768392750820-751007eb-2b47-4e5d-b870-e9e8b3c8fad4.png)
+![](/image/hmvmachines/Leet-4.png)
 
 ```c
 控制台已被锁定，需要输入 PIN 才能解锁。你可以在运行该服务器的 shell 的标准输出中找到打印出来的 PIN。
@@ -343,7 +343,7 @@ print("Pin: " + rv)
 
 输入pin码进入
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768406349168-79bea58b-db0a-4f1e-bf84-507936167b74.png)
+![](/image/hmvmachines/Leet-5.png)
 
 一个python命令框
 

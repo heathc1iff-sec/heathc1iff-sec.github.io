@@ -10,7 +10,7 @@ tags:
   - Linux Machine
 ---
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1769264237449-d6167242-034b-4eb1-b7ac-bc2687564630.png)
+![](/image/hmvmachines/Magifi-1.png)
 
 >  MagiFi 是一台用于测试多种**进攻性安全技能**的靶机，涵盖 **Web、网络、Wi‑Fi 以及权限提升** 等方向。它要求具备 **网络分析** 和 **认证机制** 方面的知识，在**受控环境**中提供一种**真实且沉浸式**的实战体验。  
 作者：@x4v1l0k 和 @M4rdc0re。  
@@ -254,7 +254,7 @@ Error: the server returns a status code that matches the provided options for no
 </form>
 ```
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1769265893146-7b17fea6-6afb-4d2b-ac0c-9d9d4925aaa3.png)
+![](/image/hmvmachines/Magifi-2.png)
 
 ```plain
 POST /upload HTTP/1.1
@@ -683,7 +683,7 @@ c.drawString(100, 600, "Pet's Name: Hedwig")
 c.save()
 ```
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1769269295378-e9ae30cc-1c7c-4e01-8e0a-0ff30f51936a.png)
+![](/image/hmvmachines/Magifi-3.png)
 
 可以执行命令，尝试反弹shell
 
@@ -1266,13 +1266,13 @@ phy70   wlan60          mac80211_hwsim  Software simulator of 802.11 radio(s) fo
 (remote) harry_potter@MagiFi:/home/harry_potter$ sudo /usr/sbin/airodump-ng wlan0mon   # 2.4GHz
 ```
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1769339137778-8843b54a-2ad7-45c4-8a1c-c33f1f010e97.png)
+![](/image/hmvmachines/Magifi-4.png)
 
 ```plain
 sudo /usr/sbin/airodump-ng wlan0mon --band a   # 5GHz
 ```
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1769339159378-cf8860ca-fc6f-406c-b191-50e8bbde16e0.png)
+![](/image/hmvmachines/Magifi-5.png)
 
 > **这里的监听不要关，后面每一步都需要用到这个，这个就像眼睛，用来辅助进行攻击的，添加ssh凭证多开几个终端进行下面的攻击！**
 >
@@ -1297,7 +1297,7 @@ BSSID              PWR  Beacons    #Data, #/s  CH   MB   ENC CIPHER  AUTH ESSID
 
 > 通过强制网络重连，迫使客户端与 AP 重新协商密钥，从而暴露握手包和证书信息。攻击者利用此过程实施中间人攻击，窃取敏感数据。 
 >
-> ![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1769339282189-5f2982e5-d45c-4009-ad4b-1a28efe7b0c0.png)
+> ![](/image/hmvmachines/Magifi-6.png)
 >
 > **重置网络状态**：断开连接后，客户端需重新协商加密密钥（如 PMK），此过程会重新生成握手包，增加攻击者捕获的概率。  
 >
@@ -1386,7 +1386,7 @@ stateOrProvinceName=Madrid
 
  过滤出 **SSL/TLS 握手类型为 11** 的数据包（即证书消息，包含证书内容）  
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1769340190383-40fa1e1e-8fa1-47a5-91d6-3ac3e30d65df.png)
+![](/image/hmvmachines/Magifi-7.png)
 
 然后就是伪造 wifi，grep出来的就是需要伪造部分：
 
@@ -1815,7 +1815,7 @@ Session completed.
 
  其中只有用户`tom.riddle`的密码可以破译出来，为`blackhogwarts`，尝试进行登录：  
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1769342674864-1322cbb4-8f7a-4385-98fe-97ee01e6f825.png)
+![](/image/hmvmachines/Magifi-8.png)
 
 ## 提权-root
 进入机器后，我会寻找启用 `SUID` 位的二进制文件：

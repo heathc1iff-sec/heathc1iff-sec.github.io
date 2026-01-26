@@ -442,13 +442,13 @@ Table: users
 
 成功登录网页但是什么也没有
 
-![](https://cdn.nlark.com/yuque/0/2025/png/40628873/1765698512259-7900a6e5-c863-4971-a8a0-c75b74c7007b.png)
+![](/image/hmvmachines/Clover-1.png)
 
 [MD5 - Cripta e decripta stringhe in md5 - MD5ONLINE](https://md5online.it)
 
 md5解密69a41c7507ad7031d9decf6fdb31810c
 
-得到<font style="color:#004030;">asta$$123</font>明文密码
+得到asta$$123明文密码
 
 # ssh-asta
 ```bash
@@ -2913,19 +2913,19 @@ sword@Clover:~$
 
 环境被我破坏掉了贴下wp的图片吧
 
-![](https://cdn.nlark.com/yuque/0/2025/png/40628873/1765704654081-0b410582-9b48-4906-b539-2cf7506c3d90.png)
+![](/image/hmvmachines/Clover-2.png)
 
 访问发现实则是lua程序
 
 查找lua提权
 
-![](https://cdn.nlark.com/yuque/0/2025/png/40628873/1765704615086-413b66dc-f73d-4418-97b0-4a7d49536f9a.png)
+![](/image/hmvmachines/Clover-3.png)
 
-![](https://cdn.nlark.com/yuque/0/2025/png/40628873/1765704631992-4c88a405-40f5-4b3a-b30c-1ef6d54d7645.png)
+![](/image/hmvmachines/Clover-4.png)
 
 运行命令后，我们获得了壳级访问权限。我们通过运行 id 命令确认我们现在已经成为 root 权限来验证。
 
-![](https://cdn.nlark.com/yuque/0/2025/png/40628873/1765704677772-490c8375-8c2d-4656-899c-59528a066b68.png)
+![](/image/hmvmachines/Clover-5.png)
 
 
 

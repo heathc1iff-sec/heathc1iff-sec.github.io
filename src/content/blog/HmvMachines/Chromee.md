@@ -10,7 +10,7 @@ tags:
   - Linux Machine
 ---
 
-![](https://cdn.nlark.com/yuque/0/2025/png/40628873/1765611556684-4d5c90c2-82e1-4728-9ab2-a91a4298b194.png)
+![](/image/hmvmachines/Chromee-1.png)
 
 #  信息收集
 ## ip定位
@@ -321,7 +321,7 @@ Way back machine:
 
 通过`POST`方法即可绕过
 
-![](https://cdn.nlark.com/yuque/0/2025/png/40628873/1765614396003-1b14e9b2-74be-4579-b9e3-fd193631bbe2.png)
+![](/image/hmvmachines/Chromee-2.png)
 
 ```bash
 Silence
@@ -697,7 +697,7 @@ Enter passphrase for key '...':
 cat.gif                                      100% 3411KB  46.5MB/s   00:00 
 ```
 
-![](https://cdn.nlark.com/yuque/0/2025/png/40628873/1765620001558-36d81ba6-f429-4a1e-9cdb-e8cf0e7fe89d.png)
+![](/image/hmvmachines/Chromee-3.png)
 
 可以发现是一只小猫照片
 
@@ -719,7 +719,7 @@ convert cat.gif 1.jpg
 
 将后面的6个6去掉扔进cyberchef中解密然后rot47解密
 
-![](https://cdn.nlark.com/yuque/0/2025/png/40628873/1765620352504-9cc64023-b02e-495d-987d-b9238b9d7354.png)
+![](/image/hmvmachines/Chromee-4.png)
 
 先加载 from decimal  模块
 
@@ -1152,15 +1152,15 @@ chromium
 
  点击 `configure`
 
-![](https://cdn.nlark.com/yuque/0/2025/png/40628873/1765625159792-cb68b06a-8cb6-40ad-b251-c706a3562b2b.png)
+![](/image/hmvmachines/Chromee-5.png)
 
 `Done` 之后会出现两个 `URL`
 
  点击第一个进行查看  
 
-![](https://cdn.nlark.com/yuque/0/2025/png/40628873/1765625190684-4db5235c-95a7-4a2a-8bef-549eeebccce1.png)
+![](/image/hmvmachines/Chromee-6.png)
 
-![](https://cdn.nlark.com/yuque/0/2025/png/40628873/1765625243325-1fb5ea0c-fbf7-4fb6-bb12-2a74715de451.png)
+![](/image/hmvmachines/Chromee-7.png)
 
 等一会就会发现向127.0.0.1/post.php发送一个key，
 

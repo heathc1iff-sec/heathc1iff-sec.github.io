@@ -10,7 +10,7 @@ tags:
   - Linux Machine
 ---
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768237962083-f643f260-5add-4184-b8a0-8a98e1decfc1.png)
+![](/image/hmvmachines/Influencer-1.png)
 
 # 信息收集
 ## IP定位
@@ -101,7 +101,7 @@ mget snapchat.jpg [anpqy?]?
 124263 bytes received in 00:00 (79.21 MiB/s)
 ```
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768240153702-83e7c470-04e3-4969-ab82-b6289c0721f3.png)
+![](/image/hmvmachines/Influencer-2.png)
 
 ```plain
 ┌──(root㉿kali)-[/home/kali/Desktop/hmv]
@@ -463,7 +463,7 @@ Trying luna / luna_1997 Time: 00:00:38 <=============                  > (2120 /
 
 `http://$IP/wordpress/wp-admin/`
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768279164829-3a41ac7c-b585-4793-ada5-9adab3b1ece1.png)
+![](/image/hmvmachines/Influencer-3.png)
 
 在Theme File Editor功能点处将index.php写入phpshell文件
 
@@ -722,7 +722,7 @@ User luna may run the following commands on influencer:
 
 尝试进行读写 juan 的 ssh私钥：
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768287730562-61df3237-1874-4bdd-9c38-0eede5ab4160.png)
+![](/image/hmvmachines/Influencer-4.png)
 
  先本地生成一对密钥对
 
