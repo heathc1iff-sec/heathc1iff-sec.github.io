@@ -16,7 +16,7 @@ tags:
 
 <font style="color:rgb(77, 77, 77);">根据题目给出的远程文件//10.10.14.6/somefile，把地址改为自己机器的地址，进行访问</font>
 
-![](https://cdn.nlark.com/yuque/0/2024/png/40628873/1709105529211-7ef8c416-9b6d-4427-9198-21f7a09076e2.png)
+![](/image/hackthebox/Responder-1.png)
 
 <font style="color:rgb(77, 77, 77);">得到一串hash值</font>
 
