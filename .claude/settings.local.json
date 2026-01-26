@@ -8,7 +8,9 @@
       "Bash(pnpm biome:check:*)",
       "Bash(pnpm biome check:*)",
       "Bash(git config:*)",
-      "Bash(xxd:*)"
+      "Bash(xxd:*)",
+      "Bash(curl:*)",
+      "Bash(powershell -Command \"\\(Invoke-WebRequest -Uri ''http://localhost:4321/blog/2'' -UseBasicParsing\\).Content\")"
     ]
   }
 }

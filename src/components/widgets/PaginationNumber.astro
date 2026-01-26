@@ -7,7 +7,8 @@ const {
   baseUrl,
   isOnly = false,
 } = Astro.props as PaginationNumberProps;
-const href = number === 1 ? baseUrl : `${baseUrl}/${number}`;
+// 使用 == 进行比较，因为 number 可能是字符串 "1" 或数字 1
+const href = number == 1 ? baseUrl : `${baseUrl}/${number}`;
 ---
 
 <a
