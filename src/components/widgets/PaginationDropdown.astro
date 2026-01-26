@@ -12,7 +12,7 @@ const { hiddenPages, current, baseUrl } =
       hiddenPages.map((page) => (
         <li class="w-full">
           <a
-            href={page == 1 ? baseUrl : `${baseUrl}/${page}`}
+            href={Number(page) === 1 ? baseUrl : `${baseUrl}/${page}`}
             class:list={["text-center py-1 px-3", page === current && "bg-primary text-primary-content"]}
           >
             {page}
