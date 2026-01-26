@@ -1,3 +1,15 @@
+---
+title: HMV-Codeshield
+description: This VM will help prepare you for something like OSCP.
+pubDate: 12 01 2026
+image: /mechine/Codeshield.jpg
+categories:
+  - Documentation
+tags:
+  - Hackmyvm
+  - Linux
+---
+
 ![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768198433349-eed52423-06bc-43fc-9364-2567aa378fb4.png)
 
 # 信息收集

@@ -1,3 +1,15 @@
+---
+title: HMV-Corrosion3
+description: Enumeration is key.
+pubDate: 11 01 2026
+image: /mechine/Corrosion3.jpg
+categories:
+  - Documentation
+tags:
+  - Hackmyvm
+  - Linux
+---
+
 ![](https://cdn.nlark.com/yuque/0/2025/png/40628873/1766817268204-27661b68-7309-4286-8b63-372167293e30.png)
 
 # 信息收集

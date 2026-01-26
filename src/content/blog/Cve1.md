@@ -1,3 +1,15 @@
+---
+title: HMV-Cve1
+description: Identifies vulnerable software and locates a vulnerability to compromise this host.
+pubDate: 12 01 2026
+image: /mechine/Cve1.jpg
+categories:
+  - Documentation
+tags:
+  - Hackmyvm
+  - Linux
+---
+
 ![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768192533831-9505f27f-bade-4460-84f3-b6d7f06ac490.png)
 
 # 信息收集

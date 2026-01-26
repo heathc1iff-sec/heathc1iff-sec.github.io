@@ -1,3 +1,15 @@
+---
+title: HMV-Aqua
+description: Go into the deep sea to gain access to Atlantida. 
+pubDate: 10 12 2025
+image: /mechine/Aqua.jpg
+categories:
+  - Documentation
+tags:
+  - Hackmyvm
+  - Linux
+---
+
 # 信息收集
 ## ip定位
 ```bash

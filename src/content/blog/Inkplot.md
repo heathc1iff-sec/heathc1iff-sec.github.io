@@ -9,6 +9,7 @@ tags:
   - Hackmyvm
   - Linux
 ---
+
 ```plain
 ┌──(root㉿kali)-[/home/kali]
 └─# arp-scan -l | grep "08:00:27" | awk '{print $1}'
