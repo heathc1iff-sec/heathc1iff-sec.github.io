@@ -1,7 +1,7 @@
 ---
 title: HMV-Deba
 description: Hack and fun.
-pubDate: 12 01 2026
+pubDate: 01 12 2026
 image: /mechine/Deba.jpg
 categories:
   - Documentation

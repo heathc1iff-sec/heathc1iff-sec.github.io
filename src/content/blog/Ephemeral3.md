@@ -1,7 +1,7 @@
 ---
 title: HMV-Ephemeral3
 description: Enumeration is key.
-pubDate: 14 01 2026
+pubDate: 01 14 2026
 image: /mechine/Ephemeral3.jpg
 categories:
   - Documentation

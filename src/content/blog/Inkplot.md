@@ -1,7 +1,7 @@
 ---
 title: HMV-Inkplot
 description: Enjoy.
-pubDate: 19 08 2025
+pubDate: 08 19 2025
 image: /mechine/Inkplot.jpg
 categories:
   - Documentation

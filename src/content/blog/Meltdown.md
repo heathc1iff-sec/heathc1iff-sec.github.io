@@ -1,7 +1,7 @@
 ---
 title: HMV-Meltdown
 description: ka ku yu u go u ro ni sa to bi ko n de mi ta ra so shi ta ra
-pubDate: 13 01 2026
+pubDate: 01 13 2026
 image: /mechine/Meltdown.jpg
 categories:
   - Documentation

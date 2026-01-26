@@ -1,7 +1,7 @@
 ---
 title: HMV-Aqua
 description: Go into the deep sea to gain access to Atlantida. 
-pubDate: 10 12 2025
+pubDate: 12 10 2025
 image: /mechine/Aqua.jpg
 categories:
   - Documentation

@@ -1,7 +1,7 @@
 ---
 title: HMV-Magifi
 description: MagiFi is a machine designed to test a variety of offensive security skills, including web, network, wifi and privilege escalation techniques, requiring knowledge of network analysis and authentication mechanisms offering a realistic and immersive experience within a controlled environment. Creators @x4v1l0k and @M4rdc0re.
-pubDate: 25 01 2026
+pubDate: 01 25 2026
 image: /mechine/Magifi.jpg
 categories:
   - Documentation

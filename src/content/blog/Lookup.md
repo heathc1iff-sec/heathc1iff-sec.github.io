@@ -1,7 +1,7 @@
 ---
 title: HMV-Lookup
 description: Enjoy it.
-pubDate: 17 01 2026
+pubDate: 01 17 2026
 image: /mechine/Lookup.jpg
 categories:
   - Documentation
