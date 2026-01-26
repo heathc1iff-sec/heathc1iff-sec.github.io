@@ -39,9 +39,9 @@ site:
           href: /blog/category/Documentation
           svg: "material-symbols:unknown-document-outline-rounded"
           target: _self
-        - id: examples
-          text: Examples
-          href: /blog/category/Examples
+        - id: experiences
+          text: Experiences
+          href: /blog/category/Experiences
           svg: "material-symbols:deployed-code-outline"
           target: _self
         # 子菜单项配置

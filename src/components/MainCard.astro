@@ -36,15 +36,24 @@ const accessibleHelpText = `${helpText}: ${title}`;
       // With image - show image with overlay title
       <div class="relative">
         <div class="aspect-video w-full overflow-hidden">
-          <Image
-            src={image}
-            alt={title}
-            width={1200}
-            height={630}
-            format="webp"
-            loading="eager"
-            class="w-full h-full object-cover"
-          />
+          {typeof image === "string" ? (
+            <img
+              src={image}
+              alt={title}
+              loading="eager"
+              class="w-full h-full object-cover"
+            />
+          ) : (
+            <Image
+              src={image}
+              alt={title}
+              width={1200}
+              height={630}
+              format="webp"
+              loading="eager"
+              class="w-full h-full object-cover"
+            />
+          )}
         </div>
 
         {/* Flex container for Title and Button */}

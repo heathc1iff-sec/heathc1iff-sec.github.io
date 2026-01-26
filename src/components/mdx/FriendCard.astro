@@ -1,4 +1,7 @@
 ---
+import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
+
 export interface FriendCardProps {
   name: string;
   avatar: string;
@@ -14,9 +17,6 @@ const {
   url,
   type = "friend",
 } = Astro.props as FriendCardProps;
-
-import { Image } from "astro:assets";
-import { Icon } from "astro-icon/components";
 
 // Define type-based styling
 const typeConfig = {
