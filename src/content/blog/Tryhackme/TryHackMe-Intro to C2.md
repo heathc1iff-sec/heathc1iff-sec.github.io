@@ -1,7 +1,7 @@
 ---
 title: TryHackMe-Intro to C2
 description: 'Red Teaming'
-pubDate: 2025-12-13
+pubDate: 2024-04-01
 image: /image/tryhackme.jpg
 categories:
   - Documentation
