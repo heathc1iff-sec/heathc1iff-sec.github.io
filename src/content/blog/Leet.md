@@ -1,6 +1,6 @@
 ---
 title: HMV-Leet
-description: Enjoy it.
+description: 'Enjoy it.'
 pubDate: 2026-01-15
 image: /mechine/Leet.jpg
 categories:

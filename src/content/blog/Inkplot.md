@@ -1,6 +1,6 @@
 ---
 title: HMV-Inkplot
-description: Enjoy.
+description: 'Enjoy.'
 pubDate: 2025-08-19
 image: /mechine/Inkplot.jpg
 categories:

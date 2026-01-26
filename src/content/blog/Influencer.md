@@ -1,6 +1,6 @@
 ---
 title: HMV-Influencer
-description: Have fun :)
+description: 'Have fun :)'s
 pubDate: 2026-01-13
 image: /mechine/Influencer.jpg
 categories:

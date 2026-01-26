@@ -1,6 +1,6 @@
 ---
 title: HMV-Lookup
-description: Enjoy it.
+description: 'Enjoy it.'
 pubDate: 2026-01-17
 image: /mechine/Lookup.jpg
 categories:
