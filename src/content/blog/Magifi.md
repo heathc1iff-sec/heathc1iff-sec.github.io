@@ -2,12 +2,12 @@
 title: HMV-Magifi
 description: 'MagiFi is a machine designed to test a variety of offensive security skills, including web, network, wifi and privilege escalation techniques, requiring knowledge of network analysis and authentication mechanisms offering a realistic and immersive experience within a controlled environment. Creators @x4v1l0k and @M4rdc0re.'
 pubDate: 2026-01-25
-image: /public/mechine/Magifi.png
+image: /machine/Magifi.png
 categories:
   - Documentation
 tags:
   - Hackmyvm
-  - Linux
+  - Linux Machine
 ---
 
 ![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1769264237449-d6167242-034b-4eb1-b7ac-bc2687564630.png)

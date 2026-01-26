@@ -2,12 +2,12 @@
 title: HMV-Crossbow
 description: 'Enjoy it :)'
 pubDate: 2026-01-12
-image: /public/mechine/Crossbow.png
+image: /machine/Crossbow.png
 categories:
   - Documentation
 tags:
   - Hackmyvm
-  - Linux
+  - Linux Machine
 ---
 ![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768144421033-d69d7ef2-bd27-49e0-9e90-280a2b98ce05.png)
 

@@ -2,12 +2,12 @@
 title: HMV-Drippingblues
 description: 'Tested on and exported from virtualbox.'
 pubDate: 2026-01-13
-image: /public/mechine/Drippingblues.png
+image: /machine/Drippingblues.png
 categories:
   - Documentation
 tags:
   - Hackmyvm
-  - Linux
+  - Linux Machine
 ---
 
 # 信息收集

@@ -2,12 +2,12 @@
 title: HMV-Alive
 description: 'Enjoy it.'
 pubDate: 2025-12-10 
-image: /public/mechine/Alive.png
+image: /machine/Alive.png
 categories:
   - Documentation
 tags:
   - Hackmyvm
-  - Linux
+  - Linux Machine
 ---
 
 # 信息收集

@@ -2,12 +2,12 @@
 title: HMV-Matrioshka
 description: 'This lab needed around 2 minutes for get up all the containers.'
 pubDate: 2026-01-24
-image: /public/mechine/Matrioshka.png
+image: /machine/Matrioshka.png
 categories:
   - Documentation
 tags:
   - Hackmyvm
-  - Linux
+  - Linux Machine
 ---
 
 ![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1769168212713-0e4e6130-698a-4d68-914c-653ae08b29de.png)

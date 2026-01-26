@@ -2,12 +2,12 @@
 title: HMV-Literal
 description: 'Try it with OSCP style. Thanks for play (:'
 pubDate: 2026-01-15
-image: /public/mechine/Literal.png
+image: /machine/Literal.png
 categories:
   - Documentation
 tags:
   - Hackmyvm
-  - Linux
+  - Linux Machine
 ---
 
 ![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768471396797-dd2964e0-d4aa-4883-bb76-6417b0cd0ffd.png)

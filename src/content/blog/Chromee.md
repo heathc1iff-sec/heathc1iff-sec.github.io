@@ -2,12 +2,12 @@
 title: HMV-Chromee
 description: 'Have fun. :D'
 pubDate: 2025-12-13
-image: /public/mechine/Chromee.png
+image: /machine/Chromee.png
 categories:
   - Documentation
 tags:
   - Hackmyvm
-  - Linux
+  - Linux Machine
 ---
 
 ![](https://cdn.nlark.com/yuque/0/2025/png/40628873/1765611556684-4d5c90c2-82e1-4728-9ab2-a91a4298b194.png)

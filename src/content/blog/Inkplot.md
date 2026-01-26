@@ -2,12 +2,12 @@
 title: HMV-Inkplot
 description: 'Enjoy.'
 pubDate: 2025-08-19
-image: /public/mechine/Inkplot.png
+image: /machine/Inkplot.png
 categories:
   - Documentation
 tags:
   - Hackmyvm
-  - Linux
+  - Linux Machine
 ---
 
 ```plain

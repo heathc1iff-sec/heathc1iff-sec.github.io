@@ -2,12 +2,12 @@
 title: HMV-Deba
 description: 'Hack and fun.'
 pubDate: 2026-01-12
-image: /public/mechine/Deba.png
+image: /machine/Deba.png
 categories:
   - Documentation
 tags:
   - Hackmyvm
-  - Linux
+  - Linux Machine
 ---
 
 ![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768216673386-bd88747c-5558-497c-bd03-4c5b7e6be620.png)

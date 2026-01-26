@@ -2,12 +2,12 @@
 title: HMV-Leet
 description: 'Enjoy it.'
 pubDate: 2026-01-15
-image: /public/mechine/Leet.png
+image: /machine/Leet.png
 categories:
   - Documentation
 tags:
   - Hackmyvm
-  - Linux
+  - Linux Machine
 ---
 
 ![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768392051169-1e662e4d-62be-4fbb-bd52-9b8257faa96f.png)

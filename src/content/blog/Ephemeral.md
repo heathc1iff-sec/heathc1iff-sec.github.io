@@ -2,12 +2,12 @@
 title: HMV-Ephemeral
 description: 'Enumeration is key.'
 pubDate: 2026-01-13
-image: /public/mechine/Ephemeral.png
+image: /machine/Ephemeral.png
 categories:
   - Documentation
 tags:
   - Hackmyvm
-  - Linux
+  - Linux Machine
 ---
 
 ![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1768288232424-f832e5f3-f774-4df3-bbbe-71ac13cb1269.png)

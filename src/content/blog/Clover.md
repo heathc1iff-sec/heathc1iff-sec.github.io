@@ -2,12 +2,12 @@
 title: HMV-Clover
 description: 'Enjoy it.'
 pubDate: 2025-12-14
-image: /public/mechine/Clover.png
+image: /machine/Clover.png
 categories:
   - Documentation
 tags:
   - Hackmyvm
-  - Linux
+  - Linux Machine
 ---
 
 # 信息收集
