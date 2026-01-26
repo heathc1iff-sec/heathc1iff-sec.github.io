@@ -34,6 +34,11 @@ site:
           href: /blog
           svg: "material-symbols:ink-pen-outline-rounded"
           target: _self
+        - id: tags
+          text: Tags
+          href: /blog/tags
+          svg: "lucide:tag"
+          target: _self
         - id: documentation
           text: Documentation
           href: /blog/category/Documentation
