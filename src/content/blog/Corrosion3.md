@@ -2,7 +2,7 @@
 title: HMV-Corrosion3
 description: 'Enumeration is key.'
 pubDate: 2026-01-11
-image: /mechine/Corrosion3.png
+image: /public/mechine/Corrosion3.png
 categories:
   - Documentation
 tags:

@@ -2,7 +2,7 @@
 title: HMV-Inkplot
 description: 'Enjoy.'
 pubDate: 2025-08-19
-image: /mechine/Inkplot.png
+image: /public/mechine/Inkplot.png
 categories:
   - Documentation
 tags:

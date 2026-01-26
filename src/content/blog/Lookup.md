@@ -2,7 +2,7 @@
 title: HMV-Lookup
 description: 'Enjoy it.'
 pubDate: 2026-01-17
-image: /mechine/Lookup.png
+image: /public/mechine/Lookup.png
 categories:
   - Documentation
 tags:

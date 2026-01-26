@@ -2,7 +2,7 @@
 title: HMV-Crossbow
 description: 'Enjoy it :)'
 pubDate: 2026-01-12
-image: /mechine/Crossbow.png
+image: /public/mechine/Crossbow.png
 categories:
   - Documentation
 tags:

@@ -2,7 +2,7 @@
 title: HMV-Chromee
 description: 'Have fun. :D'
 pubDate: 2025-12-13
-image: /mechine/Chromee.png
+image: /public/mechine/Chromee.png
 categories:
   - Documentation
 tags:

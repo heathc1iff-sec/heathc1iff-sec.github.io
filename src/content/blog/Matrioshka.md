@@ -2,7 +2,7 @@
 title: HMV-Matrioshka
 description: 'This lab needed around 2 minutes for get up all the containers.'
 pubDate: 2026-01-24
-image: /mechine/Matrioshka.png
+image: /public/mechine/Matrioshka.png
 categories:
   - Documentation
 tags:

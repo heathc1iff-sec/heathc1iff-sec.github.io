@@ -2,7 +2,7 @@
 title: HMV-Clover
 description: 'Enjoy it.'
 pubDate: 2025-12-14
-image: /mechine/Clover.png
+image: /public/mechine/Clover.png
 categories:
   - Documentation
 tags:
