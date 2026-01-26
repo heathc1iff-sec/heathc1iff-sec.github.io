@@ -4,7 +4,9 @@
       "WebFetch(domain:heathc1iff-sec.github.io)",
       "Bash(gh api:*)",
       "WebFetch(domain:github.com)",
-      "Bash(echo.)"
+      "Bash(echo.)",
+      "Bash(pnpm biome:check:*)",
+      "Bash(pnpm biome check:*)"
     ]
   }
 }
