@@ -1,7 +1,7 @@
 ---
 title: HMV-Crossbow
 description: Enjoy it :)
-pubDate: 01 12 2026
+pubDate: 2026-01-12
 image: /mechine/Crossbow.jpg
 categories:
   - Documentation

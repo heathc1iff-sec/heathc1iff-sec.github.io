@@ -1,7 +1,7 @@
 ---
 title: HMV-Leet
 description: Enjoy it.
-pubDate: 01 15 2026
+pubDate: 2026-01-15
 image: /mechine/Leet.jpg
 categories:
   - Documentation

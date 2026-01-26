@@ -1,7 +1,7 @@
 ---
 title: HMV-Influencer
 description: Have fun :)
-pubDate: 01 13 2026
+pubDate: 2026-01-13
 image: /mechine/Influencer.jpg
 categories:
   - Documentation

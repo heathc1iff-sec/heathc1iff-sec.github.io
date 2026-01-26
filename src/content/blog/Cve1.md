@@ -1,7 +1,7 @@
 ---
 title: HMV-Cve1
 description: Identifies vulnerable software and locates a vulnerability to compromise this host.
-pubDate: 01 12 2026
+pubDate: 2026-01-12
 image: /mechine/Cve1.jpg
 categories:
   - Documentation

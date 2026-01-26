@@ -1,7 +1,7 @@
 ---
 title: HMV-Literal
 description: Try it with OSCP style. Thanks for play (:
-pubDate: 01 15 2026
+pubDate: 2026-01-15
 image: /mechine/Literal.jpg
 categories:
   - Documentation
