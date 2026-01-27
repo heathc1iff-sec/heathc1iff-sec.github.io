@@ -10,7 +10,7 @@ tags:
   - Windows Machine
 ---
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1769487064375-33d01593-f8ab-4d97-891d-5719f67ed625.png)
+![](/image/hmvmachines/TriplAdvisor-1.png)
 
 # 信息收集
 ## IP定位
