@@ -8,6 +8,7 @@ categories:
 tags:
   - Hackmyvm
   - Linux Machine
+  - Wireless Network
 ---
 
 ![](/image/hmvmachines/Magifi-1.png)

@@ -85,7 +85,7 @@ SYSTEM 帐户比管理员用户具有更多的权限（是/否）
 aye
 
 # Harvesting Passwords from Usual Spots
-# The easiest way to gain access to another user is to gather credentials from a compromised machine. Such credentials could exist for many reasons, including a careless user leaving them around in plaintext files; or even stored by some software like browsers or email clients.  
+The easiest way to gain access to another user is to gather credentials from a compromised machine. Such credentials could exist for many reasons, including a careless user leaving them around in plaintext files; or even stored by some software like browsers or email clients.  
 获取其他用户访问权限的最简单方法是从受感染的计算机收集凭据。此类凭据的存在可能有很多原因，包括粗心的用户将它们留在明文文件中;甚至由浏览器或电子邮件客户端等某些软件存储。
 This task will present some known places to look for passwords on a Windows system.  
 此任务将提供一些在 Windows 系统上查找密码的已知位置。
@@ -100,8 +100,8 @@ In case you prefer connecting to the target machine via <u>RDP</u>, you can use 
 
 **Password:** **Password321** 密码： **Password321**
 
-## Unattended Windows Installations  
-无人参与的 Windows 安装
+## Unattended Windows Installations(无人参与的 Windows 安装)
+
 When installing Windows on a large number of hosts, administrators may use Windows Deployment Services, which allows for a single operating system image to be deployed to several hosts through the network. These kinds of installations are referred to as unattended installations as they don't require user interaction. Such installations require the use of an administrator account to perform the initial setup, which might end up being stored in the machine in the following locations:  
 在大量主机上安装 Windows 时，管理员可以使用 Windows 部署服务，它允许通过网络将单个操作系统映像部署到多个主机。这些类型的安装称为无人参与安装，因为它们不需要用户交互。此类安装需要使用管理员帐户来执行初始设置，该设置最终可能会存储在计算机的以下位置：
 
