@@ -1,6 +1,6 @@
 ---
-title: HTB-Vaccine
-description: 'Hack the box'
+title: HTB-Dante
+description: 'Pro Labs-Dante'
 pubDate: 2026-02-01 
 image: /Pro-Labs/dante.png
 categories:
