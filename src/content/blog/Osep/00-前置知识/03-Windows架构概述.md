@@ -135,7 +135,7 @@ HANDLE hThread = CreateThread(
 | 崩溃影响 | 只影响自己 | 可能影响整个进程 |
 
 
-#### IPC 一般指 Inter-Process Communication（进程间通信）。  
+#### IPC 一般指 Inter-Process Communication（进程间通信） 
 ##### 常见 IPC 方式（偏系统 / 开发方向）
 在操作系统、C/C++、Linux、Windows 里最常见：
 
