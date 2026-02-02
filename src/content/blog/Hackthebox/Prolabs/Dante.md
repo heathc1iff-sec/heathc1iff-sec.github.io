@@ -9,6 +9,7 @@ tags:
   - Hackthebox
   - Pro-Labs
 ---
+![](/Pro-Labs/dante.png)
 # Flag
 ```c
 root@DANTE-WEB-NIX01:/home/balthazar# cat /var/www/html/robots.txt
