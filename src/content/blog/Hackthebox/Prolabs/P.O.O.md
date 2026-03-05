@@ -2,9 +2,10 @@
 title: HTB-P.O.O
 description: 'Pro Labs-P.O.O'
 pubDate: 2026-02-04
-image: /Pro-Labs/p.o.o.png
+image: /Pro-Labs/poo.png
 categories:
   - Documentation
+  - Hackthebox Prolabs
 tags:
   - Hackthebox
   - Pro-Labs

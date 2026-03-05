@@ -1,10 +1,11 @@
 ---
 title: HTB-Dante
 description: 'Pro Labs-Dante'
-pubDate: 2026-02-01 
+pubDate: 2026-02-01
 image: /Pro-Labs/dante.png
 categories:
   - Documentation
+  - Hackthebox Prolabs
 tags:
   - Hackthebox
   - Pro-Labs
