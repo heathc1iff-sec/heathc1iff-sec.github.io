@@ -10,7 +10,7 @@ tags:
   - Pro-Labs
 ---
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1769956794204-57cedb5d-d30e-4ea5-bdb3-ada583458993.png)
+![](/image/prolabs/P.O.O-1.png)
 
 # Flag
 ```c
@@ -77,7 +77,7 @@ Service detection performed. Please report any incorrect results at https://nmap
 Nmap done: 1 IP address (1 host up) scanned in 62.15 seconds
 ```
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1769957246987-d06910e5-7f23-42de-8474-2a36eb7ccfed.png)
+![](/image/prolabs/P.O.O-2.png)
 
 ## 子域名扫描
 ### gobuster
@@ -89,7 +89,7 @@ gobuster dir -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -u 
 
 - /admin (401 需要认证)
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1769961268222-2ee8f7e6-3889-4b55-b761-4f4fc44dad79.png)
+![](/image/prolabs/P.O.O-3.png)
 
 - /dev
 
@@ -171,11 +171,11 @@ gobuster dir -w /usr/share/wordlists/seclists/Discovery/Web-Content/raft-large-w
 
 /dev/304c0c90fbc6520610abbf378e2339d1/db
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1770005298780-bc933618-f9ee-4d55-b0fd-a3811276b5fa.png)
+![](/image/prolabs/P.O.O-4.png)
 
 /dev/dca66d38fd916317687e1390a420c3fc/db
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1770005329802-adc2f196-4b76-4565-927b-f5bcb3292a79.png)
+![](/image/prolabs/P.O.O-5.png)
 
 ```c
 /dev/304c0c90fbc6520610abbf378e2339d1/db
@@ -1261,7 +1261,7 @@ Express Edition will continue to be enforced.
 ## Getflag
 我们成功获得Administrator/EverybodyWantsToWorkAtP.O.O. 凭据
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1770052190556-87b02b38-117b-42f2-8a94-29cbfab24f70.png)
+![](/image/prolabs/P.O.O-6.png)
 
 ```plain
 "I can't go back to yesterday, because i was a different person then..."
@@ -1714,7 +1714,7 @@ SID …-500
 👉 **本地管理员 ≠ 域管理员**  
 👉 对 DC 来说，你只是“一台普通域成员机上的本地账户”
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1770125782297-9ff305d4-bff6-471e-a0c8-8232c5e82a9e.png)
+![](/image/prolabs/P.O.O-7.png)
 
 ```c
 COMPATIBILITY.INTRANET.POO
@@ -3512,7 +3512,7 @@ Access is denied.
 ```
 
 ##  GenericAll  
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1770136476790-46103417-d326-42ee-adb0-7b477e251270.png)
+![](/image/prolabs/P.O.O-8.png)
 
 > 可以看到 P00_ADM@INTRANET.POO 是 P00 HELP DESK@INTRANET.POO 的成员，而 P00 HELP DESK@INTRANET.POO 又拥有 GenericAll 对 DOMAIN ADMINS@INTRANET.POO 的访问权限：
 >

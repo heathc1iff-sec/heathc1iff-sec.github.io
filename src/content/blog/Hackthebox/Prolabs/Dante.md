@@ -3763,7 +3763,7 @@ Port open 49671
 
 在端口 80 上，我们发现了一个 CMS“ Online Marriage Registration System  ”，该系统存在经过身份验证的远程代码执行漏洞（ [https://www.exploit-db.com/exploits/49557](https://www.exploit-db.com/exploits/49557) ）
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1769858438257-669843a9-f0be-487f-a401-af5dbf5ef187.png)
+![](/image/prolabs/Dante-1.png)
 
 可以注册，注册后利用exp
 
