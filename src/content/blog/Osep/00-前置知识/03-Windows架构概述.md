@@ -1805,7 +1805,7 @@ LSTATUS RegSetValueExA(
 ### 选择题
 1. Windows 中哪个权限级别最高？
     - A) Ring 3
-    - <font style="color:#DF2A3F;">B) Ring 0</font>
+    - B) Ring 0
     - C) Medium Integrity
     - D) High Integrity
 2. 执行 shellcode 需要的内存保护属性是？
@@ -1825,7 +1825,7 @@ LSTATUS RegSetValueExA(
     - D) HeapAlloc
 5. SYSTEM 账户的 SID 是？
     - A) S-1-5-32-544
-    - <font style="color:#DF2A3F;">B) S-1-5-18</font>
+    - B) S-1-5-18
     - C) S-1-5-21-xxx-500
     - D) S-1-5-32-545
 

