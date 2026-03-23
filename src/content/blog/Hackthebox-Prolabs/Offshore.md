@@ -56,6 +56,30 @@ OFFSHORE{Pr0t3ct_Th05e_5ecr3ts}
 OFFSHORE{W@tCH_TH05e_Gr0up$}
 ```
 
+# Introduction
+> Offshore is a real-world enterprise environment that features a wide range of modern Active Directory flaws and misconfigurations. Offshore Corp is mandated to have quarterly penetration tests per financial regulatory body compliance requirements, and are focused on patching. The company has completed several acquisitions, with the acquired entities being "plugged in" by means of domain trusts.  
+离岸是一个现实世界的企业环境，存在各种现代的 Active Directory 缺陷和配置错误。Offshore Corp 根据金融监管机构的合规要求，必须每季度进行渗透测试，并专注于补丁。公司已完成多项收购，被收购实体通过域名信托“连接”。
+>
+> If you are able to breach the perimeter and gain a foothold, you are tasked to explore the corporate environment, pivot across trust boundaries, and ultimately attempt to compromise all Offshore Corp entities.  
+如果你能够突破边界并立足，你的任务是探索企业环境，跨越信任界限，最终尝试破坏所有离岸公司实体。
+>
+> Offshore will test your understanding of Active Directory enumeration, exploitation, and post-exploitation as well as lateral movement, pivoting, and modern web application attacks. Some flags are required to advance through the lab, while others are side-quests that reinforce enumeration and post-exploitation skills. Players can submit flags to earn their place in the Offshore Hall of Fame, and collect badges along the way at certain checkpoints.  
+Offshore 将考验你对 Active Directory 枚举、利用和后利用，以及横向移动、枢轴和现代网络应用攻击的理解。有些旗帜是通过实验室推进的必需条件，而另一些则是支线任务，用来强化枚举和开发后技能。玩家可以提交旗帜以赢得离岸名人堂的席位，并在特定检查点收集徽章。
+>
+> This Red Team Operator Level II lab will expose players to:  
+这个红队干员二级实验室将让玩家接触到：
+>
+> + Enumeration  枚举
+> + Evading endpoint protections  
+规避端点保护
+> + Exploitation of a wide range of real-world Active Directory flaws  
+利用各种现实世界的 Active Directory 漏洞
+> + Lateral movement and crossing trust boundaries  
+横向移动与跨越信托边界
+> + Privilege escalation  权限升级
+> + Web application attacks  网络应用攻击
+>
+
 # 环境描述
 ## 网络结构
 Offshore是HTB最大的ProLab之一，涉及**5个域**和多个网段：

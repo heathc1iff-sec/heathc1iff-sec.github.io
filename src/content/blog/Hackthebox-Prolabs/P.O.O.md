@@ -15,16 +15,29 @@ tags:
 
 # Flag
 ```c
-Flag : POO{fcfb0767f5bd3cbc22f40ff5011ad555}
-
-b'POO{88d829eb39f2d11697e689d779810d42}'  
-
-Flag : POO{4882bd2ccfd4b5318978540d9843729f} 
-
-*Evil-WinRM* PS C:\Users\Administrator\Desktop> type flag.txt
+POO{fcfb0767f5bd3cbc22f40ff5011ad555}
+POO{88d829eb39f2d11697e689d779810d42}
+POO{4882bd2ccfd4b5318978540d9843729f} 
 POO{ff87c4fe10e2ef096f9a96a01c646f8f}
 POO{1196ef8bc523f084ad1732a38a0851d6}
 ```
+
+# Introduction
+> Professional Offensive Operations is a rising name in the cyber security world.  
+专业进攻行动在网络安全领域是一个新兴的名字。
+>
+> Lately they've been working into migrating core services and components to a state of the art cluster which offers cutting edge software and hardware.  
+最近他们正致力于将核心服务和组件迁移到一个提供尖端软硬件的先进集群。
+>
+> P.O.O. is designed to put your skills in enumeration, lateral movement, and privilege escalation to the test within a small Active Directory environment that is configured with the latest operating systems and technologies.  
+P.O.O. 旨在将您在枚举、横向移动和权限提升方面的技能，应用于一个配备最新操作系统和技术的小型 Active Directory 环境中。
+>
+> The goal is to compromise the perimeter host, escalate privileges and ultimately compromise the domain while collecting several flags along the way.  
+目标是攻破边界主机，升级权限，最终攻破域名，同时收集多个旗帜。
+>
+> Entry Point: `10.13.38.11`  
+入口地址：`10.13.38.11`
+>
 
 # 入口信息收集
 ## 前置IP

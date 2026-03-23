@@ -119,6 +119,29 @@ DANTE{Alw4ys_check_th053_group5}
 DANTE{S0_Much_0vafl0z!}
 ```
 
+# Introduction
+> Dante is a modern, yet beginner-friendly pro lab that provides the opportunity to learn common red team methodologies, and gain familiarity with tools included in the Parrot OS Linux distribution. Dante LLC have enlisted your services to audit their network. The company has not undergone a comprehensive penetration test in the past, and want to reduce their technical debt. They are concerned that any actual breach could lead to a loss of earnings and reputation damage.  
+Dante 是一个现代化但适合初学者的专业实验室，提供学习常见红队方法论的机会，并熟悉 Parrot OS Linux 发行版中包含的工具。Dante LLC 已聘请您的服务来审计他们的网络。该公司过去未进行全面的渗透测试，希望减少技术债务。他们担心任何实际的泄露都可能导致收入损失和声誉受损。
+>
+> Upon breaching the perimeter, you are required to explore the network, moving laterally and vertically, until you gain administrative control over all hosts and reach domain admin. You will level up your skills in information gathering and situational awareness, be able to exploit Windows and Linux buffer overflows, gain familiarity with the Metasploit Framework, and much else!  
+突破边界后，你需要横向和垂直探索网络，直到获得所有主机的管理权限并达到域管理员权限。你将提升信息收集和态势感知技能，能够利用 Windows 和 Linux 缓冲区溢出，熟悉 Metasploit 框架，以及更多其他内容！
+>
+> There are many flags to be captured along the way, some on the main attack path and others in side-quests that you must go looking for. Submitting flags will propel you through the Hall of Fame, rewarding you with badges in the process.  
+沿途有许多旗帜可以被夺取，有些位于主攻路线上，有些则在支线任务中，你必须去寻找。提交旗帜将推动你进入名人堂，并在此过程中获得徽章作为奖励。
+>
+> This Red Team Operator Level I lab will expose players to:  
+这个红队一级实验室将让玩家接触到：
+>
+> + Enumeration  枚举
+> + Exploit Development  漏洞开发
+> + Lateral Movement  横向移动
+> + Privilege Escalation  特权升级
+> + Web Application Attacks  网络应用攻击
+>
+> Your entry point is in 10.10.110.0/24. The firewall at 10.10.110.2 is out of scope  
+你的入口点在 10.10.110.0/24。10.10.110.2 的防火墙不在权限范围内
+>
+
 # 入口信息收集
 ## IP信息
 攻击机IP：10.10.16.80
