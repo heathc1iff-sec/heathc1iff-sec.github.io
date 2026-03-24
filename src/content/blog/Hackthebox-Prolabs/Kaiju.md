@@ -2453,7 +2453,7 @@ Certificate Templates                   : [!] Could not find any certificate tem
 >
 
 ### 代理转发
-> # 将 Kali 的 8080 转发到 BERSRV105 的 80 端口
+> 将 Kali 的 8080 转发到 BERSRV105 的 80 端口
 >
 
 ```bash
