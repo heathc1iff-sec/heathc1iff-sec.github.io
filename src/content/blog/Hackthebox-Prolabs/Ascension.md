@@ -1,7 +1,7 @@
 ---
 title: HTB-Ascension
 description: 'Pro Labs-Ascension'
-pubDate: 2026-03-24
+pubDate: 2026-03-26
 image: /Pro-Labs/Ascension.png
 categories:
   - Documentation
