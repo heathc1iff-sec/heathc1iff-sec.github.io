@@ -773,7 +773,7 @@ Completed after 82.50 seconds
 ### <font style="color:rgb(51, 51, 51);">LDAP 匿名枚举(失败)</font>
 > <font style="color:rgb(51, 51, 51);">LDAP 匿名查询被禁用</font>
 >
-> `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Operations error - 需要认证</font>`<font style="color:rgb(51, 51, 51);"> (00002020: Operation unavailable without authentication)</font>
+> `Operations error - 需要认证`<font style="color:rgb(51, 51, 51);"> (00002020: Operation unavailable without authentication)</font>
 >
 
 ```plain
@@ -796,7 +796,7 @@ text: 00002020: Operation unavailable without authentication
 ```
 
 ### SMB匿名登录(失败)
-> <font style="color:rgb(51, 51, 51);">匿名登录成功，可列出共享，但连接任何共享均返回 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">NT_STATUS_ACCESS_DENIED</font>`
+> <font style="color:rgb(51, 51, 51);">匿名登录成功，可列出共享，但连接任何共享均返回 </font>`NT_STATUS_ACCESS_DENIED`
 >
 > <font style="color:rgb(51, 51, 51);">匿名访问被拒绝</font>
 >
@@ -841,7 +841,7 @@ Version: v1.0.3 (9dad6e1) - 03/22/26 - Ronnie Flathers @ropnop
 ```
 
 ### <font style="color:rgb(51, 51, 51);">AS-REP Roasting(失败)</font>
-> <font style="color:rgb(51, 51, 51);">所有常见用户名均返回 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">KDC_ERR_C_PRINCIPAL_UNKNOWN</font>`<font style="color:rgb(51, 51, 51);">，无法获取有效用户名</font>
+> <font style="color:rgb(51, 51, 51);">所有常见用户名均返回 </font>`KDC_ERR_C_PRINCIPAL_UNKNOWN`<font style="color:rgb(51, 51, 51);">，无法获取有效用户名</font>
 >
 > 尝试juan abbie cartor亦无收货
 >
