@@ -1,5 +1,5 @@
 ---
-title: PolorasCTF-BabyDC(Documents)
+title: PolarisCTF-BabyDC(Documents)
 description: '个人出题-作者WriteUp'
 pubDate: 2026-03-30
 image: /ctf/Castlevania.png
@@ -1750,8 +1750,6 @@ $Recycle.Bin\S-1-5-21-...-500\$RIZ9PVX.txt
 离线读这个文件，能恢复出：
 
 FLAG{XMCVE_Castlevania_Bloodlines_DA_Pwned}
-
-再次强调，这更像是镜像内的本地证明文本，不一定等于比赛平台最后发放的正式 flag。
 
 #### Exploit
 完整利用脚本放在：
