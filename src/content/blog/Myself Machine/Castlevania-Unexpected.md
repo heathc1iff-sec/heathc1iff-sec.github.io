@@ -1,5 +1,5 @@
 ---
-title: PolorasCTF-BabyDC-Unexpected
+title: PolorasCTF-BabyDC(Unexpected)
 description: '个人出题-选手WriteUp'
 pubDate: 2026-03-30
 image: /ctf/bloodhound.jpg

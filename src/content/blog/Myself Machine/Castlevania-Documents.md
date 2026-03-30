@@ -1,5 +1,5 @@
 ---
-title: PolorasCTF-BabyDC-Documents
+title: PolorasCTF-BabyDC(Documents)
 description: '个人出题-作者WriteUp'
 pubDate: 2026-03-30
 image: /ctf/Castlevania.png
@@ -84,7 +84,7 @@ tags:
 > + 域名: `XMCVE.local`
 > + 主机名: `CASTLEVANIA`
 > + 操作系统: Windows Server 2019 (域控制器)
-> + 难度: 中高
+> + 难度: 适中
 > + Flag 位置: `C:\Users\Administrator\Desktop\flag.txt`
 >
 
