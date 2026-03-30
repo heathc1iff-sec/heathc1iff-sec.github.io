@@ -42,7 +42,7 @@ tags:
 > Common Active Directory Certificate Services attacks  
 **常见的 Active Directory 证书服务攻击**
 >
-> **<font style="color:rgb(20, 29, 34);background-color:rgb(245, 250, 255);">入口IP: </font>****<u><font style="color:rgb(46, 119, 229);background-color:rgb(245, 250, 255);">10.13.38.41</font></u>**
+> **入口IP: ****<u>10.13.38.41</u>**
 >
 
 # StartPoint
@@ -2520,7 +2520,7 @@ background-color:#555555;}
 ```
 
 ### 查找DC IP
-> **域控制器 (DC)**<font style="color:rgb(6, 10, 38);"> 和 </font>**子证书颁发机构 (Sub-CA)**<font style="color:rgb(6, 10, 38);"> 是同一台机器 (</font>`<font style="color:rgb(6, 10, 38);">BERSRV105</font>`<font style="color:rgb(6, 10, 38);">)，因此无法直接将 DC 的身份验证中继回它自己，必须将攻击流量中继到另一台机器上的 </font>**根证书颁发机构 (Root CA, **`**BERSRV100**`**)**
+> **域控制器 (DC)** 和 **子证书颁发机构 (Sub-CA)** 是同一台机器 (`BERSRV105`)，因此无法直接将 DC 的身份验证中继回它自己，必须将攻击流量中继到另一台机器上的 **根证书颁发机构 (Root CA, **`**BERSRV100**`**)**
 >
 
 ```bash

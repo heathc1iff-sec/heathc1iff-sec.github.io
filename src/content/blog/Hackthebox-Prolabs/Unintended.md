@@ -770,10 +770,10 @@ Domain logoff information:
 Completed after 82.50 seconds
 ```
 
-### <font style="color:rgb(51, 51, 51);">LDAP 匿名枚举(失败)</font>
-> <font style="color:rgb(51, 51, 51);">LDAP 匿名查询被禁用</font>
+### LDAP 匿名枚举(失败)
+> LDAP 匿名查询被禁用
 >
-> `Operations error - 需要认证`<font style="color:rgb(51, 51, 51);"> (00002020: Operation unavailable without authentication)</font>
+> `Operations error - 需要认证` (00002020: Operation unavailable without authentication)
 >
 
 ```plain
@@ -796,9 +796,9 @@ text: 00002020: Operation unavailable without authentication
 ```
 
 ### SMB匿名登录(失败)
-> <font style="color:rgb(51, 51, 51);">匿名登录成功，可列出共享，但连接任何共享均返回 </font>`NT_STATUS_ACCESS_DENIED`
+> 匿名登录成功，可列出共享，但连接任何共享均返回 `NT_STATUS_ACCESS_DENIED`
 >
-> <font style="color:rgb(51, 51, 51);">匿名访问被拒绝</font>
+> 匿名访问被拒绝
 >
 
 ```plain
@@ -819,7 +819,7 @@ Unable to connect with SMB1 -- no workgroup available
 ```
 
 ### kerbrute 枚举用户(失败)
-> 常见用户名中没有跑出有效用户，<font style="color:rgb(51, 51, 51);">需要先找到真实用户名</font>
+> 常见用户名中没有跑出有效用户，需要先找到真实用户名
 >
 
 ```plain
@@ -840,8 +840,8 @@ Version: v1.0.3 (9dad6e1) - 03/22/26 - Ronnie Flathers @ropnop
 2026/03/22 21:12:19 >  Done! Tested 1000 usernames (0 valid) in 60.598 seconds
 ```
 
-### <font style="color:rgb(51, 51, 51);">AS-REP Roasting(失败)</font>
-> <font style="color:rgb(51, 51, 51);">所有常见用户名均返回 </font>`KDC_ERR_C_PRINCIPAL_UNKNOWN`<font style="color:rgb(51, 51, 51);">，无法获取有效用户名</font>
+### AS-REP Roasting(失败)
+> 所有常见用户名均返回 `KDC_ERR_C_PRINCIPAL_UNKNOWN`，无法获取有效用户名
 >
 > 尝试juan abbie cartor亦无收货
 >
@@ -2078,7 +2078,7 @@ mattermost=#
 ```
 
 ### 信息收集
-#### <font style="color:rgb(106, 153, 85);background-color:rgba(255, 255, 255, 0.05);">数据库表</font>
+#### 数据库表
 ```plain
                         List of tables
  架构模式 |               名称               |  类型  | 拥有者 
@@ -2266,7 +2266,7 @@ Session completed.
 
 ![](/image/hackthebox-prolabs/Unintended-13.png)
 
-# <font style="color:rgb(88, 90, 90);">10.13.38.58</font>
+# 10.13.38.58
 ## netexec
 ```plain
 ┌──(web)─(root㉿kali)-[/home/kali/Desktop/htb/Unintended]
@@ -2311,7 +2311,7 @@ uid=320201104(abbie@unintended.vl) gid=320200513(domain users@unintended.vl) gro
 
 ## Docker 权限提升
 ### docker镜像
-> <font style="color:rgb(106, 153, 85);background-color:rgba(255, 255, 255, 0.05);">查看现有镜像</font>
+> 查看现有镜像
 >
 
 ```plain
@@ -2321,7 +2321,7 @@ python       3.11.2-slim   4d2191666712   3 years ago   128MB
 ```
 
 ### 执行特权容器
-> <font style="color:rgb(106, 153, 85);background-color:rgba(255, 255, 255, 0.05);"> 运行容器，挂载宿主机根目录 / 到容器内的 /mnt</font>
+>  运行容器，挂载宿主机根目录 / 到容器内的 /mnt
 >
 
 ```plain
