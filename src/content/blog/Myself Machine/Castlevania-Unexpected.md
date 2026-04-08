@@ -862,7 +862,7 @@ wmiexec连接才是administrator
 
 ![](/image/myself%20machine/Castlevania-Unexpected-18.jpeg)
 
-# 相逢何必曾相识（Zerologon）     
+# Skywalker_Han（Zerologon）     
 ## kerbrute
 ```plain
 $ kerbrute userenum --dc $ip -d XMCVE.local /home/hank/tools/dic/us
@@ -2314,7 +2314,7 @@ curl -I 192.168.56.101
 
 ![](/image/myself%20machine/Castlevania-Unexpected-37.png)
 
-# 公主姐姐**（域用户-弱口令）**
+# lpppp**（域用户-弱口令）**
 ## 题目信息
 题目名称：BabyDC
 

