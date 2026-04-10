@@ -9,6 +9,7 @@ categories:
 tags:
   - Hackthebox
   - Pro-Labs
+  - Windows Machine
 ---
 
 ![](/image/hackthebox-prolabs/Zephyr-1.png)
