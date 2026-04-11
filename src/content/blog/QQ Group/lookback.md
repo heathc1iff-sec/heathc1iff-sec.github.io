@@ -1,7 +1,7 @@
 ---
 title: MazeSec-lookback
 description: 'QQ Group Virtual Machine'
-pubDate: 2026-01-25
+pubDate: 2026-04-10
 image: /image/fengmian/QQ.png
 categories:
   - Documentation
@@ -23,6 +23,8 @@ tags:
 > 难度：hard 
 >
 > 链接：<u>https://mega.nz/file/GxgggYIR#T4gVR6wA9A3zy7r9qzo0gzxAzgIHI-_yURnsng-4tNw</u> 
+>
+> 链接：<u>https://pan.baidu.com/s/1fpP1MyMAyyxe1hLrBG_LGg?pwd=7qgb</u> 
 >
 > 初始凭证：hank\HrUhoX2r6c7Jgxg2qiTY
 >
