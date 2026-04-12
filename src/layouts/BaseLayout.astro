@@ -206,6 +206,9 @@ const isBlogRoute =
 
         // Starfield generator
         const setupStarfield = () => {
+          const perfMode = document.documentElement.getAttribute("data-performance-mode");
+          if (perfMode === "lite") return;
+
           const field = document.querySelector("[data-starfield]") as HTMLElement;
           if (!field || field.dataset.starReady === "1") return;
           field.dataset.starReady = "1";
@@ -221,11 +224,11 @@ const isBlogRoute =
                 : 28
               : isBlogPost
                 ? window.innerWidth < 768
-                  ? 32
-                  : 46
+                  ? 24
+                  : 34
                 : window.innerWidth < 768
-                  ? 52
-                  : 88;
+                  ? 40
+                  : 62;
 
           const fragment = document.createDocumentFragment();
           for (let i = 0; i < count; i += 1) {

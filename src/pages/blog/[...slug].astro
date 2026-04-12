@@ -1361,6 +1361,50 @@ const url = new URL(`/blog/${encodedSlugPath}`, Astro.url.origin);
           });
         };
 
+        const applyStyleClass = (block, index) => {
+          const className = STYLE_CLASSES[index % STYLE_CLASSES.length];
+          block.classList.add(className);
+          block.setAttribute("data-preview-code-style", `${(index % STYLE_CLASSES.length) + 1}`);
+        };
+
+        const applyStylesProgressively = (blocks, onComplete) => {
+          if (!blocks.length) {
+            onComplete?.();
+            return;
+          }
+
+          let cursor = 0;
+          const immediateCount = Math.min(18, blocks.length);
+
+          for (let i = 0; i < immediateCount; i += 1) {
+            applyStyleClass(blocks[cursor], cursor);
+            cursor += 1;
+          }
+
+          const pump = () => {
+            const batchSize = 28;
+            let applied = 0;
+            while (cursor < blocks.length && applied < batchSize) {
+              applyStyleClass(blocks[cursor], cursor);
+              cursor += 1;
+              applied += 1;
+            }
+
+            if (cursor < blocks.length) {
+              window.requestAnimationFrame(pump);
+              return;
+            }
+
+            onComplete?.();
+          };
+
+          if (cursor < blocks.length) {
+            window.requestAnimationFrame(pump);
+          } else {
+            onComplete?.();
+          }
+        };
+
         if (isPerfLite) {
           const applyLitePreviewStyles = ({ force = false } = {}) => {
             const scopeLite =
@@ -1388,13 +1432,9 @@ const url = new URL(`/blog/${encodedSlugPath}`, Astro.url.origin);
 
             if (!blocks.length) return false;
 
-            blocks.forEach((block, index) => {
-              const className = STYLE_CLASSES[index % STYLE_CLASSES.length];
-              block.classList.add(className);
-              block.setAttribute("data-preview-code-style", `${(index % STYLE_CLASSES.length) + 1}`);
+            applyStylesProgressively(blocks, () => {
+              scopeLite.dataset.previewStyled = "true";
             });
-
-            scopeLite.dataset.previewStyled = "true";
             return true;
           };
 
@@ -1403,8 +1443,10 @@ const url = new URL(`/blog/${encodedSlugPath}`, Astro.url.origin);
               void applyLitePreviewStyles({ force });
             };
 
-            if ("requestIdleCallback" in window) {
-              window.requestIdleCallback(runner, { timeout: force ? 700 : 1200 });
+            if (force) {
+              runner();
+            } else if ("requestAnimationFrame" in window) {
+              window.requestAnimationFrame(runner);
             } else {
               window.setTimeout(runner, 0);
             }
@@ -1465,13 +1507,9 @@ const url = new URL(`/blog/${encodedSlugPath}`, Astro.url.origin);
           const blocks = collectCodeBlocks(scope);
           if (!blocks.length) return false;
 
-          blocks.forEach((block, index) => {
-            const className = STYLE_CLASSES[index % STYLE_CLASSES.length];
-            block.classList.add(className);
-            block.setAttribute("data-preview-code-style", `${(index % STYLE_CLASSES.length) + 1}`);
+          applyStylesProgressively(blocks, () => {
+            scope.dataset.previewStyled = "true";
           });
-
-          scope.dataset.previewStyled = "true";
           return true;
         };
 
@@ -1479,8 +1517,10 @@ const url = new URL(`/blog/${encodedSlugPath}`, Astro.url.origin);
           const run = () => {
             void applyPreviewStyles({ force });
           };
-          if ("requestIdleCallback" in window) {
-            window.requestIdleCallback(run, { timeout: 1200 });
+          if (force) {
+            run();
+          } else if ("requestAnimationFrame" in window) {
+            window.requestAnimationFrame(run);
           } else {
             window.setTimeout(run, 0);
           }

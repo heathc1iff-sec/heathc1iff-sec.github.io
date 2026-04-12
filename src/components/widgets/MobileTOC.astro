@@ -57,12 +57,22 @@ const { headings = [], showTOC = true } = Astro.props as TOCBarProps;
 
 <script>
   document.addEventListener("astro:page-load", () => {
+    if (window.matchMedia("(min-width: 768px)").matches) return;
+
     const tocButton = document.getElementById("mobile-toc-button");
     if (!tocButton) return;
 
     // Cache DOM elements and reduce queries
-    const tocLinks = document.querySelectorAll(".mobile-toc-link");
-    const headings = document.querySelectorAll("h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]");
+    const tocLinks = Array.from(document.querySelectorAll(".mobile-toc-link"));
+    const headings = Array.from(document.querySelectorAll("h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]"));
+    let headingOffsets = [];
+
+    const recalcHeadingOffsets = () => {
+      headingOffsets = headings.map((heading) => {
+        const rect = heading.getBoundingClientRect();
+        return rect.top + window.scrollY;
+      });
+    };
 
     // Use a throttled scroll handler for better performance
     let scrollTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -93,19 +103,23 @@ const { headings = [], showTOC = true } = Astro.props as TOCBarProps;
 
     // More efficient active heading detection
     const updateActiveHeading = () => {
-      let activeHeadingId = null;
-      const offset = 100; // Offset from top of viewport
+      if (!headings.length || !headingOffsets.length) return;
 
-      // Use a reverse loop for efficiency when scrolling down (most common case)
-      for (let i = headings.length - 1; i >= 0; i--) {
-        const heading = headings[i];
-        const rect = heading.getBoundingClientRect();
+      const marker = window.scrollY + 100;
+      let left = 0;
+      let right = headingOffsets.length - 1;
+      let activeIndex = 0;
 
-        if (rect.top <= offset) {
-          activeHeadingId = heading.id;
-          break;
+      while (left <= right) {
+        const mid = (left + right) >> 1;
+        if (headingOffsets[mid] <= marker) {
+          activeIndex = mid;
+          left = mid + 1;
+        } else {
+          right = mid - 1;
         }
       }
+      const activeHeadingId = headings[activeIndex]?.id ?? null;
 
       // Update active link state
       tocLinks.forEach((link) => {
@@ -120,13 +134,16 @@ const { headings = [], showTOC = true } = Astro.props as TOCBarProps;
 
     // Add passive scroll listener for better performance
     window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", recalcHeadingOffsets, { passive: true });
 
     // Initial check
+    recalcHeadingOffsets();
     handleScroll();
 
     // Clean up on page unload
     document.addEventListener("astro:before-swap", () => {
       window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", recalcHeadingOffsets);
       if (scrollTimeout) {
         clearTimeout(scrollTimeout);
       }
