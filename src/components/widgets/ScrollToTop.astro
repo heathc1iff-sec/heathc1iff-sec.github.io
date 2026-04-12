@@ -29,8 +29,17 @@ import { Icon } from "astro-icon/components";
       // Initial check
       toggleVisibility();
 
-      // Add scroll event listener
-      window.addEventListener("scroll", toggleVisibility);
+      // Add scroll event listener with throttling
+      let ticking = false;
+      window.addEventListener("scroll", () => {
+        if (!ticking) {
+          window.requestAnimationFrame(() => {
+            toggleVisibility();
+            ticking = false;
+          });
+          ticking = true;
+        }
+      });
 
       // Scroll to top with smooth animation
       scrollButton.addEventListener("click", () => {

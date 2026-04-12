@@ -1,6 +1,5 @@
 ---
 import type { TOCBarProps } from "@interfaces/data";
-import { Icon } from "astro-icon/components";
 import Card from "../temple/Card.astro";
 
 // This prop indicates whether to render the TOC
@@ -10,16 +9,21 @@ const { headings = [], showTOC = true } = Astro.props as TOCBarProps;
 
 {
   showTOC && (
-    <div id="toc-container" class="mt-4 z-10 md:max-h-[calc(100vh-2rem)] ">
+    <div id="toc-container" class="mt-4 z-10 md:max-h-[calc(100vh-2rem)]">
       <Card>
-        <div class="p-4">
-          <nav class="toc-nav max-h-[calc(100vh-200px)] overflow-y-auto scrollbar-none relative">
-            {/* Animated active indicator - now moved outside the ul structure */}
+        <div class="p-5">
+          <div class="flex items-center gap-2 mb-4 px-1">
+            <div class="w-1.5 h-5 bg-primary rounded-full"></div>
+            <h3 class="text-sm font-black uppercase tracking-widest opacity-80">Contents</h3>
+          </div>
+          
+          <nav class="toc-nav max-h-[calc(100vh-300px)] overflow-y-auto scrollbar-none relative">
+            {/* Animated active indicator */}
             <div
               id="active-indicator"
-              class="absolute bg-primary/10 rounded-lg opacity-0 shadow-sm pointer-events-none z-0"
+              class="absolute bg-primary/10 rounded-xl opacity-0 shadow-sm pointer-events-none z-0 border-l-2 border-primary"
             />
-            <ul class="space-y-0 relative z-10">
+            <ul class="space-y-1 relative z-10">
               {headings.map((heading, index) => (
                 <li>
                   <a
@@ -27,19 +31,15 @@ const { headings = [], showTOC = true } = Astro.props as TOCBarProps;
                     data-heading-slug={heading.slug}
                     data-heading-depth={heading.depth}
                     data-index={index}
-                    class={`toc-link relative flex items-center py-2 px-2 rounded-lg ${heading.depth === 1 ? "font-medium" : ""}`}
-                    style={`padding-left: ${12 + (heading.depth - 1) * 16}px;`}
+                    class={`toc-link relative flex items-center py-2 px-3 rounded-xl transition-all duration-300 ${heading.depth === 1 ? "font-bold text-sm" : "text-xs font-medium opacity-70"}`}
+                    style={`padding-left: ${heading.depth === 1 ? '12px' : (12 + (heading.depth - 1) * 12) + 'px'}`}
                   >
-                    <Icon
-                      name="tabler:chevron-right"
-                      class="icon-indicator absolute left-1 opacity-0 transition-all duration-200 w-4 h-4 text-primary"
-                    />
-                    <span class="link-text transition-transform duration-200">{heading.text}</span>
+                    <span class="link-text transition-all duration-300 line-clamp-2">{heading.text}</span>
                   </a>
                 </li>
               ))}
               {headings.length === 0 && (
-                <li class="px-2 py-2 text-sm opacity-60">Unlock article to load table of contents.</li>
+                <li class="px-3 py-2 text-xs opacity-60">Unlock article to load table of contents.</li>
               )}
             </ul>
           </nav>
@@ -50,273 +50,231 @@ const { headings = [], showTOC = true } = Astro.props as TOCBarProps;
 }
 
 <style>
-  .toc-link:hover .link-text {
+  .toc-nav::-webkit-scrollbar {
+    width: 0px;
+  }
+
+  :global(.toc-link:hover) {
+    @apply bg-primary/5 text-primary opacity-100;
+  }
+
+  :global(.toc-link.active),
+  :global(.toc-link.is-active) {
+    @apply text-primary opacity-100;
+    background: hsl(var(--p) / 0.22);
+    border-left: 3px solid hsl(var(--p));
+    box-shadow:
+      inset 3px 0 0 hsl(var(--p)),
+      0 10px 20px -18px hsl(var(--p) / 0.8);
+  }
+
+  :global(.toc-link.active .link-text),
+  :global(.toc-link.is-active .link-text) {
     transform: translateX(2px);
-  }
-
-  .toc-link.active {
-    color: var(--p);
-    font-weight: 500;
-  }
-
-  .toc-link.active .icon-indicator {
-    opacity: 1;
-    transform: translateX(1px);
-  }
-
-  .toc-link:hover .icon-indicator {
-    opacity: 0.5;
   }
 </style>
 
 <script>
-  // Highlight active heading in TOC and manage the active indicator
-  document.addEventListener("astro:page-load", () => {
-    // Cache DOM elements and reduce DOM queries
-    const tocNav = document.querySelector(".toc-nav") as HTMLElement;
-    const activeIndicator = document.getElementById("active-indicator") as HTMLElement;
-    const tocLinks = Array.from(document.querySelectorAll(".toc-nav a")) as HTMLAnchorElement[];
+  (() => {
+    const host = window;
+    const runtime = host.__tocRuntime || (host.__tocRuntime = {});
 
-    if (!tocNav || !activeIndicator || tocLinks.length === 0) return;
-
-    // Prepare headings once
-    const headings = document.querySelectorAll("h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]");
-    if (headings.length === 0) return;
-
-    let activeLink: HTMLAnchorElement | null = null;
-    let disableObserverUpdates = false;
-    let resizeTimer: number | null = null;
-
-    // Update IDs only once at initialization
-    const headingIds = new Map<string, string>();
-    headings.forEach((heading, index) => {
-      const oldId = heading.getAttribute("id");
-      const newId = `heading-${index}`;
-
-      if (oldId && oldId !== newId) {
-        heading.setAttribute("id", newId);
-        headingIds.set(oldId, newId);
-
-        // Only update non-TOC links that point to this heading
-        document
-          .querySelectorAll(`a[href="#${oldId}"]:not(.toc-nav a)`)
-          .forEach((link) => link.setAttribute("href", `#${newId}`));
+    const initTOC = () => {
+      if (typeof host.__tocCleanup === "function") {
+        host.__tocCleanup();
+        delete host.__tocCleanup;
       }
-    });
 
-    const perfLite = document.documentElement.getAttribute("data-performance-mode") === "lite";
-    if (perfLite) {
-      activeIndicator.style.display = "none";
+      const tocNav = document.querySelector(".toc-nav");
+      const activeIndicator = document.getElementById("active-indicator");
+      if (!tocNav || !activeIndicator) return;
 
-      tocNav.addEventListener("click", (e: MouseEvent) => {
-        const target = e.target as HTMLElement;
-        const link = target.closest("a") as HTMLAnchorElement | null;
+      const tocLinks = Array.from(tocNav.querySelectorAll("a"));
+      if (!tocLinks.length) return;
+
+      const resolveContentRoot = () => {
+        const candidates = [
+          document.getElementById("post-encrypted-content"),
+          document.querySelector("#post-protected-content:not(.hidden) #content"),
+          document.getElementById("content"),
+          document.querySelector("main .prose"),
+          document.querySelector("main"),
+        ];
+        return candidates.find((node) => node && node.querySelector("h1, h2, h3, h4, h5, h6")) || null;
+      };
+
+      const contentRoot = resolveContentRoot();
+      if (!contentRoot) return;
+
+      const allHeadings = Array.from(contentRoot.querySelectorAll("h1, h2, h3, h4, h5, h6"));
+      if (!allHeadings.length) return;
+
+      const headingCount = Math.min(allHeadings.length, tocLinks.length);
+      const headings = allHeadings.slice(0, headingCount);
+      if (!headings.length) return;
+
+      headings.forEach((heading, index) => {
+        heading.id = `heading-${index}`;
+      });
+
+      tocLinks.forEach((link, index) => {
+        if (index < headings.length) {
+          link.setAttribute("data-index", String(index));
+          link.setAttribute("href", `#heading-${index}`);
+        } else {
+          link.removeAttribute("data-index");
+        }
+      });
+
+      let activeIndex = -1;
+      let resizeTimer = null;
+      let scrollRaf = null;
+      let suppressScrollSyncUntil = 0;
+
+      const isInView = (el, container) => {
+        const rect = el.getBoundingClientRect();
+        const crect = container.getBoundingClientRect();
+        return rect.top >= crect.top && rect.bottom <= crect.bottom;
+      };
+
+      const updateIndicator = (link, animate = true) => {
         if (!link) return;
+        const headingDepth = Number.parseInt(link.getAttribute("data-heading-depth") || "1", 10);
+        activeIndicator.style.transition = animate
+          ? "all 0.22s cubic-bezier(0.25, 0.1, 0.25, 1)"
+          : "opacity 0.22s ease-in-out";
+        requestAnimationFrame(() => {
+          activeIndicator.style.top = `${link.offsetTop}px`;
+          activeIndicator.style.height = `${link.offsetHeight}px`;
+          activeIndicator.style.opacity = "1";
+          activeIndicator.style.left = `${(headingDepth - 1) * 12}px`;
+          activeIndicator.style.width = `calc(100% - ${(headingDepth - 1) * 12}px)`;
+        });
+      };
 
-        const href = link.getAttribute("href") || "";
-        if (!href || !href.startsWith("#")) return;
+      const setActiveIndex = (index, animate = true) => {
+        if (!Number.isInteger(index) || index < 0 || index >= tocLinks.length) return;
+        if (activeIndex === index) return;
 
-        e.preventDefault();
-        const headingId = href.substring(1);
-        const targetHeading = document.getElementById(headingId);
-        if (!targetHeading) return;
+        if (activeIndex >= 0 && tocLinks[activeIndex]) {
+          tocLinks[activeIndex].classList.remove("active", "is-active");
+        }
 
-        targetHeading.scrollIntoView({ behavior: "auto" });
-        history.pushState(null, "", href);
-      });
-      return;
-    }
+        const nextLink = tocLinks[index];
+        nextLink.classList.add("active", "is-active");
+        activeIndex = index;
+        updateIndicator(nextLink, animate);
 
-    // Position the active indicator - optimized
-    function updateActiveIndicator(link: HTMLAnchorElement, animate = true): void {
-      if (!link) return;
+        if (!isInView(nextLink, tocNav)) {
+          const top = Math.max(0, nextLink.offsetTop - tocNav.clientHeight / 2 + nextLink.offsetHeight / 2);
+          tocNav.scrollTo({ top, behavior: "smooth" });
+        }
+      };
 
-      const headingDepth = parseInt(link.getAttribute("data-heading-depth") || "1");
+      const getActiveIndexByScroll = () => {
+        const offset = Math.max(150, Math.min(window.innerHeight * 0.34, 320));
+        for (let i = headings.length - 1; i >= 0; i -= 1) {
+          if (headings[i].getBoundingClientRect().top <= offset) return i;
+        }
+        return 0;
+      };
 
-      // Set the transition once
-      activeIndicator.style.transition = animate
-        ? "all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1)"
-        : "opacity 0.3s ease-in-out";
+      const syncByScroll = () => {
+        if (Date.now() < suppressScrollSyncUntil) return;
+        setActiveIndex(getActiveIndexByScroll());
+      };
 
-      // Batch style updates in a single frame
-      requestAnimationFrame(() => {
-        activeIndicator.style.top = `${link.offsetTop}px`;
-        activeIndicator.style.height = `${link.offsetHeight}px`;
-        activeIndicator.style.opacity = "1";
-        activeIndicator.style.left = `${(headingDepth - 1) * 16}px`;
-        activeIndicator.style.width = `calc(100% - ${(headingDepth - 1) * 16}px)`;
-      });
-    }
+      const scheduleScrollSync = () => {
+        if (scrollRaf !== null) return;
+        scrollRaf = window.requestAnimationFrame(() => {
+          scrollRaf = null;
+          syncByScroll();
+        });
+      };
 
-    // Check if element is in viewport - optimized
-    function isElementInViewport(el: HTMLElement, container: HTMLElement): boolean {
-      const rect = el.getBoundingClientRect();
-      const containerRect = container.getBoundingClientRect();
+      const handleClick = (event) => {
+        const target = event.target instanceof Element ? event.target : null;
+        const link = target ? target.closest("a") : null;
+        if (!link || !tocNav.contains(link)) return;
 
-      return rect.top >= containerRect.top && rect.bottom <= containerRect.bottom;
-    }
+        event.preventDefault();
+        const index = Number.parseInt(link.getAttribute("data-index") || "-1", 10);
+        if (!Number.isInteger(index) || index < 0 || index >= headings.length) return;
 
-    // Handle TOC scrolling - optimized
-    function scrollTOCToActiveItem(link: HTMLElement): void {
-      // Skip if link is already visible
-      if (isElementInViewport(link, tocNav)) return;
+        suppressScrollSyncUntil = Date.now() + 700;
+        setActiveIndex(index);
+        headings[index].scrollIntoView({ behavior: "smooth", block: "start" });
+        history.pushState(null, "", `#${headings[index].id}`);
+      };
 
-      const tocLinkTop = link.offsetTop;
-      const navHeight = tocNav.clientHeight;
-      const scrollOffset = Math.max(0, tocLinkTop - navHeight / 2 + link.offsetHeight / 2);
-
-      tocNav.scrollTo({
-        top: scrollOffset,
-        behavior: "smooth",
-      });
-    }
-
-    // Update active state - consolidated function
-    function setActiveLink(link: HTMLAnchorElement): void {
-      if (activeLink === link) return;
-
-      // Remove active class from previous link
-      if (activeLink) {
-        activeLink.classList.remove("active");
-      }
-
-      // Set new active link
-      link.classList.add("active");
-      activeLink = link;
-      updateActiveIndicator(link);
-
-      // Only scroll if needed
-      if (!isElementInViewport(link, tocNav)) {
-        scrollTOCToActiveItem(link);
-      }
-    }
-
-    // Optimize click handler with event delegation
-    tocNav.addEventListener("click", (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      const link = target.closest("a") as HTMLAnchorElement | null;
-      if (!link) return;
-
-      e.preventDefault();
-
-      const href = link.getAttribute("href") || "";
-      if (!href || !href.startsWith("#")) return;
-
-      const headingId = href.substring(1);
-      const targetHeading = document.getElementById(headingId);
-
-      if (targetHeading) {
-        // Disable observer updates temporarily
-        disableObserverUpdates = true;
-
-        // Update UI immediately
-        setActiveLink(link);
-
-        // Scroll to the heading
-        targetHeading.scrollIntoView({ behavior: "smooth" });
-
-        // Update URL hash without triggering scroll
-        history.pushState(null, "", href);
-
-        // Re-enable observer after navigation completes
-        setTimeout(() => {
-          disableObserverUpdates = false;
-        }, 1000);
-      }
-    });
-
-    // Throttled resize handler
-    window.addEventListener(
-      "resize",
-      () => {
-        if (resizeTimer) clearTimeout(resizeTimer);
-
+      const handleResize = () => {
+        if (resizeTimer) window.clearTimeout(resizeTimer);
         resizeTimer = window.setTimeout(() => {
-          if (activeLink) {
-            updateActiveIndicator(activeLink, false);
+          if (activeIndex >= 0 && tocLinks[activeIndex]) {
+            updateIndicator(tocLinks[activeIndex], false);
           }
         }, 100);
-      },
-      { passive: true },
-    );
+      };
 
-    // Optimized intersection observer
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (disableObserverUpdates) return;
+      const handleHashChange = () => {
+        const hash = window.location.hash.replace(/^#/, "");
+        if (!hash) return;
+        const index = headings.findIndex((heading) => heading.id === hash);
+        if (index >= 0) setActiveIndex(index);
+      };
 
-        // Get visible headings
-        const visibleEntries = entries.filter((entry) => entry.isIntersecting);
-        if (visibleEntries.length === 0) return;
+      tocNav.addEventListener("click", handleClick);
+      window.addEventListener("scroll", scheduleScrollSync, { passive: true });
+      window.addEventListener("resize", handleResize, { passive: true });
+      window.addEventListener("hashchange", handleHashChange);
 
-        // Find the heading closest to top of viewport
-        let bestEntry = visibleEntries[0];
-        let minDistance = Infinity;
-
-        for (const entry of visibleEntries) {
-          const distance = Math.abs(entry.boundingClientRect.top);
-          if (distance < minDistance) {
-            minDistance = distance;
-            bestEntry = entry;
-          }
-        }
-
-        const id = bestEntry.target.getAttribute("id");
-        if (!id) return;
-
-        const tocLink = document.querySelector(`.toc-nav a[href="#${id}"]`) as HTMLAnchorElement | null;
-
-        if (tocLink && tocLink !== activeLink) {
-          setActiveLink(tocLink);
-        }
-      },
-      {
-        rootMargin: "-50px 0px -75% 0px",
-        threshold: [0, 0.25], // Reduced number of thresholds
-      },
-    );
-
-    // Observe headings
-    headings.forEach((heading) => observer.observe(heading));
-
-    // Initial setup
-    setTimeout(() => {
-      // Use hash if available, otherwise first heading
-      const hash = window.location.hash.substring(1);
-      const initialHeading = hash ? document.getElementById(hash) : headings[0];
-
-      if (initialHeading) {
-        const id = initialHeading.getAttribute("id");
-        if (!id) return;
-
-        const tocLink = document.querySelector(`.toc-nav a[href="#${id}"]`) as HTMLAnchorElement | null;
-
-        if (tocLink) {
-          setActiveLink(tocLink);
-        }
-      }
-    }, 200);
-
-    // Hash change handler - simplified
-    window.addEventListener("hashchange", () => {
-      if (disableObserverUpdates) return;
-
-      const hash = window.location.hash.substring(1);
-      if (!hash) return;
-
-      disableObserverUpdates = true;
-
-      const heading = document.getElementById(hash);
-      if (heading) {
-        const tocLink = document.querySelector(`.toc-nav a[href="#${hash}"]`) as HTMLAnchorElement | null;
-        if (tocLink) {
-          setActiveLink(tocLink);
-        }
+      const hash = window.location.hash.replace(/^#/, "");
+      const hashIndex = hash ? headings.findIndex((heading) => heading.id === hash) : -1;
+      if (hashIndex >= 0) {
+        setActiveIndex(hashIndex, false);
+      } else {
+        setActiveIndex(getActiveIndexByScroll(), false);
       }
 
-      setTimeout(() => {
-        disableObserverUpdates = false;
-      }, 1000);
+      host.__tocCleanup = () => {
+        tocNav.removeEventListener("click", handleClick);
+        window.removeEventListener("scroll", scheduleScrollSync);
+        window.removeEventListener("resize", handleResize);
+        window.removeEventListener("hashchange", handleHashChange);
+        if (resizeTimer) window.clearTimeout(resizeTimer);
+        if (scrollRaf !== null) window.cancelAnimationFrame(scrollRaf);
+      };
+    };
+
+    let initTimer = runtime.initTimer || null;
+    const scheduleInit = (delay = 0) => {
+      if (initTimer) {
+        window.clearTimeout(initTimer);
+      }
+      initTimer = window.setTimeout(() => {
+        initTimer = null;
+        runtime.initTimer = null;
+        initTOC();
+      }, delay);
+      runtime.initTimer = initTimer;
+    };
+
+    runtime.scheduleInit = scheduleInit;
+    if (runtime.booted) {
+      scheduleInit(0);
+      return;
+    }
+    runtime.booted = true;
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", () => scheduleInit(0), { once: true });
+    } else {
+      scheduleInit(0);
+    }
+
+    document.addEventListener("astro:page-load", () => scheduleInit(0));
+    window.addEventListener("post-content-updated", () => {
+      scheduleInit(90);
     });
-  });
+  })();
 </script>

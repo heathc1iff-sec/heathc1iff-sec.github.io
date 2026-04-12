@@ -2,7 +2,23 @@
 import BaseCard from "@components/BaseCard.astro";
 import { t } from "@config";
 import BaseLayout from "@layouts/BaseLayout.astro";
+import { encodeSlugPath, getAllPosts, sortPostsByPinAndDate } from "@utils/blogUtils";
 import { Icon } from "astro-icon/components";
+
+const fallbackSearchEntries = sortPostsByPinAndDate(await getAllPosts()).map((post) => {
+  const pubDateSource =
+    post.data.pubDate instanceof Date ? post.data.pubDate : new Date(post.data.pubDate);
+  const pubDate = Number.isNaN(pubDateSource.getTime()) ? "" : pubDateSource.toISOString();
+
+  return {
+    slug: `/blog/${encodeSlugPath(post.slug)}`,
+    title: post.data.title ?? "",
+    description: post.data.description ?? "",
+    tags: post.data.tags ?? [],
+    categories: post.data.categories ?? [],
+    pubDate,
+  };
+});
 ---
 
 <BaseLayout title={t("label.searchPage")}>
@@ -26,65 +42,273 @@ import { Icon } from "astro-icon/components";
       <div id="pagefind-search"></div>
     </div>
   </BaseCard>
+
+  <script
+    id="search-fallback-index"
+    type="application/json"
+    set:html={JSON.stringify(fallbackSearchEntries)}
+  ></script>
 </BaseLayout>
 
 <script>
-  document.addEventListener("astro:page-load", initSearch);
+  (() => {
+    const ROOT_SELECTOR = "#pagefind-search";
+    const INDEX_SELECTOR = "#search-fallback-index";
+    const host = window;
 
-  function initSearch() {
-    const pageFindSearch = document.querySelector("#pagefind-search");
-    if (!pageFindSearch) return;
+    const normalize = (value) => String(value || "").trim().toLowerCase();
+    const escapeHtml = (value) =>
+      String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
 
-    const params = new URLSearchParams(window.location.search);
+    const parseDateValue = (value) => {
+      const timestamp = Date.parse(String(value || ""));
+      return Number.isNaN(timestamp) ? 0 : timestamp;
+    };
 
-    // Polyfill for requestIdleCallback
-    const onIdle = window.requestIdleCallback || ((cb) => setTimeout(cb, 1));
+    const getEntries = () => {
+      if (host.__titleOnlySearchEntries) return host.__titleOnlySearchEntries;
+      const node = document.querySelector(INDEX_SELECTOR);
+      if (!node) return [];
 
-    onIdle(async () => {
       try {
-        // @ts-ignore - Pagefind UI types
-        const { PagefindUI } = await import("@pagefind/default-ui");
-
-        // Initialize pagefind UI
-        const search = new PagefindUI({
-          element: "#pagefind-search",
-          showImages: false,
-          processTerm: function (term: string): string {
-            params.set("q", term);
-            history.replaceState(history.state, "", "?" + params.toString());
-            return term;
-          },
-        });
-
-        // If search param exists (e.g., search?q=astro), trigger search
-        const query = params.get("q");
-        if (query) {
-          search.triggerSearch(query);
-        }
-
-        // Reset search param if search input is cleared
-        const searchInput = document.querySelector(".pagefind-ui__search-input");
-        const clearButton = document.querySelector(".pagefind-ui__search-clear");
-
-        searchInput?.addEventListener("input", resetSearchParam);
-        clearButton?.addEventListener("click", resetSearchParam);
-
-        function resetSearchParam(e: Event): void {
-          if ((e.target as HTMLInputElement).value === "") {
-            history.replaceState(history.state, "", window.location.pathname);
-          }
-        }
+        host.__titleOnlySearchEntries = JSON.parse(node.textContent || "[]");
       } catch (error) {
-        console.error("Error initializing search:", error);
-        const searchContainer = document.querySelector("#search-container");
-        if (searchContainer) {
-          searchContainer.innerHTML = `
-            <div class="alert alert-error shadow-lg">
-              Error loading search functionality. Please try again later.
-            </div>
-          `;
-        }
+        console.error("Failed to parse title search index:", error);
+        host.__titleOnlySearchEntries = [];
       }
-    });
-  }
+      return host.__titleOnlySearchEntries;
+    };
+
+    const updateQueryParam = (term) => {
+      const params = new URLSearchParams(host.location.search);
+      if (term) {
+        params.set("q", term);
+        host.history.replaceState(host.history.state, "", `?${params.toString()}`);
+      } else {
+        host.history.replaceState(host.history.state, "", host.location.pathname);
+      }
+    };
+
+    const scoreTitle = (title, query, tokens) => {
+      let score = 0;
+      if (title === query) score += 120;
+      if (title.startsWith(query)) score += 60;
+      if (title.includes(query)) score += 30;
+
+      tokens.forEach((token) => {
+        if (!token) return;
+        if (title.startsWith(token)) score += 10;
+        if (title.includes(token)) score += 6;
+      });
+      return score;
+    };
+
+    const findMatches = (query) => {
+      const normalizedQuery = normalize(query);
+      if (!normalizedQuery) return [];
+
+      const tokens = normalizedQuery.split(/\s+/).filter(Boolean);
+
+      return getEntries()
+        .map((entry) => {
+          const title = normalize(entry?.title);
+          const matched =
+            title.includes(normalizedQuery) ||
+            (tokens.length > 0 && tokens.every((token) => title.includes(token)));
+          if (!matched) return null;
+
+          return {
+            entry,
+            score: scoreTitle(title, normalizedQuery, tokens),
+            dateValue: parseDateValue(entry?.pubDate),
+          };
+        })
+        .filter(Boolean)
+        .sort((a, b) => b.score - a.score || b.dateValue - a.dateValue)
+        .slice(0, 120);
+    };
+
+    const renderResult = (entry) => {
+      const dateText = entry?.pubDate
+        ? new Date(entry.pubDate).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          })
+        : "";
+
+      return `
+        <a class="title-search__item" href="${escapeHtml(entry.slug)}">
+          <div class="title-search__title">${escapeHtml(entry.title || "Untitled Post")}</div>
+          ${
+            dateText
+              ? `<div class="title-search__meta">${escapeHtml(dateText)}</div>`
+              : ""
+          }
+        </a>
+      `;
+    };
+
+    const mountTitleOnlySearch = () => {
+      const root = document.querySelector(ROOT_SELECTOR);
+      if (!root) return;
+      if (root.getAttribute("data-title-search-ready") === "1") return;
+      root.setAttribute("data-title-search-ready", "1");
+
+      const query = new URLSearchParams(host.location.search).get("q") || "";
+      root.innerHTML = `
+        <div class="title-search">
+          <div class="title-search__controls">
+            <input
+              id="title-search-input"
+              class="title-search__input"
+              type="search"
+              placeholder="Search post titles..."
+              value="${escapeHtml(query)}"
+            />
+            <button id="title-search-clear" class="title-search__clear" type="button">Clear</button>
+          </div>
+          <div id="title-search-status" class="title-search__status"></div>
+          <div id="title-search-results" class="title-search__results"></div>
+        </div>
+      `;
+
+      const input = document.querySelector("#title-search-input");
+      const clearButton = document.querySelector("#title-search-clear");
+      const statusNode = document.querySelector("#title-search-status");
+      const resultsNode = document.querySelector("#title-search-results");
+
+      if (!(input instanceof HTMLInputElement) || !statusNode || !resultsNode) return;
+
+      const run = () => {
+        const term = String(input.value || "").trim();
+        updateQueryParam(term);
+
+        if (!term) {
+          statusNode.textContent = "Type a keyword to search titles.";
+          resultsNode.innerHTML = "";
+          return;
+        }
+
+        const matches = findMatches(term);
+        statusNode.textContent = `${matches.length} title result${matches.length === 1 ? "" : "s"} for ${term}`;
+        resultsNode.innerHTML = matches.map((item) => renderResult(item.entry)).join("");
+      };
+
+      input.addEventListener("input", run);
+      clearButton?.addEventListener("click", () => {
+        input.value = "";
+        run();
+      });
+
+      run();
+      input.focus({ preventScroll: true });
+    };
+
+    const scheduleMount = () => {
+      const cb = () => mountTitleOnlySearch();
+      if ("requestIdleCallback" in host) {
+        host.requestIdleCallback(cb, { timeout: 300 });
+      } else {
+        host.setTimeout(cb, 0);
+      }
+    };
+
+    document.addEventListener("astro:page-load", scheduleMount);
+    document.addEventListener("astro:after-swap", scheduleMount);
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", scheduleMount, { once: true });
+    } else {
+      scheduleMount();
+    }
+  })();
 </script>
+
+<style is:inline>
+  .title-search {
+    display: grid;
+    gap: 0.85rem;
+  }
+
+  .title-search__controls {
+    display: flex;
+    gap: 0.65rem;
+    align-items: center;
+  }
+
+  .title-search__input {
+    flex: 1;
+    min-width: 0;
+    border: 1px solid oklch(var(--bc) / 0.22);
+    border-radius: 0.8rem;
+    background: oklch(var(--b1) / 0.88);
+    color: oklch(var(--bc));
+    padding: 0.65rem 0.8rem;
+    outline: none;
+    transition: border-color 0.22s ease, box-shadow 0.22s ease;
+  }
+
+  .title-search__input:focus {
+    border-color: oklch(var(--p) / 0.46);
+    box-shadow: 0 0 0 3px oklch(var(--p) / 0.16);
+  }
+
+  .title-search__clear {
+    border: 1px solid oklch(var(--bc) / 0.24);
+    border-radius: 0.75rem;
+    padding: 0.55rem 0.78rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    background: oklch(var(--b2) / 0.7);
+    color: oklch(var(--bc));
+  }
+
+  .title-search__clear:hover {
+    border-color: oklch(var(--p) / 0.4);
+  }
+
+  .title-search__status {
+    font-size: 0.85rem;
+    color: oklch(var(--bc) / 0.66);
+    min-height: 1.25rem;
+  }
+
+  .title-search__results {
+    display: grid;
+    gap: 0.62rem;
+  }
+
+  .title-search__item {
+    display: grid;
+    gap: 0.2rem;
+    border: 1px solid oklch(var(--bc) / 0.16);
+    border-radius: 0.9rem;
+    background: linear-gradient(165deg, oklch(var(--b1) / 0.9), oklch(var(--b2) / 0.62));
+    padding: 0.78rem 0.88rem;
+    text-decoration: none;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .title-search__item:hover {
+    transform: translateY(-1px);
+    border-color: oklch(var(--p) / 0.4);
+    box-shadow: 0 16px 24px -22px oklch(var(--bc) / 0.88);
+  }
+
+  .title-search__title {
+    color: oklch(var(--bc));
+    font-size: 1rem;
+    line-height: 1.35;
+    font-weight: 700;
+  }
+
+  .title-search__meta {
+    color: oklch(var(--bc) / 0.58);
+    font-size: 0.74rem;
+  }
+</style>

@@ -23,60 +23,60 @@ const pageLinks = generatePageLinks(totalPages);
   <!-- Blog Navigation Cards -->
   <CardGroup cols="2">
     <!-- Archives Card -->
-    <a href="/blog/archives" class="card bg-base-100 shadow-lg">
+    <a href="/blog/archives" class="frosti-card group hover:-translate-y-1 transition-all duration-300">
       <div class="card-body p-4">
         <div class="flex items-center gap-3">
-          <div class="rounded-full bg-accent/10 p-3">
+          <div class="rounded-2xl bg-accent/10 p-3 group-hover:bg-accent/20 transition-colors">
             <Icon name="lucide:archive" class="w-6 h-6 text-accent" />
           </div>
           <div>
-            <h2 class="card-title text-lg">{t("label.archivePage")}</h2>
-            <p class="text-sm opacity-75">{t("label.archivesPageDescription")}</p>
+            <h2 class="card-title text-lg font-bold group-hover:text-accent transition-colors">{t("label.archivePage")}</h2>
+            <p class="text-xs opacity-60 line-clamp-1">{t("label.archivesPageDescription")}</p>
           </div>
         </div>
       </div>
     </a>
 
     <!-- Categories Card -->
-    <a href="/blog/categories" class="card bg-base-100 shadow-lg">
+    <a href="/blog/categories" class="frosti-card group hover:-translate-y-1 transition-all duration-300">
       <div class="card-body p-4">
         <div class="flex items-center gap-3">
-          <div class="rounded-full bg-primary/10 p-3">
+          <div class="rounded-2xl bg-primary/10 p-3 group-hover:bg-primary/20 transition-colors">
             <Icon name="lucide:folder" class="w-6 h-6 text-primary" />
           </div>
           <div>
-            <h2 class="card-title text-lg">{t("label.categoryPage")}</h2>
-            <p class="text-sm opacity-75">{t("label.categoriesPageDescription")}</p>
+            <h2 class="card-title text-lg font-bold group-hover:text-primary transition-colors">{t("label.categoryPage")}</h2>
+            <p class="text-xs opacity-60 line-clamp-1">{t("label.categoriesPageDescription")}</p>
           </div>
         </div>
       </div>
     </a>
 
     <!-- Tags Card -->
-    <a href="/blog/tags" class="card bg-base-100 shadow-lg">
+    <a href="/blog/tags" class="frosti-card group hover:-translate-y-1 transition-all duration-300">
       <div class="card-body p-4">
         <div class="flex items-center gap-3">
-          <div class="rounded-full bg-secondary/10 p-3">
+          <div class="rounded-2xl bg-secondary/10 p-3 group-hover:bg-secondary/20 transition-colors">
             <Icon name="lucide:tag" class="w-6 h-6 text-secondary" />
           </div>
           <div>
-            <h2 class="card-title text-lg">{t("label.tagPage")}</h2>
-            <p class="text-sm opacity-75">{t("label.tagsPageDescription")}</p>
+            <h2 class="card-title text-lg font-bold group-hover:text-secondary transition-colors">{t("label.tagPage")}</h2>
+            <p class="text-xs opacity-60 line-clamp-1">{t("label.tagsPageDescription")}</p>
           </div>
         </div>
       </div>
     </a>
 
     <!-- Search Card -->
-    <a href="/blog/search" class="card bg-base-100 shadow-lg">
+    <a href="/blog/search" class="frosti-card group hover:-translate-y-1 transition-all duration-300">
       <div class="card-body p-4">
         <div class="flex items-center gap-3">
-          <div class="rounded-full bg-info/10 p-3">
+          <div class="rounded-2xl bg-info/10 p-3 group-hover:bg-info/20 transition-colors">
             <Icon name="lucide:search" class="w-6 h-6 text-info" />
           </div>
           <div>
-            <h2 class="card-title text-lg">{t("label.searchPage")}</h2>
-            <p class="text-sm opacity-75">{t("label.searchPageDescription")}</p>
+            <h2 class="card-title text-lg font-bold group-hover:text-info transition-colors">{t("label.searchPage")}</h2>
+            <p class="text-xs opacity-60 line-clamp-1">{t("label.searchPageDescription")}</p>
           </div>
         </div>
       </div>
@@ -103,4 +103,38 @@ const pageLinks = generatePageLinks(totalPages);
     }
   </CardGroup>
   <Pagination page={page} totalPages={totalPages} pageLinks={pageLinks} baseUrl={`/blog`} />
+
+  <script is:inline>
+    (() => {
+      const schedulePrefetch = () => {
+        const run = () => {
+          const urls = Array.from(document.querySelectorAll("a[data-post-link]"))
+            .map((link) => link.getAttribute("href") || "")
+            .filter((href) => href && href.startsWith("/"))
+            .filter((href, index, list) => list.indexOf(href) === index)
+            .slice(0, 8);
+
+          urls.forEach((href) => {
+            const key = `link[rel="prefetch"][href="${href}"][data-post-prefetch="1"]`;
+            if (document.head.querySelector(key)) return;
+            const link = document.createElement("link");
+            link.rel = "prefetch";
+            link.as = "document";
+            link.href = href;
+            link.setAttribute("data-post-prefetch", "1");
+            document.head.appendChild(link);
+          });
+        };
+
+        if ("requestIdleCallback" in window) {
+          window.requestIdleCallback(run, { timeout: 1800 });
+        } else {
+          window.setTimeout(run, 220);
+        }
+      };
+
+      document.addEventListener("astro:page-load", schedulePrefetch);
+      schedulePrefetch();
+    })();
+  </script>
 </BaseLayout>

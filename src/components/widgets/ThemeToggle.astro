@@ -10,7 +10,6 @@ const { className = "" } = Astro.props as ThemeToggleProps;
 ---
 
 <button
-  id={uniqueId}
   class:list={["btn btn-circle btn-md bg-base-100 shadow-sm hover:scale-110 md:border-base-content/20", className]}
   aria-label="Toggle theme"
   data-theme-toggle
@@ -23,14 +22,13 @@ const { className = "" } = Astro.props as ThemeToggleProps;
   <Icon name="lucide:moon" class="theme-toggle-icon h-5 w-5 moon-icon hidden" />
 </button>
 
-<script is:inline define:vars={{ SITE_THEME, uniqueId }}>
+<script is:inline define:vars={{ SITE_THEME }}>
   (() => {
     const THEME_MODE_KEY = "theme-mode";
 
     // Function to update icons based on current theme for a specific toggle button
     const updateThemeIcons = (toggleButton, isDark) => {
       if (!toggleButton) return;
-
       const sunIcon = toggleButton.querySelector(".sun-icon");
       const moonIcon = toggleButton.querySelector(".moon-icon");
 
@@ -45,81 +43,68 @@ const { className = "" } = Astro.props as ThemeToggleProps;
       }
     };
 
-    const initThemeToggle = () => {
-      // Use the unique ID to get this specific toggle button
-      const themeToggle = document.getElementById(uniqueId);
-      if (!themeToggle) return;
-      if (themeToggle.dataset.themeToggleBound === "1") return;
-      themeToggle.dataset.themeToggleBound = "1";
-
+    const initThemeToggles = () => {
+      const allToggles = document.querySelectorAll("[data-theme-toggle]");
       const currentTheme = document.documentElement.getAttribute("data-theme");
+      const isDark = currentTheme === SITE_THEME.dark;
 
-      // Initialize icon state based on current theme
-      updateThemeIcons(themeToggle, currentTheme === SITE_THEME.dark);
+      allToggles.forEach((themeToggle) => {
+        if (themeToggle.dataset.themeToggleBound === "1") return;
+        themeToggle.dataset.themeToggleBound = "1";
 
-      // Toggle theme on click
-      themeToggle.addEventListener("click", () => {
-        const currentTheme = document.documentElement.getAttribute("data-theme");
-        const newTheme = currentTheme === SITE_THEME.light ? SITE_THEME.dark : SITE_THEME.light;
+        // Initialize icon state
+        updateThemeIcons(themeToggle, isDark);
 
-        // Add animation class
-        themeToggle.classList.add("animate-spin-once");
+        // Toggle theme on click
+        themeToggle.addEventListener("click", () => {
+          const nowTheme = document.documentElement.getAttribute("data-theme");
+          const newTheme = nowTheme === SITE_THEME.light ? SITE_THEME.dark : SITE_THEME.light;
 
-        // Set new theme
-        document.documentElement.setAttribute("data-theme", newTheme);
+          themeToggle.classList.add("animate-spin-once");
 
-        // Set theme type based on which theme is active
-        const themeType = newTheme === SITE_THEME.dark ? "dark" : "light";
-        document.documentElement.setAttribute("data-theme-type", themeType);
-        document.documentElement.setAttribute("data-theme-source", "manual");
+          document.documentElement.setAttribute("data-theme", newTheme);
+          const themeType = newTheme === SITE_THEME.dark ? "dark" : "light";
+          document.documentElement.setAttribute("data-theme-type", themeType);
+          document.documentElement.setAttribute("data-theme-source", "manual");
 
-        localStorage.setItem(THEME_MODE_KEY, "manual");
-        localStorage.setItem("theme", newTheme);
+          localStorage.setItem(THEME_MODE_KEY, "manual");
+          localStorage.setItem("theme", newTheme);
 
-        // Update icons for all theme toggles on the page
-        const allToggles = document.querySelectorAll("[data-theme-toggle]");
-        allToggles.forEach((toggle) => {
-          updateThemeIcons(toggle, newTheme === SITE_THEME.dark);
+          // Update ALL toggles on the page
+          document.querySelectorAll("[data-theme-toggle]").forEach((t) => {
+            updateThemeIcons(t, newTheme === SITE_THEME.dark);
+          });
+
+          setTimeout(() => themeToggle.classList.remove("animate-spin-once"), 300);
         });
 
-        // Remove animation class after animation completes
-        setTimeout(() => {
-          themeToggle.classList.remove("animate-spin-once");
-        }, 300);
-      });
+        // Right-click for auto mode
+        themeToggle.addEventListener("contextmenu", (event) => {
+          event.preventDefault();
+          localStorage.removeItem("theme");
+          localStorage.removeItem(THEME_MODE_KEY);
 
-      // Right-click to switch back to automatic clock-based theme mode.
-      themeToggle.addEventListener("contextmenu", (event) => {
-        event.preventDefault();
-        localStorage.removeItem("theme");
-        localStorage.removeItem(THEME_MODE_KEY);
+          if (typeof window.__applyResolvedTheme === "function") {
+            window.__applyResolvedTheme();
+          }
 
-        if (typeof window.__applyResolvedTheme === "function") {
-          window.__applyResolvedTheme();
-        }
+          const nowTheme = document.documentElement.getAttribute("data-theme");
+          document.querySelectorAll("[data-theme-toggle]").forEach((t) => {
+            updateThemeIcons(t, nowTheme === SITE_THEME.dark);
+          });
 
-        const isDark = document.documentElement.getAttribute("data-theme") === SITE_THEME.dark;
-        const allToggles = document.querySelectorAll("[data-theme-toggle]");
-        allToggles.forEach((toggle) => {
-          updateThemeIcons(toggle, isDark);
+          themeToggle.classList.add("animate-spin-once");
+          setTimeout(() => themeToggle.classList.remove("animate-spin-once"), 300);
         });
-
-        themeToggle.classList.add("animate-spin-once");
-        setTimeout(() => {
-          themeToggle.classList.remove("animate-spin-once");
-        }, 300);
       });
     };
 
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", initThemeToggle, { once: true });
-    } else {
-      initThemeToggle();
-    }
-
-    // Keep compatibility with routes that still use client-side transitions.
-    document.addEventListener("astro:page-load", initThemeToggle);
-    document.addEventListener("astro:after-swap", initThemeToggle);
+    // Initial load
+    initThemeToggles();
+    
+    // View transitions support
+    document.addEventListener("astro:page-load", initThemeToggles);
+    document.addEventListener("astro:after-swap", initThemeToggles);
   })();
 </script>
 

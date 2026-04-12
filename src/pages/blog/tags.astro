@@ -4,737 +4,211 @@ import { t } from "@config";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import {
   getAllPosts,
-  getTagColorClass,
-  getTagFontSize,
   getTagsWithCount,
 } from "@utils/blogUtils";
 import { Icon } from "astro-icon/components";
 
 const allPosts = await getAllPosts();
-const tagMap = getTagsWithCount(allPosts);
-const tagEntries = Array.from(tagMap.entries()).sort((a, b) => b[1] - a[1]);
+const tagCounts = getTagsWithCount(allPosts);
+const tagEntries = Array.from(tagCounts.entries()).sort((a, b) => b[1] - a[1]);
+const maxCount = tagEntries.length > 0 ? tagEntries[0][1] : 0;
 
-const maxCount = tagEntries.length > 0 ? tagEntries[0][1] : 1;
-const minCount = tagEntries.length > 0 ? tagEntries[tagEntries.length - 1][1] : 1;
-const totalTags = tagMap.size;
+const COLORS = [
+  '#818cf8', '#2dd4bf', '#fb7185', '#fbbf24', '#a78bfa', 
+  '#38bdf8', '#4ade80', '#f472b6', '#f87171', '#22d3ee'
+];
 
-type MindMapNode = {
-  id: string;
-  tag: string;
-  count: number;
-  href: string;
-  ring: number;
-  seedAngle: number;
-  tone: string;
-  scale: number;
-  weight: number;
-  delay: number;
-  lineOpacity: number;
-  fallbackLeft: number;
-  fallbackTop: number;
-};
-
-const ringPlan: number[] = [];
-let remainingTags = tagEntries.length;
-let ringCursor = 0;
-
-while (remainingTags > 0) {
-  const capacity = 10 + ringCursor * 6;
-  const currentRingCount = Math.min(capacity, remainingTags);
-  ringPlan.push(currentRingCount);
-  remainingTags -= currentRingCount;
-  ringCursor += 1;
-}
-
-const nodes: MindMapNode[] = [];
-let entryCursor = 0;
-
-for (let ringIndex = 0; ringIndex < ringPlan.length; ringIndex += 1) {
-  const nodesInRing = ringPlan[ringIndex];
-  const angleStep = (Math.PI * 2) / nodesInRing;
-  const angleOffset =
-    ringIndex % 2 === 0 ? -Math.PI / 2 : -Math.PI / 2 + angleStep / 2;
-
-  for (let nodeIndex = 0; nodeIndex < nodesInRing; nodeIndex += 1) {
-    const [tag, count] = tagEntries[entryCursor];
-    const seedAngle = angleOffset + nodeIndex * angleStep;
-    const weight =
-      maxCount === minCount ? 0.5 : (count - minCount) / (maxCount - minCount);
-    const fallbackRadius = 19 + ringIndex * 11 + weight * 3;
-    const fallbackLeft = Math.min(94, Math.max(6, 50 + Math.cos(seedAngle) * fallbackRadius));
-    const fallbackTop = Math.min(94, Math.max(6, 50 + Math.sin(seedAngle) * fallbackRadius));
-
-    nodes.push({
-      id: `tag-node-${entryCursor}`,
-      tag,
-      count,
-      href: `/blog/tag/${encodeURIComponent(tag)}`,
-      ring: ringIndex + 1,
-      seedAngle: Number(seedAngle.toFixed(6)),
-      tone: getTagColorClass(count, maxCount),
-      scale: Number(getTagFontSize(count, maxCount, minCount).toFixed(3)),
-      weight: Number(weight.toFixed(3)),
-      delay: (entryCursor % 20) * 35,
-      lineOpacity: Number((0.24 + weight * 0.56).toFixed(3)),
-      fallbackLeft: Number(fallbackLeft.toFixed(3)),
-      fallbackTop: Number(fallbackTop.toFixed(3)),
-    });
-
-    entryCursor += 1;
+const totalNodes = tagEntries.length;
+const nodes = tagEntries.map((entry, index) => {
+  const [tag, count] = entry;
+  const color = COLORS[index % COLORS.length];
+  let zone, orbitBase, sizeClass;
+  if (index < totalNodes * 0.15) {
+    zone = 'inner'; orbitBase = 220; sizeClass = 'text-base font-black';
+  } else if (index < totalNodes * 0.45) {
+    zone = 'mid'; orbitBase = 360; sizeClass = 'text-sm font-bold';
+  } else {
+    zone = 'outer'; orbitBase = 520; sizeClass = 'text-xs font-semibold opacity-70';
   }
-}
+  return { id: `node-${index}`, tag, count, color, zone, sizeClass, orbit: orbitBase, href: `/blog/tag/${encodeURIComponent(tag)}` };
+});
 ---
 
-<BaseLayout title={t("label.tagPage")}>
-  <BaseCard title={t("label.tagPage")}>
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-      <div class="flex items-center gap-2">
-        <Icon name="lucide:tag" class="w-6 h-6 text-secondary" />
-        <h1 id="h1" class="text-2xl md:text-3xl font-bold">{t("label.tagPage")}</h1>
-        <div class="badge badge-secondary">{totalTags} {t("label.totalTags")}</div>
-      </div>
-      <a href="/blog" class="btn btn-outline btn-sm gap-2">
-        <Icon name="lucide:book-open" class="w-4 h-4" />
-        <span>{t("label.backToBlog")}</span>
-      </a>
-    </div>
-    <div class="divider my-2"></div>
-    <p class="text-sm opacity-75">{t("label.tagsPageDescription")}</p>
-  </BaseCard>
-
-  <BaseCard title={t("label.tagPage")}>
-    <div class="tags-container">
-      {
-        tagEntries.length > 0 ? (
-          <section class="tag-mindmap" aria-label="Tag mind map" data-tag-mindmap>
-            <div class="tag-mindmap__toolbar">
-              <div class="tag-mindmap__hint">
-                <Icon name="lucide:sparkles" class="w-4 h-4" />
-                <span>{t("label.tagsPageDescription")} - Interactive Mind Map</span>
+<BaseLayout title="Brain Map" description={t("label.tagsPageDescription")}>
+  <div class="space-y-12 py-6">
+    
+    <!-- 脑图展示区 (满足 8/9 条) -->
+    <section>
+      <BaseCard>
+        <div class="relative p-4 flex flex-col min-h-[750px]">
+          <div class="flex justify-between items-center mb-6 z-50">
+            <div class="flex items-center gap-3">
+              <div class="p-2 bg-primary/10 rounded-lg">
+                <Icon name="lucide:brain-circuit" class="w-6 h-6 text-primary" />
               </div>
-
-              <div class="tag-mindmap__controls" role="group" aria-label="Mind map controls">
-                <button
-                  type="button"
-                  class="tag-mindmap__control"
-                  data-mm-action="zoom-in"
-                  aria-label="Zoom in"
-                >
-                  <Icon name="lucide:zoom-in" class="w-4 h-4" />
-                </button>
-                <button
-                  type="button"
-                  class="tag-mindmap__control"
-                  data-mm-action="zoom-out"
-                  aria-label="Zoom out"
-                >
-                  <Icon name="lucide:zoom-out" class="w-4 h-4" />
-                </button>
-                <button
-                  type="button"
-                  class="tag-mindmap__control"
-                  data-mm-action="reset"
-                  aria-label="Reset view"
-                >
-                  <Icon name="lucide:refresh-ccw" class="w-4 h-4" />
-                </button>
-              </div>
+              <h1 class="text-xl font-black tracking-tight">Brain Map</h1>
             </div>
-
-            <div class="tag-mindmap__viewport" data-viewport>
-              <div class="tag-mindmap__world" data-world>
-                <svg class="tag-mindmap__svg" data-svg aria-hidden="true" focusable="false">
-                  <g class="tag-mindmap__links">
-                    {nodes.map((node) => (
-                      <path
-                        data-link-id={node.id}
-                        class={`tag-mindmap__link ${node.tone}`}
-                        style={`--line-opacity: ${node.lineOpacity};`}
-                      />
-                    ))}
-                  </g>
-                </svg>
-
-                <div class="tag-mindmap__core" data-core aria-hidden="true">
-                  <div class="tag-mindmap__core-icon-wrap">
-                    <Icon name="mdi:brain" class="tag-mindmap__core-icon" data-core-shape />
-                  </div>
-                </div>
-
-                <div class="tag-mindmap__node-layer" data-node-layer>
-                  {nodes.map((node) => (
-                    <a
-                      href={node.href}
-                      class={`tag-mindmap__node ${node.tone}`}
-                      style={`left: ${node.fallbackLeft}%; top: ${node.fallbackTop}%; --tag-scale: ${node.scale}; --tag-weight: ${node.weight}; animation-delay: ${node.delay}ms;`}
-                      data-node-id={node.id}
-                      data-tag={node.tag}
-                      data-count={node.count}
-                      data-ring={node.ring}
-                      data-seed-angle={node.seedAngle}
-                      data-fallback-left={node.fallbackLeft}
-                      data-fallback-top={node.fallbackTop}
-                      data-weight={node.weight}
-                      title={`${node.tag} (${node.count})`}
-                    >
-                      <span class="tag-mindmap__node-label">{node.tag}</span>
-                      <span class="tag-mindmap__node-badge">{node.count}</span>
-                    </a>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <p class="tag-mindmap__helper">Drag nodes or background. Scroll to zoom. Click reset to return.</p>
-
-            <div class="tag-mindmap__index" aria-label="Tag index">
-              {tagEntries.map(([tag, count]) => (
-                <a
-                  href={`/blog/tag/${encodeURIComponent(tag)}`}
-                  class={`tag-mindmap__chip ${getTagColorClass(count, maxCount)}`}
-                >
-                  <span class="tag-mindmap__chip-label">{tag}</span>
-                  <span class="tag-mindmap__chip-count">{count}</span>
-                </a>
-              ))}
-            </div>
-          </section>
-        ) : (
-          <div class="empty-state">
-            <Icon name="ri:emotion-sad-line" class="empty-icon" />
-            <p class="empty-text">{t("label.noTag")}</p>
+            <button id="reset-system" class="btn btn-sm btn-ghost gap-2 rounded-full border border-base-content/10">
+              <Icon name="lucide:refresh-ccw" class="w-3.5 h-3.5" />
+              <span class="text-[10px] font-bold">RESET</span>
+            </button>
           </div>
-        )
-      }
-    </div>
-  </BaseCard>
+
+          <div class="flex-1 relative overflow-hidden rounded-xl bg-base-200/20 shadow-inner" id="viewport" style="cursor: grab;">
+            <div id="star-field" class="absolute inset-0 pointer-events-none opacity-20"></div>
+            <div id="world" class="absolute inset-0 transform-origin-center">
+              <div id="nodes-layer" class="absolute inset-0">
+                {nodes.map((node) => (
+                  <a href={node.href} class="planet-node" data-id={node.id} style={`--node-clr: ${node.color};`}>
+                    <div class="glass-pill-lite">
+                      <div class="indicator-bar"></div>
+                      <span class={`name ${node.sizeClass}`}>{node.tag}</span>
+                      <span class="count">{node.count}</span>
+                    </div>
+                  </a>
+                ))}
+              </div>
+              <!-- 中心大脑 (满足 5/6 条) -->
+              <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-40 pointer-events-none">
+                <div class="center-aura"></div>
+                <Icon name="mdi:brain" class="w-14 h-14 text-primary drop-shadow-[0_0_10px_oklch(var(--p)/0.5)]" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </BaseCard>
+    </section>
+
+    <!-- 索引区 (满足 9 条) -->
+    <section>
+      <BaseCard>
+        <div class="relative p-8 flex flex-col">
+          <div class="flex items-center gap-4 mb-8">
+            <h2 class="text-sm font-black uppercase tracking-widest opacity-40">Knowledge Index</h2>
+            <div class="h-px flex-1 bg-base-content/5"></div>
+          </div>
+          <div class="flex flex-wrap justify-center gap-4">
+            {tagEntries.map(([tag, count], index) => {
+              const color = COLORS[index % COLORS.length];
+              return (
+                <a href={`/blog/tag/${encodeURIComponent(tag)}`} class="glass-index-tile group" style={`--tile-clr: ${color}`}>
+                  <div class="tile-bar"></div>
+                  <span class="tile-label">{tag}</span>
+                  <span class="tile-val">{count}</span>
+                </a>
+              );
+            })}
+          </div>
+        </div>
+      </BaseCard>
+    </section>
+  </div>
 </BaseLayout>
 
-<script is:inline data-astro-rerun>
-  (() => {
-    const root = document.querySelector("[data-tag-mindmap]");
-    if (!root || root.dataset.mmReady === "1") return;
+<style is:global>
+  .planet-node { position: absolute; z-index: 30; text-decoration: none; transition: z-index 0s; }
+  .planet-node:hover { z-index: 1000; }
+  .glass-pill-lite, .glass-index-tile { @apply backdrop-blur-[10px] border border-white/10; background: rgba(255, 255, 255, 0.03); box-shadow: inset 0 1px 1px rgba(255,255,255,0.05); }
+  [data-theme-type="light"] .glass-pill-lite, [data-theme-type="light"] .glass-index-tile { background: rgba(0, 0, 0, 0.02); border-color: rgba(0, 0, 0, 0.05); }
+  .glass-pill-lite { @apply flex items-center gap-2 px-4 py-2 rounded-xl; color: white; white-space: nowrap; transition: transform 0.3s, border-color 0.3s; }
+  [data-theme-type="light"] .glass-pill-lite { color: #1e293b; }
+  .indicator-bar { width: 3px; height: 12px; background: var(--node-clr); border-radius: 4px; box-shadow: 0 0 10px var(--node-clr); }
+  .glass-pill-lite .count { font-size: 10px; font-weight: 900; color: var(--node-clr); opacity: 0.5; margin-left: 2px; }
+  .planet-node:hover .glass-pill-lite { transform: scale(1.05) translateY(-2px); border-color: var(--node-clr); }
+  .center-aura { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 150px; height: 150px; background: radial-gradient(circle, oklch(var(--p) / 0.15) 0%, transparent 70%); }
+  .glass-index-tile { @apply flex items-center gap-3 px-5 py-3 rounded-xl no-underline transition-all duration-300; }
+  .glass-index-tile:hover { transform: translateY(-4px); border-color: var(--tile-clr); }
+  .tile-bar { width: 4px; height: 14px; background: var(--tile-clr); border-radius: 4px; }
+  .tile-label { color: white; font-weight: 700; font-size: 14px; opacity: 0.8; }
+  [data-theme-type="light"] .tile-label { color: #1e293b; }
+  .tile-val { font-weight: 900; color: var(--tile-clr); font-size: 11px; opacity: 0.5; }
+</style>
 
-    const viewport = root.querySelector("[data-viewport]");
-    const world = root.querySelector("[data-world]");
-    const svg = root.querySelector("[data-svg]");
-    const core = root.querySelector("[data-core]");
-    const coreShape = root.querySelector("[data-core-shape]");
-    const nodeElements = Array.from(root.querySelectorAll("[data-node-id]"));
-    const controls = Array.from(root.querySelectorAll("[data-mm-action]"));
-    if (!viewport || !world || !svg || !core || nodeElements.length === 0) return;
-    root.dataset.mmReady = "1";
+<script is:inline define:vars={{ nodes }}>
+  (function() {
+    const viewport = document.getElementById('viewport');
+    const world = document.getElementById('world');
+    const starField = document.getElementById('star-field');
+    const resetBtn = document.getElementById('reset-system');
+    if (!viewport || !world) return;
 
-    const linkMap = new Map();
+    let width, height;
+    let scale = 1; let panX = 0; let panY = 0;
+    const DAMPING = 0.45; // 极高阻尼
+    const MIN_DIST = 95; // 安全半径
 
-    root.querySelectorAll("[data-link-id]").forEach((line) => {
-      linkMap.set(line.getAttribute("data-link-id"), line);
+    const nodeData = nodes.map((n, i) => {
+      const groupLen = nodes.filter(x => x.zone === n.zone).length;
+      const groupIdx = nodes.filter(x => x.zone === n.zone).indexOf(n);
+      const angle = (groupIdx / groupLen) * Math.PI * 2;
+      return { ...n, angle, x: Math.cos(angle)*n.orbit, y: Math.sin(angle)*n.orbit, vx: 0, vy: 0, isDragging: false, el: document.querySelector(`[data-id="${n.id}"]`) };
     });
 
-    const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
-
-    let width = 0;
-    let height = 0;
-    let centerX = 0;
-    let centerY = 0;
-    let coreRadius = 76;
-    let scale = 1;
-    let panX = 0;
-    let panY = 0;
-
-    const minScale = 0.72;
-    const maxScale = 1.92;
-
-    let pointerMode = "";
-    let activePointerId = null;
-    let dragNode = null;
-    let dragMoved = false;
-    let startX = 0;
-    let startY = 0;
-    let startPanX = 0;
-    let startPanY = 0;
-    let settleRaf = 0;
-    let settleFrames = 0;
-    let focusedNodeId = "";
-
-    const nodes = [];
-
-    function applyWorldTransform() {
-      world.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
-    }
-
-    function setNodePosition(node) {
-      node.el.style.left = `${node.x.toFixed(2)}px`;
-      node.el.style.top = `${node.y.toFixed(2)}px`;
-    }
-
-    function setLinkPosition(node) {
-      const link = linkMap.get(node.id);
-      if (!link) return;
-      const dx = node.x - centerX;
-      const dy = node.y - centerY;
-      const distance = Math.hypot(dx, dy) || 0.0001;
-      const startDistance = Math.max(16, coreRadius + 1.5);
-      const startX = centerX + (dx / distance) * startDistance;
-      const startY = centerY + (dy / distance) * startDistance;
-      const normalX = -dy / distance;
-      const normalY = dx / distance;
-      const curve = Math.min(42, Math.max(12, node.idealRadius * 0.085));
-      const c1x = startX + dx * 0.24 + normalX * curve;
-      const c1y = startY + dy * 0.24 + normalY * curve;
-      const c2x = startX + dx * 0.72 - normalX * curve * 0.72;
-      const c2y = startY + dy * 0.72 - normalY * curve * 0.72;
-      const d = `M ${startX.toFixed(2)} ${startY.toFixed(2)} C ${c1x.toFixed(2)} ${c1y.toFixed(2)}, ${c2x.toFixed(2)} ${c2y.toFixed(2)}, ${node.x.toFixed(2)} ${node.y.toFixed(2)}`;
-      link.setAttribute("d", d);
-    }
-
-    function render() {
-      nodes.forEach((node) => {
-        setNodePosition(node);
-        setLinkPosition(node);
-      });
-    }
-
-    function updateBounds(node) {
-      const marginX = node.radius + 12;
-      const marginY = node.radius + 12;
-
-      if (node.x < marginX) {
-        node.x = marginX;
-        node.vx *= -0.22;
-      }
-      if (node.x > width - marginX) {
-        node.x = width - marginX;
-        node.vx *= -0.22;
-      }
-      if (node.y < marginY) {
-        node.y = marginY;
-        node.vy *= -0.22;
-      }
-      if (node.y > height - marginY) {
-        node.y = height - marginY;
-        node.vy *= -0.22;
-      }
-    }
-
-    function scheduleSettle(frames = 20) {
-      settleFrames = Math.max(settleFrames, frames);
-      if (settleRaf) return;
-
-      const settleTick = () => {
-        settleRaf = 0;
-        if (settleFrames <= 0) return;
-
-        const iterations = settleFrames > 12 ? 2 : 1;
-        runRelax(iterations);
-        render();
-        settleFrames -= 1;
-
-        settleRaf = requestAnimationFrame(settleTick);
-      };
-
-      settleRaf = requestAnimationFrame(settleTick);
-    }
-
-    function setFocus(nodeId = "") {
-      if (focusedNodeId === nodeId) return;
-      focusedNodeId = nodeId;
-
-      nodes.forEach((node) => {
-        const isActive = !!nodeId && node.id === nodeId;
-        const isDim = !!nodeId && node.id !== nodeId;
-        node.el.classList.toggle("is-active", isActive);
-        node.el.classList.toggle("is-dim", isDim);
-
-        const link = linkMap.get(node.id);
-        if (link) {
-          link.classList.toggle("is-active", isActive);
-          link.classList.toggle("is-dim", isDim);
-        }
-      });
-
-      core.classList.toggle("is-focused", !!nodeId);
-    }
-
-    function runRelax(iterations) {
-      for (let iter = 0; iter < iterations; iter += 1) {
-        for (const node of nodes) {
-          if (node.dragging) continue;
-
-          const dx = node.x - centerX;
-          const dy = node.y - centerY;
-          const distance = Math.hypot(dx, dy) || 0.0001;
-          const radialError = distance - node.idealRadius;
-
-          node.vx += (-(radialError * dx) / distance) * 0.013;
-          node.vy += (-(radialError * dy) / distance) * 0.013;
-
-          const targetX = centerX + Math.cos(node.seedAngle) * node.idealRadius;
-          const targetY = centerY + Math.sin(node.seedAngle) * node.idealRadius;
-
-          node.vx += (targetX - node.x) * 0.003;
-          node.vy += (targetY - node.y) * 0.003;
-
-          const minCoreDistance = coreRadius + node.radius + 10;
-          if (distance < minCoreDistance) {
-            const push = (minCoreDistance - distance) * 0.11;
-            node.vx += (dx / distance) * push;
-            node.vy += (dy / distance) * push;
-          }
-        }
-
-        for (let i = 0; i < nodes.length; i += 1) {
-          const a = nodes[i];
-          for (let j = i + 1; j < nodes.length; j += 1) {
-            const b = nodes[j];
-            const dx = b.x - a.x;
-            const dy = b.y - a.y;
-            const distance = Math.hypot(dx, dy) || 0.0001;
-            const minDistance = a.radius + b.radius + 8;
-
-            if (distance < minDistance) {
-              const overlap = (minDistance - distance) / distance;
-              const forceX = dx * overlap * 0.45;
-              const forceY = dy * overlap * 0.45;
-
-              if (!a.dragging) {
-                a.vx -= forceX;
-                a.vy -= forceY;
-              }
-              if (!b.dragging) {
-                b.vx += forceX;
-                b.vy += forceY;
-              }
+    function solve() {
+      for (let k = 0; k < 2; k++) {
+        nodeData.forEach((a, i) => {
+          if (a.isDragging) return;
+          nodeData.forEach((b, j) => {
+            if (i >= j) return;
+            const dx = b.x - a.x; const dy = b.y - a.y;
+            const d = Math.hypot(dx, dy) || 1;
+            if (d < MIN_DIST) {
+              const push = (MIN_DIST - d) * 0.05;
+              const ox = (dx / d) * push; const oy = (dy / d) * push;
+              a.x -= ox; a.y -= oy; b.x += ox; b.y += oy;
             }
-          }
-        }
-
-        for (const node of nodes) {
-          if (node.dragging) continue;
-          node.vx *= 0.84;
-          node.vy *= 0.84;
-          node.x += node.vx;
-          node.y += node.vy;
-          updateBounds(node);
-        }
-      }
-    }
-
-    function resolveDragCollisions(activeNode) {
-      for (const node of nodes) {
-        if (node === activeNode) continue;
-
-        const dx = node.x - activeNode.x;
-        const dy = node.y - activeNode.y;
-        const distance = Math.hypot(dx, dy) || 0.0001;
-        const minDistance = activeNode.radius + node.radius + 8;
-
-        if (distance < minDistance) {
-          const overlap = (minDistance - distance) / distance;
-          const force = overlap * 0.72;
-          if (!node.dragging) {
-            node.vx += dx * force * 0.08;
-            node.vy += dy * force * 0.08;
-            node.x += dx * force * 0.18;
-            node.y += dy * force * 0.18;
-            updateBounds(node);
-          }
-        }
-      }
-    }
-
-    function toWorldCoordinates(clientX, clientY) {
-      const rect = viewport.getBoundingClientRect();
-      return {
-        x: (clientX - rect.left - panX) / scale,
-        y: (clientY - rect.top - panY) / scale,
-      };
-    }
-
-    function zoomAt(clientX, clientY, factor) {
-      const rect = viewport.getBoundingClientRect();
-      const pointX = clientX - rect.left;
-      const pointY = clientY - rect.top;
-      const worldX = (pointX - panX) / scale;
-      const worldY = (pointY - panY) / scale;
-      const nextScale = clamp(scale * factor, minScale, maxScale);
-
-      panX = pointX - worldX * nextScale;
-      panY = pointY - worldY * nextScale;
-      scale = nextScale;
-      applyWorldTransform();
-    }
-
-    function resetView() {
-      scale = 1;
-      panX = 0;
-      panY = 0;
-      applyWorldTransform();
-    }
-
-    function measureViewport() {
-      const rect = viewport.getBoundingClientRect();
-      width = Math.max(640, rect.width);
-      height = Math.max(480, rect.height);
-      centerX = width * 0.5;
-      centerY = height * 0.5;
-
-      world.style.width = `${width}px`;
-      world.style.height = `${height}px`;
-      svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
-      svg.setAttribute("width", `${width}`);
-      svg.setAttribute("height", `${height}`);
-
-      const coreRect = (coreShape || core).getBoundingClientRect();
-      coreRadius = Math.max(coreRect.width, coreRect.height) * 0.5;
-    }
-
-    function buildNodeState() {
-      nodes.length = 0;
-      const ringGap = Math.max(76, Math.min(width, height) * 0.11);
-      const baseRadius = Math.max(120, Math.min(width, height) * 0.2);
-
-      nodeElements.forEach((element, index) => {
-        const seedAngle = Number(element.dataset.seedAngle || "0");
-        const ring = Number(element.dataset.ring || "1");
-        const weight = Number(element.dataset.weight || "0.5");
-
-        const idealRadius = baseRadius + (ring - 1) * ringGap + weight * 34;
-        const x = centerX + Math.cos(seedAngle) * idealRadius;
-        const y = centerY + Math.sin(seedAngle) * idealRadius;
-
-        element.style.left = `${x}px`;
-        element.style.top = `${y}px`;
-
-        const radius = Math.max(element.offsetWidth, element.offsetHeight) * 0.56 + 10;
-
-        nodes.push({
-          id: element.dataset.nodeId || `node-${index}`,
-          el: element,
-          x,
-          y,
-          vx: 0,
-          vy: 0,
-          seedAngle,
-          ring,
-          weight,
-          idealRadius,
-          radius,
-          dragging: false,
-          moved: false,
+          });
+          const r = Math.hypot(a.x, a.y) || 1;
+          a.x = (a.x / r) * a.orbit; a.y = (a.y / r) * a.orbit;
         });
+      }
+    }
+
+    function tick() {
+      const cx = width / 2; const cy = height / 2;
+      nodeData.forEach(a => {
+        if (a.isDragging) return;
+        a.angle += speeds[a.zone];
+        const tx = Math.cos(a.angle) * a.orbit; const ty = Math.sin(a.angle) * a.orbit;
+        a.vx = (a.vx + (tx - a.x) * 0.02) * DAMPING;
+        a.vy = (a.vy + (ty - a.y) * 0.02) * DAMPING;
+        a.x += a.vx; a.y += a.vy;
       });
+      solve();
+      nodeData.forEach(n => {
+        if (n.el) n.el.style.transform = `translate3d(${cx + n.x}px, ${cy + n.y}px, 0) translate(-50%, -50%)`;
+      });
+      requestAnimationFrame(tick);
     }
 
-    function remapAfterResize(previousWidth, previousHeight) {
-      if (previousWidth <= 0 || previousHeight <= 0) return;
-
-      const sx = width / previousWidth;
-      const sy = height / previousHeight;
-      const ringGap = Math.max(76, Math.min(width, height) * 0.11);
-      const baseRadius = Math.max(120, Math.min(width, height) * 0.2);
-
-      for (const node of nodes) {
-        node.x *= sx;
-        node.y *= sy;
-        node.vx = 0;
-        node.vy = 0;
-        node.idealRadius = baseRadius + (node.ring - 1) * ringGap + node.weight * 34;
-        updateBounds(node);
-      }
+    const speeds = { inner: 0.0005, mid: 0.0003, outer: 0.0002 };
+    function init() {
+      const rect = viewport.getBoundingClientRect(); width = rect.width; height = rect.height;
+      for(let i=0; i<200; i++) solve();
+      let h = ''; for(let i=0; i<100; i++) h += `<div style="left:${Math.random()*100}%; top:${Math.random()*100}%; width:1.5px; height:1.5px; position:absolute; background:white; opacity:0.3; border-radius:50%"></div>`;
+      starField.innerHTML = h;
+      tick();
     }
 
-    function initialize() {
-      measureViewport();
-      buildNodeState();
-      runRelax(260);
-      render();
-      resetView();
-      scheduleSettle(26);
-    }
+    let isPanning = false; let sx, sy;
+    viewport.addEventListener('mousedown', e => { if (e.target.closest('.planet-node')) return; isPanning = true; sx = e.clientX - panX; sy = e.clientY - panY; });
+    window.addEventListener('mousemove', e => { if (!isPanning) return; panX = e.clientX - sx; panY = e.clientY - sy; world.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`; });
+    window.addEventListener('mouseup', () => isPanning = false);
+    viewport.addEventListener('wheel', e => { e.preventDefault(); const zoom = e.deltaY > 0 ? 0.95 : 1.05; scale = Math.min(Math.max(0.3, scale * zoom), 3); world.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`; }, { passive: false });
 
-    viewport.addEventListener("pointerdown", (event) => {
-      if (event.button !== 0 && event.pointerType !== "touch") return;
-
-      const target = event.target;
-      const nodeTarget = target instanceof Element ? target.closest("[data-node-id]") : null;
-      activePointerId = event.pointerId;
-      viewport.setPointerCapture(activePointerId);
-
-      startX = event.clientX;
-      startY = event.clientY;
-      dragMoved = false;
-
-      if (nodeTarget) {
-        pointerMode = "node";
-        const nodeId = nodeTarget.getAttribute("data-node-id");
-        dragNode = nodes.find((node) => node.id === nodeId) || null;
-        setFocus(nodeId || "");
-
-        if (dragNode) {
-          dragNode.dragging = true;
-          dragNode.vx = 0;
-          dragNode.vy = 0;
-          dragNode.el.classList.add("is-dragging");
-        }
-      } else {
-        pointerMode = "pan";
-        startPanX = panX;
-        startPanY = panY;
-        viewport.classList.add("is-panning");
-        setFocus("");
-      }
+    nodeData.forEach(node => {
+      node.el.addEventListener('mousedown', e => { e.stopPropagation(); node.isDragging = true; node.el.style.zIndex = "1000"; });
+      window.addEventListener('mousemove', e => {
+        if (!node.isDragging) return;
+        const rect = viewport.getBoundingClientRect();
+        node.x = (e.clientX - rect.left - panX) / scale - width/2;
+        node.y = (e.clientY - rect.top - panY) / scale - height/2;
+      });
+      window.addEventListener('mouseup', () => { if(node.isDragging) { node.isDragging = false; node.el.style.zIndex = "30"; node.angle = Math.atan2(node.y, node.x); node.orbit = Math.hypot(node.x, node.y); } });
     });
 
-    viewport.addEventListener("pointermove", (event) => {
-      if (activePointerId !== event.pointerId || !pointerMode) return;
-
-      if (pointerMode === "pan") {
-        const dx = event.clientX - startX;
-        const dy = event.clientY - startY;
-        panX = startPanX + dx;
-        panY = startPanY + dy;
-        applyWorldTransform();
-        return;
-      }
-
-      if (pointerMode === "node" && dragNode) {
-        const worldPoint = toWorldCoordinates(event.clientX, event.clientY);
-        dragNode.x = clamp(worldPoint.x, dragNode.radius + 10, width - dragNode.radius - 10);
-        dragNode.y = clamp(worldPoint.y, dragNode.radius + 10, height - dragNode.radius - 10);
-        dragNode.vx = 0;
-        dragNode.vy = 0;
-
-        resolveDragCollisions(dragNode);
-        runRelax(1);
-        render();
-        scheduleSettle(3);
-
-        if (Math.hypot(event.clientX - startX, event.clientY - startY) > 4) {
-          dragMoved = true;
-        }
-      }
-    });
-
-    function stopPointer(event) {
-      if (activePointerId !== event.pointerId) return;
-
-      if (pointerMode === "node" && dragNode) {
-        const draggedElement = dragNode.el;
-        dragNode.dragging = false;
-        draggedElement.classList.remove("is-dragging");
-
-        if (dragMoved) {
-          draggedElement.dataset.dragMoved = "1";
-          setTimeout(() => {
-            delete draggedElement.dataset.dragMoved;
-          }, 180);
-        }
-
-        scheduleSettle(24);
-      }
-
-      pointerMode = "";
-      activePointerId = null;
-      dragNode = null;
-      viewport.classList.remove("is-panning");
-
-      if (viewport.hasPointerCapture(event.pointerId)) {
-        viewport.releasePointerCapture(event.pointerId);
-      }
-    }
-
-    viewport.addEventListener("pointerup", stopPointer);
-    viewport.addEventListener("pointercancel", stopPointer);
-
-    viewport.addEventListener(
-      "wheel",
-      (event) => {
-        event.preventDefault();
-        const factor = event.deltaY < 0 ? 1.08 : 0.92;
-        zoomAt(event.clientX, event.clientY, factor);
-      },
-      { passive: false },
-    );
-
-    nodeElements.forEach((element) => {
-      const id = element.dataset.nodeId || "";
-      if (!id) return;
-
-      element.addEventListener("mouseenter", () => {
-        setFocus(id);
-      });
-
-      element.addEventListener("mouseleave", () => {
-        if (pointerMode === "node" && dragNode) return;
-        setFocus("");
-      });
-
-      element.addEventListener("click", (event) => {
-        if (element.dataset.dragMoved === "1") {
-          event.preventDefault();
-          event.stopPropagation();
-          delete element.dataset.dragMoved;
-        }
-      });
-    });
-
-    controls.forEach((control) => {
-      control.addEventListener("click", () => {
-        const action = control.getAttribute("data-mm-action");
-        if (action === "zoom-in") {
-          const rect = viewport.getBoundingClientRect();
-          zoomAt(rect.left + rect.width / 2, rect.top + rect.height / 2, 1.12);
-        } else if (action === "zoom-out") {
-          const rect = viewport.getBoundingClientRect();
-          zoomAt(rect.left + rect.width / 2, rect.top + rect.height / 2, 0.9);
-        } else {
-          resetView();
-        }
-        scheduleSettle(10);
-      });
-    });
-
-    const handleResize = () => {
-      const previousWidth = width;
-      const previousHeight = height;
-      measureViewport();
-
-      if (nodes.length === 0) {
-        buildNodeState();
-      } else {
-        remapAfterResize(previousWidth, previousHeight);
-      }
-
-      runRelax(24);
-      render();
-      scheduleSettle(22);
-    };
-
-    let resizeRaf = 0;
-    const onResize = () => {
-      if (resizeRaf) cancelAnimationFrame(resizeRaf);
-      resizeRaf = requestAnimationFrame(() => {
-        resizeRaf = 0;
-        handleResize();
-      });
-    };
-
-    window.addEventListener("resize", onResize);
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(onResize).catch(() => {});
-    }
-
-    document.addEventListener(
-      "astro:before-swap",
-      () => {
-        window.removeEventListener("resize", onResize);
-        if (settleRaf) cancelAnimationFrame(settleRaf);
-        if (resizeRaf) cancelAnimationFrame(resizeRaf);
-      },
-      { once: true },
-    );
-
-    initialize();
+    resetBtn.addEventListener('click', () => { panX = 0; panY = 0; scale = 1; world.style.transform = `translate(0,0) scale(1)`; });
+    window.addEventListener('resize', () => { const r = viewport.getBoundingClientRect(); width = r.width; height = r.height; });
+    init();
   })();
 </script>

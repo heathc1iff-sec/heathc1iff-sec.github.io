@@ -21,7 +21,7 @@ const {
   description = SITE_DESCRIPTION,
   headings = [],
   showTOC = false,
-  isIndexed = true,
+  isIndexed = false,
   pageType = "default",
 } = Astro.props;
 
@@ -44,7 +44,6 @@ const isBlogRoute = currentPathname === "/blog" || currentPathname.startsWith("/
     {!isBlogRoute && <ElementCrossing />}
     {!isBlogRoute && <PointerOnNavigation />}
     <Header title={title} description={description} favicon={SITE_FAVICON} image={image} />
-    <title>{`${title} - ${SITE_TAB}`}</title>
 
     <script define:vars={{ SITE_THEME }} is:inline>
       (function () {
@@ -107,27 +106,28 @@ const isBlogRoute = currentPathname === "/blog" || currentPathname.startsWith("/
     </script>
   </head>
 
-  <body class="flex flex-col min-h-screen" {...isIndexed ? { "data-pagefind-body": true } : {}}>
+  <body class="flex flex-col min-h-screen">
     {
       isBlogRoute ? (
         <div class="theme-background theme-background--lite" aria-hidden="true">
           <div class="theme-background__gradient"></div>
+          <div class="theme-background__stars theme-background__stars--lite" data-starfield></div>
           <div class="theme-background__vignette"></div>
         </div>
       ) : (
         <div class="theme-background" aria-hidden="true">
           <div class="theme-background__gradient"></div>
+          <!-- Animated Blobs for Light Mode -->
+          <div class="glass-blobs" aria-hidden="true">
+            <div class="glass-blob glass-blob--1"></div>
+            <div class="glass-blob glass-blob--2"></div>
+            <div class="glass-blob glass-blob--3"></div>
+            <div class="glass-blob glass-blob--4"></div>
+          </div>
           <div class="theme-background__mesh"></div>
           <div class="theme-background__aurora theme-background__aurora--a"></div>
           <div class="theme-background__aurora theme-background__aurora--b"></div>
           <div class="theme-background__sun"></div>
-          <div class="theme-background__clouds">
-            <span class="theme-background__cloud theme-background__cloud--1"></span>
-            <span class="theme-background__cloud theme-background__cloud--2"></span>
-            <span class="theme-background__cloud theme-background__cloud--3"></span>
-            <span class="theme-background__cloud theme-background__cloud--4"></span>
-            <span class="theme-background__cloud theme-background__cloud--5"></span>
-          </div>
           <div class="theme-background__glow theme-background__glow--a"></div>
           <div class="theme-background__glow theme-background__glow--b"></div>
           <div class="theme-background__stars" data-starfield></div>
@@ -150,7 +150,7 @@ const isBlogRoute = currentPathname === "/blog" || currentPathname.startsWith("/
           <main
             class="col-span-1 md:col-span-4 lg:col-span-3 bg-transparent order-1 md:order-2 mt-16 md:mt-0 flex flex-col gap-4"
           >
-            <div class="flex-grow flex flex-col gap-4">
+            <div class="flex-grow flex flex-col gap-4" {...isIndexed ? { "data-pagefind-body": true } : {}}>
               <slot />
             </div>
             <Footer />
@@ -164,21 +164,19 @@ const isBlogRoute = currentPathname === "/blog" || currentPathname.startsWith("/
 
       <MobileTOC headings={headings} showTOC={showTOC} />
 
-      <script is:inline>
+      <script>
         document.addEventListener("astro:after-swap", () => {
-          if (typeof window.__applyResolvedTheme === "function") {
-            window.__applyResolvedTheme();
+          if (typeof (window as any).__applyResolvedTheme === "function") {
+            (window as any).__applyResolvedTheme();
           }
         });
-      </script>
-
-      <script is:inline data-astro-rerun>
-        (() => {
-          if (window.__copyHandlerBound) return;
-          window.__copyHandlerBound = true;
+        // Copy button handler with delegation
+        const setupCopyButtons = () => {
+          if ((window as any).__copyHandlerBound) return;
+          (window as any).__copyHandlerBound = true;
 
           document.addEventListener("click", async (event) => {
-            const button = event.target?.closest?.(".btn-copy");
+            const button = (event.target as HTMLElement)?.closest?.(".btn-copy");
             if (!button) return;
 
             const codeBlock = button.closest(".frosti-code");
@@ -203,26 +201,30 @@ const isBlogRoute = currentPathname === "/blog" || currentPathname.startsWith("/
               console.error("Failed to copy:", err);
             }
           });
-        })();
-      </script>
+        };
 
-      {
-        !isBlogRoute && (
-          <script is:inline data-astro-rerun>
-            {`(() => {
-          const field = document.querySelector("[data-starfield]");
+        // Starfield generator
+        const setupStarfield = () => {
+          const field = document.querySelector("[data-starfield]") as HTMLElement;
           if (!field || field.dataset.starReady === "1") return;
           field.dataset.starReady = "1";
 
           const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
           const reducedData = window.matchMedia("(prefers-reduced-data: reduce)").matches;
+          const isBlogPost = document.documentElement.getAttribute("data-page-type") === "blog-post";
           const count = reducedData
-            ? 16
+            ? 14
             : reducedMotion
-              ? 24
-              : window.innerWidth < 768
-                ? 42
-                : 72;
+              ? isBlogPost
+                ? 22
+                : 28
+              : isBlogPost
+                ? window.innerWidth < 768
+                  ? 32
+                  : 46
+                : window.innerWidth < 768
+                  ? 52
+                  : 88;
 
           const fragment = document.createDocumentFragment();
           for (let i = 0; i < count; i += 1) {
@@ -230,24 +232,35 @@ const isBlogRoute = currentPathname === "/blog" || currentPathname.startsWith("/
             star.className = "theme-background__star";
 
             const size =
-              Math.random() < 0.08 ? 1.6 + Math.random() * 1.1 : 0.7 + Math.random() * 0.9;
-            star.style.width = \`\${size.toFixed(2)}px\`;
-            star.style.height = \`\${size.toFixed(2)}px\`;
-            star.style.left = \`\${(Math.random() * 100).toFixed(3)}%\`;
-            star.style.top = \`\${(Math.random() * 74).toFixed(3)}%\`;
-            star.style.opacity = \`\${(0.28 + Math.random() * 0.52).toFixed(3)}\`;
-            star.style.setProperty("--twinkle-duration", \`\${(6.8 + Math.random() * 8.6).toFixed(2)}s\`);
-            star.style.setProperty("--twinkle-delay", \`\${(-Math.random() * 8).toFixed(2)}s\`);
-            star.style.setProperty("--star-scale", (0.84 + Math.random() * 0.34).toFixed(3));
+              Math.random() < 0.1 ? 1.7 + Math.random() * 1.2 : 0.68 + Math.random() * 0.95;
+            star.style.width = `${size.toFixed(2)}px`;
+            star.style.height = `${size.toFixed(2)}px`;
+            star.style.left = `${(Math.random() * 100).toFixed(3)}%`;
+            star.style.top = `${(Math.random() * 78).toFixed(3)}%`;
+            star.style.opacity = `${(0.24 + Math.random() * 0.62).toFixed(3)}`;
+            star.style.setProperty("--twinkle-duration", `${(5.6 + Math.random() * 9.8).toFixed(2)}s`);
+            star.style.setProperty("--twinkle-delay", `${(-Math.random() * 9.5).toFixed(2)}s`);
+            star.style.setProperty("--star-scale", (0.82 + Math.random() * 0.44).toFixed(3));
 
             fragment.appendChild(star);
           }
 
           field.appendChild(fragment);
-        })();`}
-          </script>
-        )
-      }
+        };
+
+        // Initialize on page load and after-swap
+        const init = () => {
+          setupCopyButtons();
+          // Use requestIdleCallback if available for non-critical starfield
+          if ('requestIdleCallback' in window) {
+            window.requestIdleCallback(() => setupStarfield());
+          } else {
+            setTimeout(setupStarfield, 100);
+          }
+        };
+
+        document.addEventListener("astro:page-load", init);
+      </script>
 
       <style is:inline>
         .btn-copy {

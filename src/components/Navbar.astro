@@ -29,20 +29,20 @@ const typedMenu = SITE_MENU as MenuItem[];
 ---
 
 <nav
-  class="navbar fixed px-2 w-full transform transition-transform delay-300 duration-500 ease-in-out text-center z-50 bg-base-100 shadow-lg md:hidden"
+  class="navbar fixed px-4 w-full transform transition-all duration-500 ease-in-out z-50 frosti-card !rounded-none !border-none md:hidden"
   id="navbar"
 >
   <div class="navbar-start">
-    <label class="btn btn-circle btn-md bg-base-100 swap swap-rotate">
+    <label class="btn btn-ghost btn-circle swap swap-rotate hover:bg-primary/10 hover:text-primary">
       <span class="sr-only">Toggle menu</span>
-      <input type="checkbox" id="menu-toggle" />
+      <input type="checkbox" id="menu-toggle" aria-expanded="false" aria-controls="header-menu" />
       <Icon name="lucide:menu" class="swap-off h-5 w-5" />
       <Icon name="lucide:x" class="swap-on h-5 w-5" />
     </label>
   </div>
 
   <div class="navbar-center">
-    <a class="btn btn-ghost text-xl hover:scale-105 transition-transform duration-300" href="/">
+    <a class="text-xl font-black tracking-tighter transition-all hover:scale-105 active:scale-95" href="/">
       {SITE_TITLE}
     </a>
   </div>
@@ -53,30 +53,31 @@ const typedMenu = SITE_MENU as MenuItem[];
 
   <div
     id="header-menu"
-    class="absolute top-full left-0 w-full transform -translate-x-full transition-transform duration-300 ease-in-out bg-base-100 shadow-lg"
+    class="absolute top-full left-0 w-full transform -translate-x-full transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1) frosti-card !rounded-none border-t border-white/5"
   >
-    <ul class="menu bg-transparent w-full p-2">
+    <ul class="menu w-full p-4 gap-2">
       {
         typedMenu.map((item) => (
-          <li class="w-full relative group">
+          <li class="w-full">
             {item.subItems ? (
-              <details open={currentPath.startsWith(item.href)}>
-                <summary class="flex items-center text-lg font-bold p-3 hover:bg-base-200 rounded-lg">
-                  <Icon name={item.svg} class="w-5 h-5 mr-2" />
+              <details class="group" open={currentPath.startsWith(item.href)}>
+                <summary class="flex items-center text-sm font-black p-4 hover:bg-primary/10 hover:text-primary rounded-xl transition-all">
+                  <Icon name={item.svg} class="w-5 h-5 mr-3" />
                   <span>{item.text}</span>
+                  <Icon name="lucide:chevron-down" class="w-4 h-4 ml-auto opacity-30 group-open:rotate-180 transition-transform" />
                 </summary>
-                <ul class="pl-4">
+                <ul class="mt-2 ml-6 border-l border-base-content/5 py-1">
                   {item.subItems.map((subItem) => (
                     <li>
                       <a
                         class:list={[
-                          "flex items-center p-2 hover:bg-base-200 rounded-lg",
-                          currentPath === subItem.href && "bg-base-200",
+                          "flex items-center p-3 text-sm font-bold opacity-60 hover:opacity-100 hover:text-primary transition-all",
+                          currentPath === subItem.href && "opacity-100 text-primary",
                         ]}
                         href={subItem.href}
                         target={subItem.target || "_self"}
                       >
-                        <Icon name={subItem.svg} class="w-4 h-4 mr-2" />
+                        <Icon name={subItem.svg} class="w-4 h-4 mr-3" />
                         <span>{subItem.text}</span>
                       </a>
                     </li>
@@ -86,13 +87,13 @@ const typedMenu = SITE_MENU as MenuItem[];
             ) : (
               <a
                 class:list={[
-                  "flex items-center text-lg font-bold p-3 hover:bg-base-200 rounded-lg",
-                  currentPath === item.href && "bg-base-200",
+                  "flex items-center text-sm font-black p-4 hover:bg-primary/10 hover:text-primary rounded-xl transition-all",
+                  currentPath === item.href && "bg-primary/10 text-primary",
                 ]}
                 href={item.href}
                 target={item.target || "_self"}
               >
-                <Icon name={item.svg} class="w-5 h-5 mr-2" />
+                <Icon name={item.svg} class="w-5 h-5 mr-3" />
                 <span>{item.text}</span>
               </a>
             )}
@@ -114,7 +115,9 @@ const typedMenu = SITE_MENU as MenuItem[];
 
     // Toggle menu visibility
     menuToggle.addEventListener("change", () => {
-      if (menuToggle.checked) {
+      const isChecked = menuToggle.checked;
+      menuToggle.setAttribute("aria-expanded", isChecked.toString());
+      if (isChecked) {
         headerMenu.classList.remove("-translate-x-full");
         headerMenu.classList.add("translate-x-0");
       } else {
@@ -133,6 +136,7 @@ const typedMenu = SITE_MENU as MenuItem[];
         // Close menu when hiding navbar
         if (menuToggle.checked) {
           menuToggle.checked = false;
+          menuToggle.setAttribute("aria-expanded", "false");
           headerMenu.classList.add("-translate-x-full");
           headerMenu.classList.remove("translate-x-0");
         }
@@ -163,6 +167,7 @@ const typedMenu = SITE_MENU as MenuItem[];
       const target = event.target as Node;
       if (!navbar.contains(target) && headerMenu.classList.contains("translate-x-0")) {
         menuToggle.checked = false;
+        menuToggle.setAttribute("aria-expanded", "false");
         headerMenu.classList.add("-translate-x-full");
         headerMenu.classList.remove("translate-x-0");
       }
@@ -176,6 +181,7 @@ const typedMenu = SITE_MENU as MenuItem[];
 
         if (menuToggle.checked) {
           menuToggle.checked = false;
+          menuToggle.setAttribute("aria-expanded", "false");
           headerMenu.classList.add("-translate-x-full");
           headerMenu.classList.remove("translate-x-0");
         }

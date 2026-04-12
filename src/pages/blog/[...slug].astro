@@ -123,6 +123,7 @@ const url = new URL(`/blog/${encodedSlugPath}`, Astro.url.origin);
   image={image}
   headings={displayHeadings}
   showTOC={!isEncrypted || hasEncryptedPayload}
+  isIndexed={true}
   pageType="blog-post"
 >
   <MainCard title={blog.data.title} description={blog.data.description} image={blog.data.image} infoIcon="lucide:info">
@@ -141,7 +142,7 @@ const url = new URL(`/blog/${encodedSlugPath}`, Astro.url.origin);
       {
         hasEncryptedPayload ? (
           <>
-            <div id="post-lock-gate" class="post-lock-shell">
+            <div id="post-lock-gate" class="post-lock-shell" data-pagefind-ignore>
               <div class="post-lock-orb post-lock-orb-a" aria-hidden="true"></div>
               <div class="post-lock-orb post-lock-orb-b" aria-hidden="true"></div>
               <div class="post-lock-grid" aria-hidden="true"></div>
@@ -766,11 +767,10 @@ const url = new URL(`/blog/${encodedSlugPath}`, Astro.url.origin);
                             data-heading-slug="${escapeHtml(heading.slug)}"
                             data-heading-depth="${heading.depth}"
                             data-index="${heading.index}"
-                            class="toc-link relative flex items-center py-2 px-2 rounded-lg ${heading.depth === 1 ? "font-medium" : ""}"
-                            style="padding-left: ${12 + (heading.depth - 1) * 16}px;"
+                            class="toc-link relative flex items-center py-2 px-3 rounded-xl transition-all duration-300 ${heading.depth === 1 ? "font-bold text-sm" : "text-xs font-medium opacity-70"}"
+                            style="padding-left: ${heading.depth === 1 ? 12 : 12 + (heading.depth - 1) * 12}px;"
                           >
-                            <span class="icon-indicator absolute left-1 opacity-0 transition-all duration-200 w-4 h-4 text-primary">›</span>
-                            <span class="link-text transition-transform duration-200">${escapeHtml(heading.text)}</span>
+                            <span class="link-text transition-all duration-300 line-clamp-2">${escapeHtml(heading.text)}</span>
                           </a>
                         </li>
                       `,
@@ -815,7 +815,6 @@ const url = new URL(`/blog/${encodedSlugPath}`, Astro.url.origin);
                   const headingEntries = buildHeadingsFromContent(contentRoot);
                   renderSidebarTOC(headingEntries);
                   renderMobileTOC(headingEntries);
-                  document.dispatchEvent(new Event("astro:page-load"));
                 };
 
                 const deriveKey = async (password, salt, iterations) => {
@@ -887,6 +886,8 @@ const url = new URL(`/blog/${encodedSlugPath}`, Astro.url.origin);
                   const unlockPost = () => {
                     gate.classList.add("hidden");
                     contentWrap.classList.remove("hidden");
+                    document.dispatchEvent(new Event("astro:page-load"));
+                    window.dispatchEvent(new Event("post-content-updated"));
                   };
 
                   const decryptWithPassword = async (password) => {
@@ -922,7 +923,6 @@ const url = new URL(`/blog/${encodedSlugPath}`, Astro.url.origin);
                       }
                       contentBody.innerHTML = sanitizeHtml(renderedHtml);
                       refreshDynamicTOC(contentBody);
-                      window.dispatchEvent(new Event("post-content-updated"));
                       return true;
                     } catch {
                       return false;
@@ -1006,7 +1006,7 @@ const url = new URL(`/blog/${encodedSlugPath}`, Astro.url.origin);
           </>
         ) : isEncrypted ? (
           <>
-            <div id="post-lock-gate" class="post-lock-shell">
+            <div id="post-lock-gate" class="post-lock-shell" data-pagefind-ignore>
               <div class="post-lock-orb post-lock-orb-a" aria-hidden="true"></div>
               <div class="post-lock-orb post-lock-orb-b" aria-hidden="true"></div>
               <div class="post-lock-grid" aria-hidden="true"></div>
@@ -1091,7 +1091,8 @@ const url = new URL(`/blog/${encodedSlugPath}`, Astro.url.origin);
                         <p class="prolabs-certificate-kicker">Hack The Box Prolabs</p>
                         <h3 class="prolabs-certificate-title">Completion Certificate</h3>
                         <p class="prolabs-certificate-subtitle">
-                          宸茶В閿佹湰绡囨枃绔狅紝涓嬮潰鏄瀹為獙鐜鐨勯€氬叧璇佷功銆?                        </p>
+                        This article is unlocked. The certificate for this lab is shown below.
+                        </p>
                       </div>
                       <a
                         class="prolabs-certificate-link"
@@ -1165,6 +1166,8 @@ const url = new URL(`/blog/${encodedSlugPath}`, Astro.url.origin);
                   const unlockPost = () => {
                     gate.classList.add("hidden");
                     content.classList.remove("hidden");
+                    document.dispatchEvent(new Event("astro:page-load"));
+                    window.dispatchEvent(new Event("post-content-updated"));
                   };
 
                   if (toggle) {
@@ -1391,8 +1394,20 @@ const url = new URL(`/blog/${encodedSlugPath}`, Astro.url.origin);
             return true;
           };
 
+          const runLitePreview = (force = false) => {
+            const runner = () => {
+              void applyLitePreviewStyles({ force });
+            };
+
+            if ("requestIdleCallback" in window) {
+              window.requestIdleCallback(runner, { timeout: force ? 700 : 1200 });
+            } else {
+              window.setTimeout(runner, 0);
+            }
+          };
+
           const initializeLitePreview = () => {
-            void applyLitePreviewStyles();
+            runLitePreview(false);
           };
 
           document.addEventListener("astro:page-load", initializeLitePreview);
@@ -1403,7 +1418,7 @@ const url = new URL(`/blog/${encodedSlugPath}`, Astro.url.origin);
             if (scopeLite) {
               delete scopeLite.dataset.previewStyled;
             }
-            void applyLitePreviewStyles({ force: true });
+            runLitePreview(true);
           });
           initializeLitePreview();
           return;
@@ -1477,6 +1492,7 @@ const url = new URL(`/blog/${encodedSlugPath}`, Astro.url.origin);
         initializePreview();
       })();
     </script>
+
   </MainCard>
 </BaseLayout>
 
@@ -1944,4 +1960,5 @@ const url = new URL(`/blog/${encodedSlugPath}`, Astro.url.origin);
     }
   }
 </style>
+
 

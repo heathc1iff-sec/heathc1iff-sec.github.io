@@ -7,37 +7,38 @@ import ThemeToggle from "../widgets/ThemeToggle.astro";
 ---
 
 <Card>
-  <div class="toolbar-container p-4">
-    <div class="grid grid-cols-4 md:grid-cols-2 lg:grid-cols-4 justify-center items-center gap-4 flex-wrap">
-      <!-- Navigation Buttons -->
+  <div class="toolbar-container p-3">
+    <div class="grid grid-cols-4 md:grid-cols-2 lg:grid-cols-4 gap-2">
       <a
         href="/blog/tags"
-        class="btn btn-circle btn-md border-base-content/20 bg-base-100 shadow-sm hover:scale-110"
+        class="flex flex-col items-center justify-center p-3 rounded-2xl bg-base-content/5 hover:bg-primary/10 hover:text-primary transition-all duration-300 group/tool"
         aria-label={t("label.tagPage")}
         title={t("label.tagPage")}
       >
-        <Icon name="lucide:tag" class="w-5 h-5" />
+        <Icon name="lucide:tag" class="w-5 h-5 transition-transform group-hover/tool:scale-110" />
       </a>
 
       <a
         href="/blog/categories"
-        class="btn btn-circle btn-md border-base-content/20 bg-base-100 shadow-sm hover:scale-110"
+        class="flex flex-col items-center justify-center p-3 rounded-2xl bg-base-content/5 hover:bg-primary/10 hover:text-primary transition-all duration-300 group/tool"
         aria-label={t("label.categoryPage")}
         title={t("label.categoryPage")}
       >
-        <Icon name="lucide:folder" class="w-5 h-5" />
+        <Icon name="lucide:folder" class="w-5 h-5 transition-transform group-hover/tool:scale-110" />
       </a>
 
       <a
         href="/blog/archives"
-        class="btn btn-circle btn-md border-base-content/20 bg-base-100 shadow-sm hover:scale-110"
+        class="flex flex-col items-center justify-center p-3 rounded-2xl bg-base-content/5 hover:bg-primary/10 hover:text-primary transition-all duration-300 group/tool"
         aria-label={t("label.archivePage")}
         title={t("label.archivePage")}
       >
-        <Icon name="lucide:archive" class="w-5 h-5" />
+        <Icon name="lucide:archive" class="w-5 h-5 transition-transform group-hover/tool:scale-110" />
       </a>
 
-      <ThemeToggle className="sidebar-theme" />
+      <div class="flex items-center justify-center p-1 rounded-2xl bg-base-content/5 hover:bg-primary/10 transition-all duration-300">
+        <ThemeToggle className="sidebar-theme" />
+      </div>
 
       <slot />
     </div>

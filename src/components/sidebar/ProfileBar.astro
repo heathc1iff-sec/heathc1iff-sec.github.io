@@ -13,19 +13,34 @@ const currentPath = Astro.url.pathname;
 ---
 
 <Card>
-  <div class="relative p-4 flex flex-col">
-    <div class="p-2 flex justify-center">
-      <Image
-        class="mask mask-circle"
-        format="webp"
-        width={250}
-        height={250}
-        src={USER_AVATAR}
-        alt="Profile"
-        loading="eager"
-      />
+  <div class="relative p-4 flex flex-col items-center">
+    <!-- Avatar Section with Glass Effect -->
+    <div class="relative group p-2">
+      <div class="absolute inset-0 bg-gradient-to-tr from-primary/20 to-secondary/20 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+      <div class="relative p-1 bg-white/5 backdrop-blur-md rounded-full border border-white/10 shadow-inner">
+        <Image
+          class="mask mask-circle w-24 h-24 lg:w-32 lg:h-32 object-cover"
+          format="webp"
+          width={250}
+          height={250}
+          src={USER_AVATAR}
+          alt="Profile"
+          loading="eager"
+        />
+      </div>
     </div>
-    <ul class="menu bg-transparent w-full m-0 p-0 hidden md:flex flex-col items-center lg:items-start">
+
+    <!-- Signature Section -->
+    <div class="mt-4 mb-6 text-center">
+      <div class="relative inline-block px-4 py-1">
+        <span class="relative z-10 font-signature text-2xl md:text-3xl text-base-content/90 tracking-wider">
+          Heathcliff
+        </span>
+        <div class="absolute bottom-1 left-0 w-full h-2 bg-primary/10 -rotate-1 rounded-full -z-0"></div>
+      </div>
+    </div>
+
+    <ul class="menu bg-transparent w-full m-0 p-0 hidden md:flex flex-col items-center lg:items-start border-t border-base-content/5 pt-4">
       {
         SITE_MENU.map((item) => (
           <li class="w-full relative group">
