@@ -75,6 +75,7 @@ const { headings = [], showTOC = true } = Astro.props as TOCBarProps;
 </style>
 
 <script>
+  // @ts-nocheck
   (() => {
     const host = window;
     const runtime = host.__tocRuntime || (host.__tocRuntime = {});
