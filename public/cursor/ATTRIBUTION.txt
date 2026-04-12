@@ -1,0 +1,19 @@
+﻿Catppuccin cursor assets
+Source repository: https://github.com/catppuccin/cursors
+Release assets used:
+- catppuccin-latte-blue-cursors.zip (v2.0.0)
+- catppuccin-mocha-blue-cursors.zip (v2.0.0)
+Files used (cursors_scalable):
+- catppuccin-latte-blue-default.svg
+- catppuccin-latte-blue-pointer.svg
+- catppuccin-latte-blue-text.svg
+- catppuccin-mocha-blue-default.svg
+- catppuccin-mocha-blue-pointer.svg
+- catppuccin-mocha-blue-text.svg
+License: GNU GPL-3.0 (per upstream repository)
+
+Cursors-4U cursor stylesheet (self-hosted copy)
+Cursor: Lights Of Heaven
+Source page: https://www.cursors-4u.com/cursor/lights-of-heaven-16
+Original CDN URL:
+- https://cdn.cursors-4u.net/cursors/animated/lights-of-heaven-16-622b48c2-32.css

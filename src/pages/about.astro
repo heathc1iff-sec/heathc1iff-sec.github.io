@@ -3,31 +3,46 @@ import { Icon } from "astro-icon/components";
 import MainCard from "@/components/MainCard.astro";
 import GitHubStats from "@/components/mdx/GitHubStats.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const focusAreas = [
+  {
+    icon: "lucide:shield",
+    title: "Web Security",
+    description: "Hands-on web security practice, exploit development, and defense analysis in controlled labs.",
+  },
+  {
+    icon: "lucide:crosshair",
+    title: "Red Team Training",
+    description: "Continuous red team mindset training with offensive workflows and post-exploitation methodology.",
+  },
+  {
+    icon: "lucide:book-open",
+    title: "Knowledge Sharing",
+    description: "Write-ups and notes that turn complex technical problems into practical, repeatable learning.",
+  },
+];
 ---
 
 <BaseLayout title="About">
   <MainCard
     title="About Heathc1iff"
-    description="关于 希斯克利夫"
+    description="About Heathc1iff"
     image="/image/about-banner.png"
     infoIcon="lucide:user"
   >
-    <div class="space-y-10 mb-8">
-      <!-- Profile Section -->
-      <section class="flex flex-col md:flex-row gap-8 items-center md:items-start">
+    <div class="about-stack">
+      <section class="about-hero">
         <div class="avatar">
-          <div
-            class="w-32 h-32 md:w-40 md:h-40 rounded-xl ring ring-primary ring-offset-base-100 ring-offset-2 overflow-hidden"
-          >
-            <img src="/friends/me.jpg" alt="希斯克利夫" width="160" height="160" loading="eager" />
+          <div class="about-avatar-frame">
+            <img src="/friends/me.jpg" alt="Heathc1iff" width="160" height="160" loading="eager" />
           </div>
         </div>
 
         <div class="flex-1 text-center md:text-left">
-          <h1 class="text-3xl md:text-4xl font-bold mb-2">Heathc1iff</h1>
-          <p class="text-xl text-base-content/80 mb-4">Web Security & Red Team</p>
+          <h1 class="about-name">Heathc1iff</h1>
+          <p class="text-xl text-base-content/80 mb-4">Web Security and Red Team</p>
 
-          <div class="flex flex-wrap gap-3 justify-center md:justify-start mb-6">
+          <div class="about-link-row">
             <a
               href="https://github.com/heathc1iff-sec"
               target="_blank"
@@ -52,19 +67,44 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
             </a>
           </div>
 
-          <p class="text-base-content/80">
-            Hi, I'm Heathc1iff! I'm a third-year university student, passionate about web security and a member of the XMCVE security team. Currently, I'm preparing for the OSEP certification while exploring the world of cybersecurity.
+          <p class="about-intro">
+            Hi, I am Heathc1iff. I am a third-year university student focused on web security and a member of the
+            XMCVE security team. I am currently preparing for OSEP while building long-term offensive security depth.
           </p>
         </div>
       </section>
 
-      <!-- GitHub Stats -->
-      <section>
-        <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+      <section class="about-section">
+        <h2 class="about-section-title">
           <Icon name="lucide:github" class="w-6 h-6 text-primary" />
           <span>GitHub Statistics</span>
         </h2>
 
-        <GitHubStats username="heathc1iff-sec" showLanguages={false} showCommitGraph={true} />
+        <div class="about-section-panel">
+          <GitHubStats username="heathc1iff-sec" showLanguages={false} showCommitGraph={true} />
+        </div>
       </section>
 
+      <section class="about-section">
+        <h2 class="about-section-title">
+          <Icon name="lucide:sparkles" class="w-6 h-6 text-primary" />
+          <span>Focus Areas</span>
+        </h2>
+
+        <div class="about-focus-grid">
+          {
+            focusAreas.map((item) => (
+              <article class="about-focus-card">
+                <div class="about-focus-icon">
+                  <Icon name={item.icon} class="w-5 h-5" />
+                </div>
+                <h3 class="text-lg font-semibold mb-2">{item.title}</h3>
+                <p class="text-sm text-base-content/75 leading-relaxed">{item.description}</p>
+              </article>
+            ))
+          }
+        </div>
+      </section>
+    </div>
+  </MainCard>
+</BaseLayout>

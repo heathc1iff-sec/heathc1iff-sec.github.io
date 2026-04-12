@@ -7,6 +7,7 @@ categories:
   - Documentation
 tags:
   - Tryhackme
+  - Threat Intel
 ---
 
 > ATT&CK战术知识库：[https://attack.mitre.org/](https://attack.mitre.org/)

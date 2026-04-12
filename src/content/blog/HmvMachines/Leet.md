@@ -8,6 +8,8 @@ categories:
 tags:
   - Hackmyvm
   - Linux Machine
+  - Enumeration
+  - Privilege Escalation
 ---
 
 ![](/image/hmvmachines/Leet-1.png)

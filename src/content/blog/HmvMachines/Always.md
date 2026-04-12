@@ -8,6 +8,9 @@ categories:
 tags:
   - Hackmyvm
   - Windows Machine
+  - Enumeration
+  - Privilege Escalation
+  - Password Attacks
 ---
 
 ![](/image/hmvmachines/Always-1.png)

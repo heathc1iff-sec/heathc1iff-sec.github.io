@@ -8,6 +8,9 @@ categories:
 tags:
   - MazeSec
   - Linux Machine
+  - Privilege Escalation
+  - Enumeration
+  - Password Attacks
 ---
 
 # 信息收集

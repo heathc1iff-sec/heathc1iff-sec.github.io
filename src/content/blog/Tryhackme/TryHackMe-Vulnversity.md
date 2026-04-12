@@ -7,6 +7,7 @@ categories:
   - Documentation
 tags:
   - Tryhackme
+  - Privilege Escalation
 ---
 
 

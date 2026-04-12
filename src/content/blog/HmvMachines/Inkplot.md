@@ -8,6 +8,8 @@ categories:
 tags:
   - Hackmyvm
   - Linux Machine
+  - Privilege Escalation
+  - Enumeration
 ---
 
 ```plain

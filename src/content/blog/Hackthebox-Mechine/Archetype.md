@@ -8,6 +8,8 @@ categories:
 tags:
   - Hackthebox
   - Windows Machine
+  - Privilege Escalation
+  - Enumeration
 ---
 
 ## TASK 1

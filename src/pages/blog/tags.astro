@@ -10,22 +10,79 @@ import {
 } from "@utils/blogUtils";
 import { Icon } from "astro-icon/components";
 
-// 获取所有博客文章
 const allPosts = await getAllPosts();
-
-// 提取所有标签并统计其出现次数
 const tagMap = getTagsWithCount(allPosts);
+const tagEntries = Array.from(tagMap.entries()).sort((a, b) => b[1] - a[1]);
 
-// 转换为数组并按计数排序（降序）
-const tagEntries = Array.from(tagMap.entries());
-tagEntries.sort((a, b) => b[1] - a[1]);
-
-// 找到最大和最小计数，用于缩放
-const maxCount = Math.max(...tagMap.values());
-const minCount = Math.min(...tagMap.values());
-
-// 计算总标签数
+const maxCount = tagEntries.length > 0 ? tagEntries[0][1] : 1;
+const minCount = tagEntries.length > 0 ? tagEntries[tagEntries.length - 1][1] : 1;
 const totalTags = tagMap.size;
+
+type MindMapNode = {
+  id: string;
+  tag: string;
+  count: number;
+  href: string;
+  ring: number;
+  seedAngle: number;
+  tone: string;
+  scale: number;
+  weight: number;
+  delay: number;
+  lineOpacity: number;
+  fallbackLeft: number;
+  fallbackTop: number;
+};
+
+const ringPlan: number[] = [];
+let remainingTags = tagEntries.length;
+let ringCursor = 0;
+
+while (remainingTags > 0) {
+  const capacity = 10 + ringCursor * 6;
+  const currentRingCount = Math.min(capacity, remainingTags);
+  ringPlan.push(currentRingCount);
+  remainingTags -= currentRingCount;
+  ringCursor += 1;
+}
+
+const nodes: MindMapNode[] = [];
+let entryCursor = 0;
+
+for (let ringIndex = 0; ringIndex < ringPlan.length; ringIndex += 1) {
+  const nodesInRing = ringPlan[ringIndex];
+  const angleStep = (Math.PI * 2) / nodesInRing;
+  const angleOffset =
+    ringIndex % 2 === 0 ? -Math.PI / 2 : -Math.PI / 2 + angleStep / 2;
+
+  for (let nodeIndex = 0; nodeIndex < nodesInRing; nodeIndex += 1) {
+    const [tag, count] = tagEntries[entryCursor];
+    const seedAngle = angleOffset + nodeIndex * angleStep;
+    const weight =
+      maxCount === minCount ? 0.5 : (count - minCount) / (maxCount - minCount);
+    const fallbackRadius = 19 + ringIndex * 11 + weight * 3;
+    const fallbackLeft = Math.min(94, Math.max(6, 50 + Math.cos(seedAngle) * fallbackRadius));
+    const fallbackTop = Math.min(94, Math.max(6, 50 + Math.sin(seedAngle) * fallbackRadius));
+
+    nodes.push({
+      id: `tag-node-${entryCursor}`,
+      tag,
+      count,
+      href: `/blog/tag/${encodeURIComponent(tag)}`,
+      ring: ringIndex + 1,
+      seedAngle: Number(seedAngle.toFixed(6)),
+      tone: getTagColorClass(count, maxCount),
+      scale: Number(getTagFontSize(count, maxCount, minCount).toFixed(3)),
+      weight: Number(weight.toFixed(3)),
+      delay: (entryCursor % 20) * 35,
+      lineOpacity: Number((0.24 + weight * 0.56).toFixed(3)),
+      fallbackLeft: Number(fallbackLeft.toFixed(3)),
+      fallbackTop: Number(fallbackTop.toFixed(3)),
+    });
+
+    entryCursor += 1;
+  }
+}
 ---
 
 <BaseLayout title={t("label.tagPage")}>
@@ -44,27 +101,104 @@ const totalTags = tagMap.size;
     <div class="divider my-2"></div>
     <p class="text-sm opacity-75">{t("label.tagsPageDescription")}</p>
   </BaseCard>
+
   <BaseCard title={t("label.tagPage")}>
     <div class="tags-container">
       {
         tagEntries.length > 0 ? (
-          <div class="tags-cloud">
-            {tagEntries.map(([tag, count], index) => (
-              <a
-                href={`/blog/tag/${tag}`}
-                class={`tags-item ${getTagColorClass(count, maxCount)}`}
-                style={`font-size: ${getTagFontSize(count, maxCount, minCount)}rem;`}
-                data-count={count}
-                data-index={index}
-              >
-                <span class="tags-content">
-                  <Icon name="lucide:tag" />
-                  <span class="tags-text">{tag}</span>
-                  <span class="tags-count">{count}</span>
-                </span>
-              </a>
-            ))}
-          </div>
+          <section class="tag-mindmap" aria-label="Tag mind map" data-tag-mindmap>
+            <div class="tag-mindmap__toolbar">
+              <div class="tag-mindmap__hint">
+                <Icon name="lucide:sparkles" class="w-4 h-4" />
+                <span>{t("label.tagsPageDescription")} - Interactive Mind Map</span>
+              </div>
+
+              <div class="tag-mindmap__controls" role="group" aria-label="Mind map controls">
+                <button
+                  type="button"
+                  class="tag-mindmap__control"
+                  data-mm-action="zoom-in"
+                  aria-label="Zoom in"
+                >
+                  <Icon name="lucide:zoom-in" class="w-4 h-4" />
+                </button>
+                <button
+                  type="button"
+                  class="tag-mindmap__control"
+                  data-mm-action="zoom-out"
+                  aria-label="Zoom out"
+                >
+                  <Icon name="lucide:zoom-out" class="w-4 h-4" />
+                </button>
+                <button
+                  type="button"
+                  class="tag-mindmap__control"
+                  data-mm-action="reset"
+                  aria-label="Reset view"
+                >
+                  <Icon name="lucide:refresh-ccw" class="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            <div class="tag-mindmap__viewport" data-viewport>
+              <div class="tag-mindmap__world" data-world>
+                <svg class="tag-mindmap__svg" data-svg aria-hidden="true" focusable="false">
+                  <g class="tag-mindmap__links">
+                    {nodes.map((node) => (
+                      <path
+                        data-link-id={node.id}
+                        class={`tag-mindmap__link ${node.tone}`}
+                        style={`--line-opacity: ${node.lineOpacity};`}
+                      />
+                    ))}
+                  </g>
+                </svg>
+
+                <div class="tag-mindmap__core" data-core aria-hidden="true">
+                  <div class="tag-mindmap__core-icon-wrap">
+                    <Icon name="mdi:brain" class="tag-mindmap__core-icon" data-core-shape />
+                  </div>
+                </div>
+
+                <div class="tag-mindmap__node-layer" data-node-layer>
+                  {nodes.map((node) => (
+                    <a
+                      href={node.href}
+                      class={`tag-mindmap__node ${node.tone}`}
+                      style={`left: ${node.fallbackLeft}%; top: ${node.fallbackTop}%; --tag-scale: ${node.scale}; --tag-weight: ${node.weight}; animation-delay: ${node.delay}ms;`}
+                      data-node-id={node.id}
+                      data-tag={node.tag}
+                      data-count={node.count}
+                      data-ring={node.ring}
+                      data-seed-angle={node.seedAngle}
+                      data-fallback-left={node.fallbackLeft}
+                      data-fallback-top={node.fallbackTop}
+                      data-weight={node.weight}
+                      title={`${node.tag} (${node.count})`}
+                    >
+                      <span class="tag-mindmap__node-label">{node.tag}</span>
+                      <span class="tag-mindmap__node-badge">{node.count}</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <p class="tag-mindmap__helper">Drag nodes or background. Scroll to zoom. Click reset to return.</p>
+
+            <div class="tag-mindmap__index" aria-label="Tag index">
+              {tagEntries.map(([tag, count]) => (
+                <a
+                  href={`/blog/tag/${encodeURIComponent(tag)}`}
+                  class={`tag-mindmap__chip ${getTagColorClass(count, maxCount)}`}
+                >
+                  <span class="tag-mindmap__chip-label">{tag}</span>
+                  <span class="tag-mindmap__chip-count">{count}</span>
+                </a>
+              ))}
+            </div>
+          </section>
         ) : (
           <div class="empty-state">
             <Icon name="ri:emotion-sad-line" class="empty-icon" />
@@ -75,3 +209,532 @@ const totalTags = tagMap.size;
     </div>
   </BaseCard>
 </BaseLayout>
+
+<script is:inline data-astro-rerun>
+  (() => {
+    const root = document.querySelector("[data-tag-mindmap]");
+    if (!root || root.dataset.mmReady === "1") return;
+
+    const viewport = root.querySelector("[data-viewport]");
+    const world = root.querySelector("[data-world]");
+    const svg = root.querySelector("[data-svg]");
+    const core = root.querySelector("[data-core]");
+    const coreShape = root.querySelector("[data-core-shape]");
+    const nodeElements = Array.from(root.querySelectorAll("[data-node-id]"));
+    const controls = Array.from(root.querySelectorAll("[data-mm-action]"));
+    if (!viewport || !world || !svg || !core || nodeElements.length === 0) return;
+    root.dataset.mmReady = "1";
+
+    const linkMap = new Map();
+
+    root.querySelectorAll("[data-link-id]").forEach((line) => {
+      linkMap.set(line.getAttribute("data-link-id"), line);
+    });
+
+    const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+
+    let width = 0;
+    let height = 0;
+    let centerX = 0;
+    let centerY = 0;
+    let coreRadius = 76;
+    let scale = 1;
+    let panX = 0;
+    let panY = 0;
+
+    const minScale = 0.72;
+    const maxScale = 1.92;
+
+    let pointerMode = "";
+    let activePointerId = null;
+    let dragNode = null;
+    let dragMoved = false;
+    let startX = 0;
+    let startY = 0;
+    let startPanX = 0;
+    let startPanY = 0;
+    let settleRaf = 0;
+    let settleFrames = 0;
+    let focusedNodeId = "";
+
+    const nodes = [];
+
+    function applyWorldTransform() {
+      world.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
+    }
+
+    function setNodePosition(node) {
+      node.el.style.left = `${node.x.toFixed(2)}px`;
+      node.el.style.top = `${node.y.toFixed(2)}px`;
+    }
+
+    function setLinkPosition(node) {
+      const link = linkMap.get(node.id);
+      if (!link) return;
+      const dx = node.x - centerX;
+      const dy = node.y - centerY;
+      const distance = Math.hypot(dx, dy) || 0.0001;
+      const startDistance = Math.max(16, coreRadius + 1.5);
+      const startX = centerX + (dx / distance) * startDistance;
+      const startY = centerY + (dy / distance) * startDistance;
+      const normalX = -dy / distance;
+      const normalY = dx / distance;
+      const curve = Math.min(42, Math.max(12, node.idealRadius * 0.085));
+      const c1x = startX + dx * 0.24 + normalX * curve;
+      const c1y = startY + dy * 0.24 + normalY * curve;
+      const c2x = startX + dx * 0.72 - normalX * curve * 0.72;
+      const c2y = startY + dy * 0.72 - normalY * curve * 0.72;
+      const d = `M ${startX.toFixed(2)} ${startY.toFixed(2)} C ${c1x.toFixed(2)} ${c1y.toFixed(2)}, ${c2x.toFixed(2)} ${c2y.toFixed(2)}, ${node.x.toFixed(2)} ${node.y.toFixed(2)}`;
+      link.setAttribute("d", d);
+    }
+
+    function render() {
+      nodes.forEach((node) => {
+        setNodePosition(node);
+        setLinkPosition(node);
+      });
+    }
+
+    function updateBounds(node) {
+      const marginX = node.radius + 12;
+      const marginY = node.radius + 12;
+
+      if (node.x < marginX) {
+        node.x = marginX;
+        node.vx *= -0.22;
+      }
+      if (node.x > width - marginX) {
+        node.x = width - marginX;
+        node.vx *= -0.22;
+      }
+      if (node.y < marginY) {
+        node.y = marginY;
+        node.vy *= -0.22;
+      }
+      if (node.y > height - marginY) {
+        node.y = height - marginY;
+        node.vy *= -0.22;
+      }
+    }
+
+    function scheduleSettle(frames = 20) {
+      settleFrames = Math.max(settleFrames, frames);
+      if (settleRaf) return;
+
+      const settleTick = () => {
+        settleRaf = 0;
+        if (settleFrames <= 0) return;
+
+        const iterations = settleFrames > 12 ? 2 : 1;
+        runRelax(iterations);
+        render();
+        settleFrames -= 1;
+
+        settleRaf = requestAnimationFrame(settleTick);
+      };
+
+      settleRaf = requestAnimationFrame(settleTick);
+    }
+
+    function setFocus(nodeId = "") {
+      if (focusedNodeId === nodeId) return;
+      focusedNodeId = nodeId;
+
+      nodes.forEach((node) => {
+        const isActive = !!nodeId && node.id === nodeId;
+        const isDim = !!nodeId && node.id !== nodeId;
+        node.el.classList.toggle("is-active", isActive);
+        node.el.classList.toggle("is-dim", isDim);
+
+        const link = linkMap.get(node.id);
+        if (link) {
+          link.classList.toggle("is-active", isActive);
+          link.classList.toggle("is-dim", isDim);
+        }
+      });
+
+      core.classList.toggle("is-focused", !!nodeId);
+    }
+
+    function runRelax(iterations) {
+      for (let iter = 0; iter < iterations; iter += 1) {
+        for (const node of nodes) {
+          if (node.dragging) continue;
+
+          const dx = node.x - centerX;
+          const dy = node.y - centerY;
+          const distance = Math.hypot(dx, dy) || 0.0001;
+          const radialError = distance - node.idealRadius;
+
+          node.vx += (-(radialError * dx) / distance) * 0.013;
+          node.vy += (-(radialError * dy) / distance) * 0.013;
+
+          const targetX = centerX + Math.cos(node.seedAngle) * node.idealRadius;
+          const targetY = centerY + Math.sin(node.seedAngle) * node.idealRadius;
+
+          node.vx += (targetX - node.x) * 0.003;
+          node.vy += (targetY - node.y) * 0.003;
+
+          const minCoreDistance = coreRadius + node.radius + 10;
+          if (distance < minCoreDistance) {
+            const push = (minCoreDistance - distance) * 0.11;
+            node.vx += (dx / distance) * push;
+            node.vy += (dy / distance) * push;
+          }
+        }
+
+        for (let i = 0; i < nodes.length; i += 1) {
+          const a = nodes[i];
+          for (let j = i + 1; j < nodes.length; j += 1) {
+            const b = nodes[j];
+            const dx = b.x - a.x;
+            const dy = b.y - a.y;
+            const distance = Math.hypot(dx, dy) || 0.0001;
+            const minDistance = a.radius + b.radius + 8;
+
+            if (distance < minDistance) {
+              const overlap = (minDistance - distance) / distance;
+              const forceX = dx * overlap * 0.45;
+              const forceY = dy * overlap * 0.45;
+
+              if (!a.dragging) {
+                a.vx -= forceX;
+                a.vy -= forceY;
+              }
+              if (!b.dragging) {
+                b.vx += forceX;
+                b.vy += forceY;
+              }
+            }
+          }
+        }
+
+        for (const node of nodes) {
+          if (node.dragging) continue;
+          node.vx *= 0.84;
+          node.vy *= 0.84;
+          node.x += node.vx;
+          node.y += node.vy;
+          updateBounds(node);
+        }
+      }
+    }
+
+    function resolveDragCollisions(activeNode) {
+      for (const node of nodes) {
+        if (node === activeNode) continue;
+
+        const dx = node.x - activeNode.x;
+        const dy = node.y - activeNode.y;
+        const distance = Math.hypot(dx, dy) || 0.0001;
+        const minDistance = activeNode.radius + node.radius + 8;
+
+        if (distance < minDistance) {
+          const overlap = (minDistance - distance) / distance;
+          const force = overlap * 0.72;
+          if (!node.dragging) {
+            node.vx += dx * force * 0.08;
+            node.vy += dy * force * 0.08;
+            node.x += dx * force * 0.18;
+            node.y += dy * force * 0.18;
+            updateBounds(node);
+          }
+        }
+      }
+    }
+
+    function toWorldCoordinates(clientX, clientY) {
+      const rect = viewport.getBoundingClientRect();
+      return {
+        x: (clientX - rect.left - panX) / scale,
+        y: (clientY - rect.top - panY) / scale,
+      };
+    }
+
+    function zoomAt(clientX, clientY, factor) {
+      const rect = viewport.getBoundingClientRect();
+      const pointX = clientX - rect.left;
+      const pointY = clientY - rect.top;
+      const worldX = (pointX - panX) / scale;
+      const worldY = (pointY - panY) / scale;
+      const nextScale = clamp(scale * factor, minScale, maxScale);
+
+      panX = pointX - worldX * nextScale;
+      panY = pointY - worldY * nextScale;
+      scale = nextScale;
+      applyWorldTransform();
+    }
+
+    function resetView() {
+      scale = 1;
+      panX = 0;
+      panY = 0;
+      applyWorldTransform();
+    }
+
+    function measureViewport() {
+      const rect = viewport.getBoundingClientRect();
+      width = Math.max(640, rect.width);
+      height = Math.max(480, rect.height);
+      centerX = width * 0.5;
+      centerY = height * 0.5;
+
+      world.style.width = `${width}px`;
+      world.style.height = `${height}px`;
+      svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+      svg.setAttribute("width", `${width}`);
+      svg.setAttribute("height", `${height}`);
+
+      const coreRect = (coreShape || core).getBoundingClientRect();
+      coreRadius = Math.max(coreRect.width, coreRect.height) * 0.5;
+    }
+
+    function buildNodeState() {
+      nodes.length = 0;
+      const ringGap = Math.max(76, Math.min(width, height) * 0.11);
+      const baseRadius = Math.max(120, Math.min(width, height) * 0.2);
+
+      nodeElements.forEach((element, index) => {
+        const seedAngle = Number(element.dataset.seedAngle || "0");
+        const ring = Number(element.dataset.ring || "1");
+        const weight = Number(element.dataset.weight || "0.5");
+
+        const idealRadius = baseRadius + (ring - 1) * ringGap + weight * 34;
+        const x = centerX + Math.cos(seedAngle) * idealRadius;
+        const y = centerY + Math.sin(seedAngle) * idealRadius;
+
+        element.style.left = `${x}px`;
+        element.style.top = `${y}px`;
+
+        const radius = Math.max(element.offsetWidth, element.offsetHeight) * 0.56 + 10;
+
+        nodes.push({
+          id: element.dataset.nodeId || `node-${index}`,
+          el: element,
+          x,
+          y,
+          vx: 0,
+          vy: 0,
+          seedAngle,
+          ring,
+          weight,
+          idealRadius,
+          radius,
+          dragging: false,
+          moved: false,
+        });
+      });
+    }
+
+    function remapAfterResize(previousWidth, previousHeight) {
+      if (previousWidth <= 0 || previousHeight <= 0) return;
+
+      const sx = width / previousWidth;
+      const sy = height / previousHeight;
+      const ringGap = Math.max(76, Math.min(width, height) * 0.11);
+      const baseRadius = Math.max(120, Math.min(width, height) * 0.2);
+
+      for (const node of nodes) {
+        node.x *= sx;
+        node.y *= sy;
+        node.vx = 0;
+        node.vy = 0;
+        node.idealRadius = baseRadius + (node.ring - 1) * ringGap + node.weight * 34;
+        updateBounds(node);
+      }
+    }
+
+    function initialize() {
+      measureViewport();
+      buildNodeState();
+      runRelax(260);
+      render();
+      resetView();
+      scheduleSettle(26);
+    }
+
+    viewport.addEventListener("pointerdown", (event) => {
+      if (event.button !== 0 && event.pointerType !== "touch") return;
+
+      const target = event.target;
+      const nodeTarget = target instanceof Element ? target.closest("[data-node-id]") : null;
+      activePointerId = event.pointerId;
+      viewport.setPointerCapture(activePointerId);
+
+      startX = event.clientX;
+      startY = event.clientY;
+      dragMoved = false;
+
+      if (nodeTarget) {
+        pointerMode = "node";
+        const nodeId = nodeTarget.getAttribute("data-node-id");
+        dragNode = nodes.find((node) => node.id === nodeId) || null;
+        setFocus(nodeId || "");
+
+        if (dragNode) {
+          dragNode.dragging = true;
+          dragNode.vx = 0;
+          dragNode.vy = 0;
+          dragNode.el.classList.add("is-dragging");
+        }
+      } else {
+        pointerMode = "pan";
+        startPanX = panX;
+        startPanY = panY;
+        viewport.classList.add("is-panning");
+        setFocus("");
+      }
+    });
+
+    viewport.addEventListener("pointermove", (event) => {
+      if (activePointerId !== event.pointerId || !pointerMode) return;
+
+      if (pointerMode === "pan") {
+        const dx = event.clientX - startX;
+        const dy = event.clientY - startY;
+        panX = startPanX + dx;
+        panY = startPanY + dy;
+        applyWorldTransform();
+        return;
+      }
+
+      if (pointerMode === "node" && dragNode) {
+        const worldPoint = toWorldCoordinates(event.clientX, event.clientY);
+        dragNode.x = clamp(worldPoint.x, dragNode.radius + 10, width - dragNode.radius - 10);
+        dragNode.y = clamp(worldPoint.y, dragNode.radius + 10, height - dragNode.radius - 10);
+        dragNode.vx = 0;
+        dragNode.vy = 0;
+
+        resolveDragCollisions(dragNode);
+        runRelax(1);
+        render();
+        scheduleSettle(3);
+
+        if (Math.hypot(event.clientX - startX, event.clientY - startY) > 4) {
+          dragMoved = true;
+        }
+      }
+    });
+
+    function stopPointer(event) {
+      if (activePointerId !== event.pointerId) return;
+
+      if (pointerMode === "node" && dragNode) {
+        const draggedElement = dragNode.el;
+        dragNode.dragging = false;
+        draggedElement.classList.remove("is-dragging");
+
+        if (dragMoved) {
+          draggedElement.dataset.dragMoved = "1";
+          setTimeout(() => {
+            delete draggedElement.dataset.dragMoved;
+          }, 180);
+        }
+
+        scheduleSettle(24);
+      }
+
+      pointerMode = "";
+      activePointerId = null;
+      dragNode = null;
+      viewport.classList.remove("is-panning");
+
+      if (viewport.hasPointerCapture(event.pointerId)) {
+        viewport.releasePointerCapture(event.pointerId);
+      }
+    }
+
+    viewport.addEventListener("pointerup", stopPointer);
+    viewport.addEventListener("pointercancel", stopPointer);
+
+    viewport.addEventListener(
+      "wheel",
+      (event) => {
+        event.preventDefault();
+        const factor = event.deltaY < 0 ? 1.08 : 0.92;
+        zoomAt(event.clientX, event.clientY, factor);
+      },
+      { passive: false },
+    );
+
+    nodeElements.forEach((element) => {
+      const id = element.dataset.nodeId || "";
+      if (!id) return;
+
+      element.addEventListener("mouseenter", () => {
+        setFocus(id);
+      });
+
+      element.addEventListener("mouseleave", () => {
+        if (pointerMode === "node" && dragNode) return;
+        setFocus("");
+      });
+
+      element.addEventListener("click", (event) => {
+        if (element.dataset.dragMoved === "1") {
+          event.preventDefault();
+          event.stopPropagation();
+          delete element.dataset.dragMoved;
+        }
+      });
+    });
+
+    controls.forEach((control) => {
+      control.addEventListener("click", () => {
+        const action = control.getAttribute("data-mm-action");
+        if (action === "zoom-in") {
+          const rect = viewport.getBoundingClientRect();
+          zoomAt(rect.left + rect.width / 2, rect.top + rect.height / 2, 1.12);
+        } else if (action === "zoom-out") {
+          const rect = viewport.getBoundingClientRect();
+          zoomAt(rect.left + rect.width / 2, rect.top + rect.height / 2, 0.9);
+        } else {
+          resetView();
+        }
+        scheduleSettle(10);
+      });
+    });
+
+    const handleResize = () => {
+      const previousWidth = width;
+      const previousHeight = height;
+      measureViewport();
+
+      if (nodes.length === 0) {
+        buildNodeState();
+      } else {
+        remapAfterResize(previousWidth, previousHeight);
+      }
+
+      runRelax(24);
+      render();
+      scheduleSettle(22);
+    };
+
+    let resizeRaf = 0;
+    const onResize = () => {
+      if (resizeRaf) cancelAnimationFrame(resizeRaf);
+      resizeRaf = requestAnimationFrame(() => {
+        resizeRaf = 0;
+        handleResize();
+      });
+    };
+
+    window.addEventListener("resize", onResize);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(onResize).catch(() => {});
+    }
+
+    document.addEventListener(
+      "astro:before-swap",
+      () => {
+        window.removeEventListener("resize", onResize);
+        if (settleRaf) cancelAnimationFrame(settleRaf);
+        if (resizeRaf) cancelAnimationFrame(resizeRaf);
+      },
+      { once: true },
+    );
+
+    initialize();
+  })();
+</script>

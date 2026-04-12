@@ -164,12 +164,22 @@ export async function getPostsWithStats(
 ): Promise<any[]> {
   return Promise.all(
     posts.map(async (blog: CollectionEntry<"blog">) => {
-      const { remarkPluginFrontmatter } = await blog.render();
+      let readingTime = blog.data.encryptedReadTime ?? "0";
+      let totalCharCount = blog.data.encryptedWordCount ?? "0";
+
+      try {
+        const { remarkPluginFrontmatter } = await blog.render();
+        readingTime = remarkPluginFrontmatter.readingTime;
+        totalCharCount = remarkPluginFrontmatter.totalCharCount;
+      } catch {
+        // Keep fallback stats from frontmatter for encrypted/edge-case posts.
+      }
+
       return {
         ...blog,
         remarkPluginFrontmatter: {
-          readingTime: remarkPluginFrontmatter.readingTime,
-          totalCharCount: remarkPluginFrontmatter.totalCharCount,
+          readingTime,
+          totalCharCount,
         },
       };
     }),
@@ -225,4 +235,15 @@ export function getCategoryColorClass(index: number): string {
     "category-error",
   ];
   return colorClasses[index % colorClasses.length];
+}
+
+/**
+ * Encode a post slug safely for use in href/src URLs.
+ * Each path segment is encoded independently to preserve slash separators.
+ */
+export function encodeSlugPath(slug: string): string {
+  return slug
+    .split("/")
+    .map((segment) => encodeURIComponent(segment))
+    .join("/");
 }

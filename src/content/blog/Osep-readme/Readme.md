@@ -8,6 +8,10 @@ categories:
   - OffSec
 tags:
   - PEN-300-OSEP
+  - Kerberos
+  - Lateral Movement
+  - Exploit Development
+  - XSS
 ---
 
 # PEN-300 OSEP 知识库

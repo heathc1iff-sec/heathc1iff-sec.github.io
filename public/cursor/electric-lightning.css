@@ -1,0 +1,28 @@
+@charset "UTF-8";
+/*
+ *   ██████╗██╗   ██╗██████╗ ███████╗ ██████╗ ██████╗ ███████╗
+ *  ██╔════╝██║   ██║██╔══██╗██╔════╝██╔═══██╗██╔══██╗██╔════╝
+ *  ██║     ██║   ██║██████╔╝███████╗██║   ██║██████╔╝███████╗
+ *  ██║     ██║   ██║██╔══██╗╚════██║██║   ██║██╔══██╗╚════██║
+ *  ╚██████╗╚██████╔╝██║  ██║███████║╚██████╔╝██║  ██║███████║
+ *   ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝
+ *                         ██╗  ██╗██╗   ██╗
+ *                         ██║  ██║██║   ██║
+ *  ████████████████████   ███████║██║   ██║
+ *                         ╚════██║██║   ██║
+ *                              ██║╚██████╔╝
+ *                              ╚═╝ ╚═════╝
+ *
+ *  Brought to you by https://www.cursors-4u.com
+ *
+ *  Cursor: Electricity Lightning
+ *  URL: https://www.cursors-4u.com/cursor/cur1-11
+ */
+@keyframes cursor-anim {
+  0.00% { cursor: url("data:image/webp;base64,UklGRvYAAABXRUJQVlA4TOoAAAAvH8AHEDcgEEjyt5psDYFAkr/VZBNk23T+Ujf7/AcgNwypAexGkis3CyqClWx/07MKwNjhJWCumIAe/wQI5Z+DeI8QIvo/AXIo0gQroH1kYpIRTCLilmaMIETIlRqtWBKDzP5HDwImKz40SFpa4dAeNMja1bQVSyuoJDwoq16v7taKzbLX4YYelmasA1BtxTb8nlV7rIBDVfu7zSRPWjxX/u5D39qiWFrr8dMLISvR4qffTOb5PqIOfZ1WnLHU0BfTJNOfZPz0ZcWc5vWnlzUAYLQisyQi2W+LpYl8iNMgm4GT7My+R5D2HA4=") 8 4, auto; }
+  25.00% { cursor: url("data:image/webp;base64,UklGRgYBAABXRUJQVlA4TPkAAAAvH8AHEDcgEEjyt5psDYFAkr/VZBNk23T+Ujf7/AcgNwypAewGcCpHlrcC3+vbGTcQMaQCfDSQXAFIKP33AJtcCRH9nwB5HyrQV5zhjJciriR2KiKI8ltDFw8R8WB2wgtx1YX3OTLAEmVT2rROEoWHiEhpaZe4hQJccE8rLUNEoSIizEtgOW3zEuj1OPHFRvIEbSLMet24lDZpZuN2bBRtmtl4PrgU9U3Px3HCaU/rlTsUzpE/owIbss2+hC7O0jJzWnIjAO+Pv2m9YiMOkvkzMvwEZH6NSmxEHGA+a/DwjYiXlhUg9QRkqJSQUy8BFdeX5HUn3hDIfwMA") 8 4, auto; }
+  50.00% { cursor: url("data:image/webp;base64,UklGRvgAAABXRUJQVlA4TOwAAAAvH8AHEDcgEEjyt5psDYFAkr/VZBNk23T+Ujf7/AcgNwypAeQGcONGA3aQ800MXQEpF7A2oQL2+ufsvwcdi+0gov8TgL4KJpUATSZoVDfMpNFkrtgMuT1/IyY8vp631Ubqvj8PdeEouD8PtxLSCNSaQ10NgBpg2nzkIoAbVHR7Hg6HWkzUBAC8uWWIEwC0c6irqHTi1dx+qNbx5vb+sSluJTh6Hq4euRp7e94W56dFSMM9M+NeSO9FZtqxUrSjkSUeh7pA0fE9Iq+3BX31oO/nW5FBmDCyTphA4yttREAZMeqqk5h3wX/xL6rSAQ==") 8 4, auto; }
+  75.00% { cursor: url("data:image/webp;base64,UklGRuoAAABXRUJQVlA4TN4AAAAvH8AHEDcgEEjyt5psDYFAkr/VZBNk23T+Ujf7/AcgNwypAeQGUCM4iA7YI29r2AoYN7AJ6wZy/K1Y6b+HGNcQ0f8JkBoq542oGqACagUSLfwgsjtOWuTPQ8EKXDOBqNr7svEIagOqmQRA13+xzEYHCJXqmYCrbLHMbHQ/u8yky7ZhhbuN7rojEW4zWcQvgLnSK7+YjSRkx2V/NrrrDp9r5tvskH1wjbzNrMDMXJZ+8CKPWpDMt6drgYh4vc1eSHPgI0dHBQE/v1mJSHiQegQAUjeESjsJUuU4oHIOyCE=") 8 4, auto; }
+}
+html { animation: cursor-anim 464ms step-end infinite; }
+a,button,input,textarea,label,[role=button],select,option{cursor:inherit!important}

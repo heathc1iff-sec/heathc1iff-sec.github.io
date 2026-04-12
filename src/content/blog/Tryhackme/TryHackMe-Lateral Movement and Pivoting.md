@@ -7,6 +7,11 @@ categories:
   - Documentation
 tags:
   - Tryhackme
+  - Persistence
+  - Lateral Movement
+  - Blue Team
+  - Privilege Escalation
+  - Red Team
 ---
 
 靶场网络拓扑：

@@ -7,6 +7,10 @@ categories:
   - Documentation
 tags:
   - Tryhackme
+  - Red Team
+  - OSINT
+  - RCE
+  - Phishing
 ---
 
 # Brief

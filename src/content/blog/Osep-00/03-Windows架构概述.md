@@ -9,6 +9,12 @@ categories:
 tags:
   - PEN-300-OSEP
   - Windows Learning
+  - Exploit Development
+  - Privilege Escalation
+  - Reverse Engineering
+  - Windows
+  - Competition
+  - Persistence
 ---
 # Windows 架构概述 - 写给 Web 安全人员
 ## 为什么需要了解 Windows 架构？

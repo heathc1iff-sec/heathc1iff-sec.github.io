@@ -7,6 +7,8 @@ categories:
   - Documentation
 tags:
   - Tryhackme
+  - Red Team
+  - C2
 ---
 
 命令与控制 （C2） 框架是 Red Teamers 和 Advanced Adversaries 剧本的重要组成部分。它们使在交战期间管理受感染的设备变得容易，并且通常有助于横向移动。

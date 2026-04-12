@@ -1,5 +1,4 @@
 ---
-import { Image } from "astro:assets";
 import { DATE_FORMAT } from "@config";
 import type { PostData } from "@interfaces/data";
 import dayjs from "@utils/dayjs";
@@ -23,6 +22,7 @@ const {
 } = Astro.props as PostData;
 
 const displayDate = pubDate ? dayjs(pubDate).format(DATE_FORMAT) : "";
+const normalizedImage = typeof image === "string" ? image.trim() : "";
 ---
 
 <Card class="overflow-hidden">
@@ -39,22 +39,24 @@ const displayDate = pubDate ? dayjs(pubDate).format(DATE_FORMAT) : "";
 
     <!-- Image Section -->
     {
-      image && (
-        <a href={url} class="relative lg:w-2/5 aspect-video lg:aspect-auto overflow-hidden lg:order-2 order-1 group">
+      normalizedImage && (
+        <a
+          href={url}
+          data-astro-reload
+          class="relative lg:w-2/5 aspect-video lg:aspect-auto overflow-hidden lg:order-2 order-1 group"
+        >
           <div class="absolute inset-0 bg-black/0 group-hover:bg-black/60 z-10 transition-all duration-300 flex items-center justify-center">
             <Icon
               name="lucide:arrow-right"
               class="w-12 h-12 text-white opacity-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-x-2"
             />
           </div>
-          <Image
-            src={image}
+          <img
+            src={normalizedImage}
             alt={title}
-            width={800}
-            height={400}
-            format="webp"
-            loading="eager"
-            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            loading="lazy"
+            decoding="async"
+            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         </a>
       )

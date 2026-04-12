@@ -8,6 +8,12 @@ categories:
 tags:
   - Hackmyvm
   - Linux Machine
+  - Enumeration
+  - Privilege Escalation
+  - Exploit Development
+  - Deserialization
+  - Reverse Engineering
+  - XSS
 ---
 
 ![](/image/hmvmachines/Deba-1.png)

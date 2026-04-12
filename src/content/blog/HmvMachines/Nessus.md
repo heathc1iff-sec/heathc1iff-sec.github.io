@@ -9,6 +9,15 @@ tags:
   - Hackmyvm
   - Windows Machine
   - DLL Hijacking
+  - Enumeration
+  - Privilege Escalation
+  - Password Attacks
+  - Lateral Movement
+  - XSS
+  - Credential Dumping
+  - Exploit Development
+  - Persistence
+  - RCE
 ---
 
 ![](/image/hmvmachines/Nessus-1.png)

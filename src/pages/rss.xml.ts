@@ -2,6 +2,7 @@ import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
 import rss from "@astrojs/rss";
 import { SITE_DESCRIPTION, SITE_LANGUAGE, SITE_TAB, SITE_TITLE } from "@config";
+import { encodeSlugPath } from "@utils/blogUtils";
 import { marked } from "marked";
 
 export async function GET(context: any) {
@@ -31,16 +32,17 @@ export async function GET(context: any) {
   const items = await Promise.all(
     sortedPosts.map(async (blog: CollectionEntry<"blog">) => {
       const {
-        data: { title, description, pubDate },
+        data: { title, description, pubDate, encryption },
         body,
         slug,
       } = blog;
 
-      const content = body
-        ? replacePath(await marked(body), context.site)
-        : "No content available.";
-
-      const postURL = new URL(`/blog/${slug}/`, context.site);
+      const postURL = new URL(`/blog/${encodeSlugPath(slug)}/`, context.site);
+      const content = encryption
+        ? `<p>This article is password-protected. Please visit <a href="${postURL}">${postURL}</a> to unlock and view the full content.</p>`
+        : body
+          ? replacePath(await marked(body), context.site)
+          : "No content available.";
 
       return {
         title,

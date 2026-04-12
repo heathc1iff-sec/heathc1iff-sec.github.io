@@ -8,6 +8,17 @@ categories:
 tags:
   - Hackmyvm
   - Linux Machine
+  - Enumeration
+  - Privilege Escalation
+  - WordPress
+  - Docker
+  - SQL Injection
+  - XSS
+  - RCE
+  - Lateral Movement
+  - Password Attacks
+  - Command Injection
+  - File Upload
 ---
 
 ![](/image/hmvmachines/Matrioshka-1.png)

@@ -8,6 +8,12 @@ categories:
 tags:
   - Hackmyvm
   - Linux Machine
+  - Enumeration
+  - Privilege Escalation
+  - WordPress
+  - Password Attacks
+  - Kubernetes
+  - SSRF
 ---
 
 ![](/image/hmvmachines/Influencer-1.png)

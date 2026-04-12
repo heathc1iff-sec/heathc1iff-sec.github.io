@@ -8,6 +8,9 @@ categories:
 tags:
   - Hackmyvm
   - Linux Machine
+  - Enumeration
+  - Privilege Escalation
+  - Password Attacks
 ---
 
 ![](/image/hmvmachines/Corrosion3-1.png)

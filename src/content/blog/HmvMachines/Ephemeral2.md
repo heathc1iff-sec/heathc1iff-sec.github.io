@@ -8,6 +8,10 @@ categories:
 tags:
   - Hackmyvm
   - Linux Machine
+  - Enumeration
+  - Privilege Escalation
+  - Active Directory
+  - Password Attacks
 ---
 
 ![](/image/hmvmachines/Ephemeral2-1.png)

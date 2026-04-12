@@ -8,6 +8,10 @@ categories:
 tags:
   - Hackmyvm
   - Linux Machine
+  - Enumeration
+  - Password Attacks
+  - Privilege Escalation
+  - SSRF
 ---
 ![](/image/hmvmachines/Crossbow-1.png)
 

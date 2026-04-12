@@ -1,0 +1,9 @@
+#!/bin/sh
+node tools/encrypt-pending-posts.mjs
+status=$?
+if [ $status -ne 0 ]; then
+  echo "[pre-commit] Encryption step failed."
+  exit $status
+fi
+
+git add src/content/blog

@@ -8,6 +8,7 @@ categories:
 tags:
   - Hackthebox
   - Windows Machine
+  - Password Attacks
 ---
 
 测出网页存在文件包含漏洞

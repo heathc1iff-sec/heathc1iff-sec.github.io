@@ -9,6 +9,10 @@ tags:
   - Hackmyvm
   - HMVLabs
   - Linux Machine
+  - Password Attacks
+  - Competition
+  - Enumeration
+  - Privilege Escalation
 ---
 
 #### 一键获取flag

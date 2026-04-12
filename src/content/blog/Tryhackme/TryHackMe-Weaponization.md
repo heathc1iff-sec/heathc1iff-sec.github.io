@@ -7,6 +7,7 @@ categories:
   - Documentation
 tags:
   - Tryhackme
+  - Red Team
 ---
 
 ![](/image/tryhackme/TryHackMe-Weaponization-1.png)

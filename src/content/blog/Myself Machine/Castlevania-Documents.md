@@ -9,6 +9,14 @@ categories:
 tags:
   - CTF
   - Windows Machine
+  - Active Directory
+  - Enumeration
+  - Kerberos
+  - Credential Dumping
+  - Password Attacks
+  - Privilege Escalation
+  - Lateral Movement
+  - Competition
 ---
 ![](/ctf/poloarsctf.png)
 ![](/image/myself%20machine/Castlevania-Documents-1.png)

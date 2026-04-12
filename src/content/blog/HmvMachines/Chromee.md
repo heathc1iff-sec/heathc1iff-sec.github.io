@@ -8,6 +8,10 @@ categories:
 tags:
   - Hackmyvm
   - Linux Machine
+  - Enumeration
+  - Password Attacks
+  - Privilege Escalation
+  - Lateral Movement
 ---
 
 ![](/image/hmvmachines/Chromee-1.png)

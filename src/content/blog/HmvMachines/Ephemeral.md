@@ -8,6 +8,12 @@ categories:
 tags:
   - Hackmyvm
   - Linux Machine
+  - Enumeration
+  - Privilege Escalation
+  - Docker
+  - Password Attacks
+  - LFI
+  - SSTI
 ---
 
 ![](/image/hmvmachines/Ephemeral-1.png)

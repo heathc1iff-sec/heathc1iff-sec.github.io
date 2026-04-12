@@ -1,0 +1,25 @@
+
+> frosti@3.3.3 dev
+> astro dev 127.0.0.1 4321
+
+[2m22:39:58[22m [34m[types][39m Generated [2m2ms[22m
+[2m22:39:59[22m [34m[content][39m Syncing content
+[2m22:39:59[22m [34m[content][39m Astro config changed
+[2m22:39:59[22m [34m[content][39m Clearing content store
+[2m22:40:16[22m [34m[content][39m Synced content
+[2m22:40:16[22m [34m[vite][39m Re-optimizing dependencies because vite config has changed
+
+[42m[1m astro [22m[49m [32mv5.16.4[39m [2mready in[22m 21423 [2mms[22m
+
+[2m┃[22m Local    [36mhttp://localhost:4321/[39m
+[2m┃[22m Network  [2muse --host to expose[22m
+
+[2m22:40:17[22m [32mwatching for file changes...[39m
+[2m22:41:00[22m [34m[200][39m /blog/hackthebox-prolabs/aptlabs/ [2m7100ms[22m
+[2m22:41:00[22m [34m[200][39m /blog/hackthebox-prolabs/aptlabs/ [2m7105ms[22m
+[2m22:41:09[22m [34m[200][39m /blog/hackthebox-prolabs/aptlabs/ [2m25ms[22m
+[2m22:41:19[22m [34m[200][39m /blog/hackthebox-prolabs/aptlabs/ [2m36ms[22m
+[2m22:41:42[22m [34m[200][39m /blog/hackthebox-prolabs/aptlabs/ [2m48ms[22m
+[2m22:41:49[22m [34m[200][39m /blog/hackthebox-prolabs/aptlabs/ [2m37ms[22m
+[2m22:44:53[22m [34m[watch][39m src/pages/blog/[...slug].astro
+[2m22:45:19[22m [34m[watch][39m src/pages/blog/[...slug].astro

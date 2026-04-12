@@ -8,6 +8,10 @@ categories:
 tags:
   - Hackmyvm
   - Linux Machine
+  - Password Attacks
+  - Enumeration
+  - Kubernetes
+  - Privilege Escalation
 ---
 
 ![](/image/hmvmachines/Codeshield-1.png)

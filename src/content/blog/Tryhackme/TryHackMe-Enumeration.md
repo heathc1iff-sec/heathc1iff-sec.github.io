@@ -7,6 +7,9 @@ categories:
   - Documentation
 tags:
   - Tryhackme
+  - Privilege Escalation
+  - Enumeration
+  - Active Directory
 ---
 
 # Introduction

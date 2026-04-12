@@ -22,126 +22,256 @@ const {
   headings = [],
   showTOC = false,
   isIndexed = true,
+  pageType = "default",
 } = Astro.props;
+
+const currentPathname = Astro.url.pathname;
+const isBlogRoute = currentPathname === "/blog" || currentPathname.startsWith("/blog/");
 ---
 
 <!doctype html>
-<html lang={SITE_LANGUAGE} class="bg-base-300" data-theme={SITE_THEME.light} data-theme-type="light">
+<html
+  lang={SITE_LANGUAGE}
+  class="bg-base-300"
+  data-theme={SITE_THEME.light}
+  data-theme-type="light"
+  data-page-type={pageType}
+  data-page-path={currentPathname}
+  data-performance-mode={isBlogRoute ? "lite" : "normal"}
+>
   <head>
-    <ClientRouter />
-    <ElementCrossing />
-    <PointerOnNavigation />
+    {!isBlogRoute && <ClientRouter />}
+    {!isBlogRoute && <ElementCrossing />}
+    {!isBlogRoute && <PointerOnNavigation />}
     <Header title={title} description={description} favicon={SITE_FAVICON} image={image} />
     <title>{`${title} - ${SITE_TAB}`}</title>
 
     <script define:vars={{ SITE_THEME }} is:inline>
       (function () {
-        const storedTheme = localStorage.getItem("theme");
-        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-        let theme;
-        if (storedTheme) {
-          theme = storedTheme;
-        } else {
-          theme = prefersDark ? SITE_THEME.dark : SITE_THEME.light;
-          localStorage.setItem("theme", theme);
-        }
-        document.documentElement.setAttribute("data-theme", theme);
-        const themeType = theme === SITE_THEME.dark ? "dark" : "light";
-        document.documentElement.setAttribute("data-theme-type", themeType);
-        window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
-          if (!localStorage.getItem("theme")) {
-            const newTheme = e.matches ? SITE_THEME.dark : SITE_THEME.light;
-            document.documentElement.setAttribute("data-theme", newTheme);
-            const newThemeType = e.matches ? "dark" : "light";
-            document.documentElement.setAttribute("data-theme-type", newThemeType);
-            localStorage.setItem("theme", newTheme);
+        const DAY_START_HOUR = 7;
+        const NIGHT_START_HOUR = 19;
+        const THEME_MODE_KEY = "theme-mode";
+
+        const isValidTheme = (value) => value === SITE_THEME.light || value === SITE_THEME.dark;
+
+        const getClockTheme = () => {
+          const hour = new Date().getHours();
+          return hour >= DAY_START_HOUR && hour < NIGHT_START_HOUR
+            ? SITE_THEME.light
+            : SITE_THEME.dark;
+        };
+
+        const applyTheme = (theme, source) => {
+          document.documentElement.setAttribute("data-theme", theme);
+          document.documentElement.setAttribute(
+            "data-theme-type",
+            theme === SITE_THEME.dark ? "dark" : "light",
+          );
+          document.documentElement.setAttribute("data-theme-source", source);
+        };
+
+        const resolveTheme = () => {
+          const mode = localStorage.getItem(THEME_MODE_KEY);
+          const storedTheme = localStorage.getItem("theme");
+
+          if (mode === "manual" && isValidTheme(storedTheme)) {
+            return { theme: storedTheme, source: "manual" };
           }
-        });
+
+          // Migration: old versions stored "theme" by default.
+          // Treat missing/invalid mode as clock-auto behavior.
+          return { theme: getClockTheme(), source: "clock" };
+        };
+
+        const applyResolvedTheme = () => {
+          const { theme, source } = resolveTheme();
+          applyTheme(theme, source);
+        };
+
+        window.__applyResolvedTheme = applyResolvedTheme;
+        applyResolvedTheme();
+
+        if (!window.__themeClockTimerStarted) {
+          window.__themeClockTimerStarted = true;
+          window.setInterval(() => {
+            const mode = localStorage.getItem(THEME_MODE_KEY);
+            if (mode === "manual") return;
+
+            const nextTheme = getClockTheme();
+            if (document.documentElement.getAttribute("data-theme") !== nextTheme) {
+              applyTheme(nextTheme, "clock");
+            }
+          }, 60 * 1000);
+        }
       })();
     </script>
   </head>
 
   <body class="flex flex-col min-h-screen" {...isIndexed ? { "data-pagefind-body": true } : {}}>
-    <Navbar />
-
-    <div class="max-w-6xl mx-auto w-full flex-grow">
-      <div class="grid grid-cols-1 md:grid-cols-5 lg:grid-cols-4 gap-4 p-4 h-full">
-        <main
-          class="col-span-1 md:col-span-4 lg:col-span-3 bg-transparent order-1 md:order-2 mt-16 md:mt-0 flex flex-col gap-4"
-        >
-          <div class="flex-grow flex flex-col gap-4">
-            <slot />
+    {
+      isBlogRoute ? (
+        <div class="theme-background theme-background--lite" aria-hidden="true">
+          <div class="theme-background__gradient"></div>
+          <div class="theme-background__vignette"></div>
+        </div>
+      ) : (
+        <div class="theme-background" aria-hidden="true">
+          <div class="theme-background__gradient"></div>
+          <div class="theme-background__mesh"></div>
+          <div class="theme-background__aurora theme-background__aurora--a"></div>
+          <div class="theme-background__aurora theme-background__aurora--b"></div>
+          <div class="theme-background__sun"></div>
+          <div class="theme-background__clouds">
+            <span class="theme-background__cloud theme-background__cloud--1"></span>
+            <span class="theme-background__cloud theme-background__cloud--2"></span>
+            <span class="theme-background__cloud theme-background__cloud--3"></span>
+            <span class="theme-background__cloud theme-background__cloud--4"></span>
+            <span class="theme-background__cloud theme-background__cloud--5"></span>
           </div>
-          <Footer />
-        </main>
-        <aside class="col-span-1 bg-transparent order-2 md:order-1 md:top-4">
-          <Sidebar headings={headings} showTOC={showTOC} />
-          <slot name="sidebar" />
-        </aside>
+          <div class="theme-background__glow theme-background__glow--a"></div>
+          <div class="theme-background__glow theme-background__glow--b"></div>
+          <div class="theme-background__stars" data-starfield></div>
+          <div class="theme-background__particles"></div>
+          <span class="theme-background__meteor theme-background__meteor--a"></span>
+          <span class="theme-background__meteor theme-background__meteor--b"></span>
+          <span class="theme-background__meteor theme-background__meteor--c"></span>
+          <span class="theme-background__meteor theme-background__meteor--d"></span>
+          <div class="theme-background__grain"></div>
+          <div class="theme-background__vignette"></div>
+        </div>
+      )
+    }
+
+    <div class="site-content-layer">
+      <Navbar />
+
+      <div class="max-w-6xl mx-auto w-full flex-grow">
+        <div class="grid grid-cols-1 md:grid-cols-5 lg:grid-cols-4 gap-4 p-4 h-full">
+          <main
+            class="col-span-1 md:col-span-4 lg:col-span-3 bg-transparent order-1 md:order-2 mt-16 md:mt-0 flex flex-col gap-4"
+          >
+            <div class="flex-grow flex flex-col gap-4">
+              <slot />
+            </div>
+            <Footer />
+          </main>
+          <aside class="col-span-1 bg-transparent order-2 md:order-1 md:top-4">
+            <Sidebar headings={headings} showTOC={showTOC} />
+            <slot name="sidebar" />
+          </aside>
+        </div>
       </div>
-    </div>
 
-    <MobileTOC headings={headings} showTOC={showTOC} />
+      <MobileTOC headings={headings} showTOC={showTOC} />
 
-    <script define:vars={{ SITE_THEME }} is:inline>
-      document.addEventListener("astro:after-swap", () => {
-        const storedTheme = localStorage.getItem("theme");
-        if (storedTheme) {
-          document.documentElement.setAttribute("data-theme", storedTheme);
-          const themeType = storedTheme === SITE_THEME.dark ? "dark" : "light";
-          document.documentElement.setAttribute("data-theme-type", themeType);
-        }
-      });
-    </script>
+      <script is:inline>
+        document.addEventListener("astro:after-swap", () => {
+          if (typeof window.__applyResolvedTheme === "function") {
+            window.__applyResolvedTheme();
+          }
+        });
+      </script>
 
-    <script is:inline>
-      document.addEventListener("astro:page-load", () => {
-        document.querySelectorAll(".btn-copy").forEach((button) => {
-          button.addEventListener("click", async () => {
+      <script is:inline data-astro-rerun>
+        (() => {
+          if (window.__copyHandlerBound) return;
+          window.__copyHandlerBound = true;
+
+          document.addEventListener("click", async (event) => {
+            const button = event.target?.closest?.(".btn-copy");
+            if (!button) return;
+
             const codeBlock = button.closest(".frosti-code");
-            const code = codeBlock.querySelector("code").textContent;
+            const codeElement = codeBlock?.querySelector?.("code");
+            const copyText = codeElement?.textContent ?? "";
+            if (!copyText.trim()) return;
+
             const copyIcon = button.querySelector(".frosti-code-toolbar-copy-icon");
             const successIcon = button.querySelector(".frosti-code-toolbar-copy-success");
+
             try {
-              await navigator.clipboard.writeText(code);
-              copyIcon.classList.add("hidden");
-              successIcon.classList.remove("hidden");
+              await navigator.clipboard.writeText(copyText);
+              copyIcon?.classList.add("hidden");
+              successIcon?.classList.remove("hidden");
               button.classList.add("copy-success");
               setTimeout(() => {
-                copyIcon.classList.remove("hidden");
-                successIcon.classList.add("hidden");
+                copyIcon?.classList.remove("hidden");
+                successIcon?.classList.add("hidden");
                 button.classList.remove("copy-success");
               }, 2000);
             } catch (err) {
               console.error("Failed to copy:", err);
             }
           });
-        });
-      });
-    </script>
+        })();
+      </script>
 
-    <style is:inline>
-      .btn-copy {
-        position: relative;
-        overflow: hidden;
+      {
+        !isBlogRoute && (
+          <script is:inline data-astro-rerun>
+            {`(() => {
+          const field = document.querySelector("[data-starfield]");
+          if (!field || field.dataset.starReady === "1") return;
+          field.dataset.starReady = "1";
+
+          const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+          const reducedData = window.matchMedia("(prefers-reduced-data: reduce)").matches;
+          const count = reducedData
+            ? 16
+            : reducedMotion
+              ? 24
+              : window.innerWidth < 768
+                ? 42
+                : 72;
+
+          const fragment = document.createDocumentFragment();
+          for (let i = 0; i < count; i += 1) {
+            const star = document.createElement("span");
+            star.className = "theme-background__star";
+
+            const size =
+              Math.random() < 0.08 ? 1.6 + Math.random() * 1.1 : 0.7 + Math.random() * 0.9;
+            star.style.width = \`\${size.toFixed(2)}px\`;
+            star.style.height = \`\${size.toFixed(2)}px\`;
+            star.style.left = \`\${(Math.random() * 100).toFixed(3)}%\`;
+            star.style.top = \`\${(Math.random() * 74).toFixed(3)}%\`;
+            star.style.opacity = \`\${(0.28 + Math.random() * 0.52).toFixed(3)}\`;
+            star.style.setProperty("--twinkle-duration", \`\${(6.8 + Math.random() * 8.6).toFixed(2)}s\`);
+            star.style.setProperty("--twinkle-delay", \`\${(-Math.random() * 8).toFixed(2)}s\`);
+            star.style.setProperty("--star-scale", (0.84 + Math.random() * 0.34).toFixed(3));
+
+            fragment.appendChild(star);
+          }
+
+          field.appendChild(fragment);
+        })();`}
+          </script>
+        )
       }
-      .copy-success {
-        animation: pulse 0.5s ease-in-out;
-      }
-      .frosti-code-toolbar-copy-success svg {
-        color: #10b981;
-      }
-      @keyframes pulse {
-        0% {
-          transform: scale(1);
+
+      <style is:inline>
+        .btn-copy {
+          position: relative;
+          overflow: hidden;
         }
-        50% {
-          transform: scale(1.1);
+        .copy-success {
+          animation: pulse 0.5s ease-in-out;
         }
-        100% {
-          transform: scale(1);
+        .frosti-code-toolbar-copy-success svg {
+          color: #10b981;
         }
-      }
-    </style>
+        @keyframes pulse {
+          0% {
+            transform: scale(1);
+          }
+          50% {
+            transform: scale(1.1);
+          }
+          100% {
+            transform: scale(1);
+          }
+        }
+      </style>
+    </div>
   </body>
 </html>

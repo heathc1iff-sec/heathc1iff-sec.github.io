@@ -8,6 +8,10 @@ categories:
 tags:
   - Hackmyvm
   - Linux Machine
+  - Enumeration
+  - Password Attacks
+  - SQL Injection
+  - Privilege Escalation
 ---
 
 ![](/image/hmvmachines/Lookup-1.png)

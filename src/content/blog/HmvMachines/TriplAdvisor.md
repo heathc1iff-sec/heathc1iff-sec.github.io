@@ -8,6 +8,12 @@ categories:
 tags:
   - Hackmyvm
   - Windows Machine
+  - Enumeration
+  - LFI
+  - WordPress
+  - Privilege Escalation
+  - RCE
+  - XSS
 ---
 
 ![](/image/hmvmachines/TriplAdvisor-1.png)

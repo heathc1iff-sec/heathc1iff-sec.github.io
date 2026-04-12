@@ -1,10 +1,14 @@
 ---
+import { createHash } from "node:crypto";
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import { type CollectionEntry, getCollection } from "astro:content";
 import License from "@components/widgets/License.astro";
 import PostFilter from "@components/widgets/PostFilter.astro";
 import PostInfo from "@components/widgets/PostInfo.astro";
 import { DATE_FORMAT } from "@config";
 import BaseLayout from "@layouts/BaseLayout.astro";
+import { encodeSlugPath } from "@utils/blogUtils";
 import dayjs from "@utils/dayjs";
 import MainCard from "@/components/MainCard.astro";
 
@@ -26,27 +30,107 @@ interface Props {
 }
 
 const { blog } = Astro.props;
-const { Content, remarkPluginFrontmatter, headings } = await blog.render();
+const isEncrypted = blog.data.encryption;
+const hasEncryptedPayload = Boolean(
+  isEncrypted &&
+    blog.data.passwordHash &&
+    blog.data.encryptionSalt &&
+    blog.data.encryptionIv &&
+    blog.data.encryptionTag &&
+    blog.data.encryptionContent &&
+    blog.data.encryptionIterations,
+);
+
+let Content: any = null;
+let headings: any[] = [];
+let totalCharCount = blog.data.encryptedWordCount ?? "-";
+let readingTime = blog.data.encryptedReadTime ?? "-";
+
+if (!hasEncryptedPayload) {
+  const rendered = await blog.render();
+  Content = rendered.Content;
+  headings = rendered.headings;
+  totalCharCount = rendered.remarkPluginFrontmatter.totalCharCount;
+  readingTime = rendered.remarkPluginFrontmatter.readingTime;
+}
+
+const legacyPasswordHash =
+  isEncrypted && blog.data.password
+    ? createHash("sha256").update(blog.data.password).digest("hex")
+    : "";
+
+const encryptedPayload = hasEncryptedPayload
+  ? {
+      passwordHash: blog.data.passwordHash,
+      salt: blog.data.encryptionSalt,
+      iv: blog.data.encryptionIv,
+      tag: blog.data.encryptionTag,
+      content: blog.data.encryptionContent,
+      iterations: blog.data.encryptionIterations,
+      slug: blog.slug,
+    }
+  : null;
+
+const PROLABS_CERTIFICATES: Record<string, string> = {
+  aptlabs: "prolabs-aptlabs-certificate.png",
+  ascension: "prolabs-ascension-certificate.png",
+  dante: "prolabs-dante-certificate.png",
+  kaiju: "prolabs-kaiju-certificate.png",
+  offshore: "prolabs-offshore-certificate.png",
+  poo: "prolabs-poo-certificate.png",
+  rastalabs: "prolabs-rastalabs-certificate.png",
+  unintended: "prolabs-unintended-certificate.png",
+  xen: "prolabs-xen-certificate.png",
+  zephyr: "prolabs-zephyr-certificate.png",
+};
+const slugTail = blog.slug.split("/").at(-1)?.toLowerCase() ?? "";
+const normalizedSlugTail = slugTail.replace(/[^a-z0-9]+/g, "");
+const isProlabsArticle = blog.slug.toLowerCase().includes("hackthebox-prolabs/");
+const certificateFilename = isProlabsArticle
+  ? PROLABS_CERTIFICATES[normalizedSlugTail]
+  : undefined;
+
+const resolvePublicAssetPath = (value: string | undefined | null) => {
+  const raw = String(value || "").trim();
+  if (!raw) return null;
+
+  const normalized = raw.startsWith("/") ? raw : `/${raw}`;
+  if (normalized.includes("..")) return null;
+
+  const relative = normalized.replace(/^\/+/, "");
+  if (!relative) return null;
+
+  const localPath = join(process.cwd(), "public", ...relative.split("/"));
+  return existsSync(localPath) ? normalized : null;
+};
+
+const certificateImagePath =
+  resolvePublicAssetPath(blog.data.certificate) ||
+  resolvePublicAssetPath(certificateFilename ? `/certificate/${certificateFilename}` : null);
+
+const displayHeadings = isEncrypted ? [] : headings;
 const displayDate = blog.data.pubDate
   ? dayjs(blog.data.pubDate).format(DATE_FORMAT)
   : "";
-const image = new URL(`/og/${blog.slug}.png`, Astro.site).toString();
-const url = new URL(`/blog/${blog.slug}`, Astro.url.origin);
+const encodedSlugPath = encodeSlugPath(blog.slug);
+const image = new URL(`/og/${encodedSlugPath}.png`, Astro.site).toString();
+const url = new URL(`/blog/${encodedSlugPath}`, Astro.url.origin);
 ---
 
 <BaseLayout
   title={blog.data.title}
   description={blog.data.description}
   image={image}
-  headings={headings}
-  showTOC={true}
+  headings={displayHeadings}
+  showTOC={!isEncrypted || hasEncryptedPayload}
+  pageType="blog-post"
 >
   <MainCard title={blog.data.title} description={blog.data.description} image={blog.data.image} infoIcon="lucide:info">
     <PostInfo
       pubDate={displayDate}
       badge={blog.data.badge}
-      word={remarkPluginFrontmatter.totalCharCount}
-      time={remarkPluginFrontmatter.readingTime}
+      word={totalCharCount}
+      time={readingTime}
     />
 
     <div class="mb-6">
@@ -54,20 +138,1810 @@ const url = new URL(`/blog/${blog.slug}`, Astro.url.origin);
     </div>
 
     <div class="mt-8">
-      <div id="content" class="prose max-w-none prose-headings:scroll-mt-20 prose-img:rounded-xl prose-img:mx-auto">
-        <Content />
-        <License
-          url={url}
-          title={blog.data.title}
-          image={blog.data.image}
-          pubDate={blog.data.pubDate}
-          badge={blog.data.badge}
-          categories={blog.data.categories}
-          tags={blog.data.tags}
-          word={remarkPluginFrontmatter.totalCharCount}
-          time={remarkPluginFrontmatter.readingTime}
-        />
-      </div>
+      {
+        hasEncryptedPayload ? (
+          <>
+            <div id="post-lock-gate" class="post-lock-shell">
+              <div class="post-lock-orb post-lock-orb-a" aria-hidden="true"></div>
+              <div class="post-lock-orb post-lock-orb-b" aria-hidden="true"></div>
+              <div class="post-lock-grid" aria-hidden="true"></div>
+              <div class="post-lock-card">
+                <div class="post-lock-head">
+                  <div class="post-lock-emblem" aria-hidden="true">
+                    <span class="post-lock-emblem-core"></span>
+                  </div>
+                  <div>
+                    <p class="post-lock-label">Encrypted Post</p>
+                    <p class="post-lock-micro">Private Notes Archive</p>
+                  </div>
+                  <div class="post-lock-signal" aria-hidden="true">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                </div>
+                <h2 class="post-lock-title">Enter Password to View</h2>
+                <p class="post-lock-subtitle">This article is protected. Unlock it to read the full content.</p>
+
+                <div class="post-lock-row">
+                  <div class="post-lock-input-wrap">
+                    <span class="post-lock-input-icon" aria-hidden="true">PW</span>
+                    <input
+                      id="post-password-input"
+                      type="password"
+                      placeholder="Enter password"
+                      class="input input-bordered post-lock-input"
+                      autocomplete="current-password"
+                    />
+                  </div>
+                  <button id="post-password-toggle" type="button" class="btn btn-ghost post-lock-toggle">Show</button>
+                  <button id="post-password-submit" type="button" class="btn btn-primary post-lock-submit">Unlock</button>
+                </div>
+
+                {blog.data.passwordHint && <p class="post-lock-hint">Hint: {blog.data.passwordHint}</p>}
+                <p class="post-lock-note">
+                  Password verification is done locally in your browser and is never sent to a server.
+                </p>
+                <p id="post-password-error" class="post-lock-error hidden" role="status" aria-live="polite">
+                  Wrong password, please try again.
+                </p>
+              </div>
+              {
+                certificateImagePath && (
+                  <section
+                    class="prolabs-certificate prolabs-certificate-preunlock"
+                    aria-label="Hack The Box Prolabs Certificate Preview"
+                  >
+                    <div class="prolabs-certificate-meta">
+                      <p class="prolabs-certificate-kicker">Hack The Box Prolabs</p>
+                      <h3 class="prolabs-certificate-title">Certificate Preview</h3>
+                      <p class="prolabs-certificate-subtitle">
+                        You can view the certificate before unlocking this article.
+                      </p>
+                    </div>
+                    <a
+                      class="prolabs-certificate-link"
+                      href={certificateImagePath}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <img
+                        src={certificateImagePath}
+                        alt={`${blog.data.title} completion certificate preview`}
+                        loading="lazy"
+                      />
+                    </a>
+                  </section>
+                )
+              }
+            </div>
+
+            <div id="post-protected-content" class="hidden" data-pagefind-ignore>
+              <div id="post-encrypted-content" class="prose max-w-none prose-headings:scroll-mt-20 prose-img:rounded-xl prose-img:mx-auto"></div>
+              {
+                certificateImagePath && (
+                  <section class="prolabs-certificate" aria-label="Hack The Box Prolabs Certificate">
+                    <div class="prolabs-certificate-meta">
+                      <p class="prolabs-certificate-kicker">Hack The Box Prolabs</p>
+                      <h3 class="prolabs-certificate-title">Completion Certificate</h3>
+                      <p class="prolabs-certificate-subtitle">
+                        This article is unlocked. The certificate for this lab is shown below.
+                      </p>
+                    </div>
+                    <a
+                      class="prolabs-certificate-link"
+                      href={certificateImagePath}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <img
+                        src={certificateImagePath}
+                        alt={`${blog.data.title} completion certificate`}
+                        loading="lazy"
+                      />
+                    </a>
+                  </section>
+                )
+              }
+              <License
+                url={url}
+                title={blog.data.title}
+                image={blog.data.image}
+                pubDate={blog.data.pubDate}
+                badge={blog.data.badge}
+                categories={blog.data.categories}
+                tags={blog.data.tags}
+                word={totalCharCount}
+                time={readingTime}
+              />
+            </div>
+
+            <script is:inline define:vars={{ encryptedPayload }} data-astro-rerun>
+              (() => {
+                const payload = encryptedPayload;
+                if (!payload) return;
+
+                const toHex = (buffer) => {
+                  return Array.from(new Uint8Array(buffer))
+                    .map((byte) => byte.toString(16).padStart(2, "0"))
+                    .join("");
+                };
+
+                const base64ToBytes = (value) => {
+                  const normalized = value.replace(/=+$/, "");
+                  const bytes = [];
+                  let buffer = 0;
+                  let bits = 0;
+
+                  for (const char of normalized) {
+                    let code = -1;
+                    if (char >= "A" && char <= "Z") code = char.charCodeAt(0) - 65;
+                    else if (char >= "a" && char <= "z") code = char.charCodeAt(0) - 71;
+                    else if (char >= "0" && char <= "9") code = char.charCodeAt(0) + 4;
+                    else if (char === "+") code = 62;
+                    else if (char === "/") code = 63;
+
+                    if (code === -1) continue;
+                    buffer = (buffer << 6) | code;
+                    bits += 6;
+
+                    if (bits >= 8) {
+                      bits -= 8;
+                      bytes.push((buffer >> bits) & 0xff);
+                    }
+                  }
+
+                  return new Uint8Array(bytes);
+                };
+
+                const toArrayBuffer = (bytes) =>
+                  bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength);
+
+                const sanitizeHtml = (html) => {
+                  const template = document.createElement("template");
+                  template.innerHTML = html;
+                  template.content
+                    .querySelectorAll("script, iframe, object, embed, style")
+                    .forEach((node) => node.remove());
+
+                  template.content.querySelectorAll("*").forEach((element) => {
+                    for (const attr of [...element.attributes]) {
+                      const attrName = attr.name.toLowerCase();
+                      const attrValue = attr.value.trim().toLowerCase();
+
+                      if (attrName.startsWith("on")) {
+                        element.removeAttribute(attr.name);
+                        continue;
+                      }
+
+                      if (
+                        (attrName === "href" || attrName === "src") &&
+                        attrValue.startsWith("javascript:")
+                      ) {
+                        element.removeAttribute(attr.name);
+                      }
+                    }
+                  });
+
+                  return template.innerHTML;
+                };
+
+                const escapeHtml = (text) =>
+                  text
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#39;");
+
+                const normalizeUrl = (rawUrl) => {
+                  const value = String(rawUrl || "").trim().replace(/^<|>$/g, "");
+                  if (!value) return "#";
+                  if (/^(javascript|data|vbscript):/i.test(value)) return "#";
+                  return value;
+                };
+
+                const renderInlineMarkdown = (input) => {
+                  const codeSnippets = [];
+                  let text = escapeHtml(input ?? "");
+
+                  text = text.replace(/`([^`]+?)`/g, (_, code) => {
+                    const token = `@@INLINE_CODE_${codeSnippets.length}@@`;
+                    codeSnippets.push(`<code>${escapeHtml(code)}</code>`);
+                    return token;
+                  });
+
+                  text = text.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (_, alt, src) => {
+                    const safeSrc = escapeHtml(normalizeUrl(src));
+                    return `<img src="${safeSrc}" alt="${escapeHtml(alt)}" loading="lazy" />`;
+                  });
+
+                  text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, label, href) => {
+                    const normalizedHref = normalizeUrl(href);
+                    const safeHref = escapeHtml(normalizedHref);
+                    const isExternal = /^(https?:)?\/\//i.test(normalizedHref);
+                    const attrs = isExternal
+                      ? ' target="_blank" rel="noopener noreferrer"'
+                      : "";
+                    return `<a href="${safeHref}"${attrs}>${escapeHtml(label)}</a>`;
+                  });
+
+                  text = text.replace(/\*\*([^*]+?)\*\*/g, "<strong>$1</strong>");
+                  text = text.replace(/__([^_]+?)__/g, "<strong>$1</strong>");
+                  text = text.replace(/\*([^*\n]+?)\*/g, "<em>$1</em>");
+                  text = text.replace(/_([^_\n]+?)_/g, "<em>$1</em>");
+                  text = text.replace(/~~([^~]+?)~~/g, "<del>$1</del>");
+
+                  text = text.replace(/@@INLINE_CODE_(\d+)@@/g, (_, index) => {
+                    return codeSnippets[Number(index)] ?? "";
+                  });
+
+                  return text;
+                };
+
+                const renderMarkdownFallback = (markdown) => {
+                  return `<pre class="post-markdown-fallback">${escapeHtml(markdown)}</pre>`;
+                };
+
+                const renderMarkdownToHtml = (markdown) => {
+                  const source = String(markdown ?? "").replace(/\r\n?/g, "\n").trim();
+                  if (!source) return "";
+
+                  const codeBlocks = [];
+                  const codeFencePattern = /```([^\n`]*)\n([\s\S]*?)```/g;
+
+                  let text = source.replace(codeFencePattern, (_, lang, code) => {
+                    const token = `@@CODE_BLOCK_${codeBlocks.length}@@`;
+                    const language = String(lang || "").trim();
+                    const langClass = language
+                      ? ` class="language-${escapeHtml(language)}"`
+                      : "";
+                    codeBlocks.push(
+                      `<pre class="post-markdown-code"><code${langClass}>${escapeHtml(code)}</code></pre>`,
+                    );
+                    return token;
+                  });
+
+                  const quotePrefixPattern = /^[>\uFF1E]\s?/;
+                  const stripQuotePrefix = (line) => String(line || "").replace(/^\s*[>\uFF1E]\s?/, "");
+                  const tableRowHasPipe = (line) => /[|\uFF5C]/.test(String(line || ""));
+                  const normalizeTablePipes = (line) => String(line || "").replace(/\uFF5C/g, "|");
+
+                  const splitTableRow = (rowText) => {
+                    const text = normalizeTablePipes(rowText)
+                      .trim()
+                      .replace(/^\|/, "")
+                      .replace(/\|$/, "");
+
+                    const cells = [];
+                    let current = "";
+                    for (let i = 0; i < text.length; i += 1) {
+                      const char = text[i];
+                      if (char === "\\" && text[i + 1] === "|") {
+                        current += "|";
+                        i += 1;
+                        continue;
+                      }
+
+                      if (char === "|") {
+                        cells.push(current.trim());
+                        current = "";
+                        continue;
+                      }
+
+                      current += char;
+                    }
+                    cells.push(current.trim());
+                    return cells;
+                  };
+
+                  const isTableSeparatorLine = (line) => {
+                    if (!tableRowHasPipe(line)) return false;
+                    const tokens = splitTableRow(line).map((cell) => cell.replace(/\s+/g, ""));
+                    if (!tokens.length) return false;
+                    return tokens.every((token) => /^:?-{3,}:?$/.test(token));
+                  };
+
+                  const getTableAlign = (token) => {
+                    const value = String(token || "").replace(/\s+/g, "");
+                    const isLeft = value.startsWith(":");
+                    const isRight = value.endsWith(":");
+                    if (isLeft && isRight) return "center";
+                    if (isRight) return "right";
+                    if (isLeft) return "left";
+                    return "";
+                  };
+
+                  const findTableSeparatorIndex = (allLines, startIndex) => {
+                    let separatorIndex = startIndex + 1;
+                    while (
+                      separatorIndex < allLines.length &&
+                      !allLines[separatorIndex].trim() &&
+                      separatorIndex <= startIndex + 2
+                    ) {
+                      separatorIndex += 1;
+                    }
+
+                    if (
+                      separatorIndex < allLines.length &&
+                      separatorIndex <= startIndex + 2 &&
+                      isTableSeparatorLine(allLines[separatorIndex])
+                    ) {
+                      return separatorIndex;
+                    }
+
+                    return -1;
+                  };
+
+                  const isTableBlockStartAt = (allLines, startIndex) => {
+                    if (startIndex < 0 || startIndex >= allLines.length) return false;
+                    const currentLine = allLines[startIndex];
+                    if (!tableRowHasPipe(currentLine)) return false;
+                    return findTableSeparatorIndex(allLines, startIndex) !== -1;
+                  };
+
+                  const isSpecialLine = (line, options = {}) => {
+                    const { includeQuoteMarker = true } = options;
+                    const trimmed = String(line || "").trim();
+                    return (
+                      trimmed === "" ||
+                      /^@@CODE_BLOCK_\d+@@$/.test(trimmed) ||
+                      /^#{1,6}\s+/.test(trimmed) ||
+                      /^(-{3,}|\*{3,}|_{3,})$/.test(trimmed) ||
+                      (includeQuoteMarker && quotePrefixPattern.test(trimmed)) ||
+                      /^(\d+\.)\s+/.test(trimmed) ||
+                      /^[-*+]\s+/.test(trimmed)
+                    );
+                  };
+
+                  const lines = text.split("\n");
+                  const blocks = [];
+                  let index = 0;
+
+                  while (index < lines.length) {
+                    const line = lines[index];
+                    const trimmed = line.trim();
+
+                    if (!trimmed) {
+                      index += 1;
+                      continue;
+                    }
+
+                    if (/^@@CODE_BLOCK_\d+@@$/.test(trimmed)) {
+                      blocks.push(trimmed);
+                      index += 1;
+                      continue;
+                    }
+
+                    const headingMatch = trimmed.match(/^(#{1,6})\s+(.+)$/);
+                    if (headingMatch) {
+                      const level = headingMatch[1].length;
+                      const headingContent = renderInlineMarkdown(headingMatch[2]);
+                      blocks.push(`<h${level}>${headingContent}</h${level}>`);
+                      index += 1;
+                      continue;
+                    }
+
+                    if (/^(-{3,}|\*{3,}|_{3,})$/.test(trimmed)) {
+                      blocks.push("<hr />");
+                      index += 1;
+                      continue;
+                    }
+
+                    if (/^<table(?:\s|>)/i.test(trimmed)) {
+                      const htmlLines = [line];
+                      index += 1;
+                      while (index < lines.length) {
+                        const htmlLine = lines[index];
+                        htmlLines.push(htmlLine);
+                        index += 1;
+                        if (/<\/table>/i.test(htmlLine)) break;
+                      }
+                      blocks.push(htmlLines.join("\n"));
+                      continue;
+                    }
+
+                    if (quotePrefixPattern.test(trimmed)) {
+                      const quoteLines = [];
+
+                      while (index < lines.length) {
+                        const quoteLine = lines[index];
+                        const quoteTrimmed = quoteLine.trim();
+
+                        if (quotePrefixPattern.test(quoteTrimmed)) {
+                          quoteLines.push(stripQuotePrefix(quoteLine));
+                          index += 1;
+                          continue;
+                        }
+
+                        if (!quoteTrimmed) {
+                          const nextLine = lines[index + 1] ?? "";
+                          const nextTrimmed = nextLine.trim();
+                          if (
+                            quotePrefixPattern.test(nextTrimmed) ||
+                            (nextTrimmed &&
+                              !isSpecialLine(nextLine, { includeQuoteMarker: false }) &&
+                              !isTableBlockStartAt(lines, index + 1))
+                          ) {
+                            quoteLines.push("");
+                            index += 1;
+                            continue;
+                          }
+                          break;
+                        }
+
+                        if (/^<table(?:\s|>)/i.test(quoteTrimmed) || isTableBlockStartAt(lines, index)) {
+                          break;
+                        }
+
+                        // Support Markdown lazy continuation lines in blockquotes
+                        if (!isSpecialLine(quoteLine, { includeQuoteMarker: false })) {
+                          quoteLines.push(quoteTrimmed);
+                          index += 1;
+                          continue;
+                        }
+
+                        break;
+                      }
+
+                      const quoteParagraphs = [];
+                      let paragraphBuffer = [];
+                      quoteLines.forEach((qLine) => {
+                        const current = String(qLine || "").trim();
+                        if (!current) {
+                          if (paragraphBuffer.length) {
+                            quoteParagraphs.push(paragraphBuffer.join(" "));
+                            paragraphBuffer = [];
+                          }
+                          return;
+                        }
+                        paragraphBuffer.push(current);
+                      });
+                      if (paragraphBuffer.length) {
+                        quoteParagraphs.push(paragraphBuffer.join(" "));
+                      }
+
+                      const quoteHtml = quoteParagraphs.length
+                        ? quoteParagraphs
+                            .map((paragraph) => `<p>${renderInlineMarkdown(paragraph)}</p>`)
+                            .join("")
+                        : `<p>${renderInlineMarkdown(quoteLines.join(" ").trim())}</p>`;
+
+                      blocks.push(`<blockquote>${quoteHtml}</blockquote>`);
+                      continue;
+                    }
+
+                    if (/^[-*+]\s+/.test(trimmed)) {
+                      const items = [];
+                      while (index < lines.length && /^[-*+]\s+/.test(lines[index].trim())) {
+                        items.push(lines[index].trim().replace(/^[-*+]\s+/, ""));
+                        index += 1;
+                      }
+                      blocks.push(
+                        `<ul>${items
+                          .map((item) => `<li>${renderInlineMarkdown(item)}</li>`)
+                          .join("")}</ul>`,
+                      );
+                      continue;
+                    }
+
+                    if (/^\d+\.\s+/.test(trimmed)) {
+                      const items = [];
+                      while (index < lines.length && /^\d+\.\s+/.test(lines[index].trim())) {
+                        items.push(lines[index].trim().replace(/^\d+\.\s+/, ""));
+                        index += 1;
+                      }
+                      blocks.push(
+                        `<ol>${items
+                          .map((item) => `<li>${renderInlineMarkdown(item)}</li>`)
+                          .join("")}</ol>`,
+                      );
+                      continue;
+                    }
+
+                    const separatorIndex = findTableSeparatorIndex(lines, index);
+
+                    if (
+                      tableRowHasPipe(trimmed) &&
+                      separatorIndex !== -1
+                    ) {
+                      const headerCells = splitTableRow(lines[index]);
+                      const separatorCells = splitTableRow(lines[separatorIndex]);
+                      index = separatorIndex + 1;
+                      const bodyRows = [];
+
+                      while (
+                        index < lines.length &&
+                        lines[index].trim() &&
+                        tableRowHasPipe(lines[index]) &&
+                        !isTableSeparatorLine(lines[index])
+                      ) {
+                        bodyRows.push(splitTableRow(lines[index]));
+                        index += 1;
+                      }
+
+                      const columnCount = Math.max(
+                        headerCells.length,
+                        separatorCells.length,
+                        ...bodyRows.map((row) => row.length),
+                      );
+                      const normalizeCells = (cells) => {
+                        const copy = [...cells];
+                        if (columnCount <= 0) return copy;
+                        if (copy.length > columnCount) {
+                          copy[columnCount - 1] = copy.slice(columnCount - 1).join(" | ");
+                          copy.length = columnCount;
+                        }
+                        while (copy.length < columnCount) copy.push("");
+                        return copy;
+                      };
+
+                      const alignments = normalizeCells(separatorCells).map((token) =>
+                        getTableAlign(token),
+                      );
+                      const renderTableCell = (tag, content, align) => {
+                        const style = align ? ` style="text-align:${align}"` : "";
+                        return `<${tag}${style}>${renderInlineMarkdown(content)}</${tag}>`;
+                      };
+
+                      const thead = `<thead><tr>${normalizeCells(headerCells)
+                        .map((cell, i) => renderTableCell("th", cell, alignments[i]))
+                        .join("")}</tr></thead>`;
+                      const tbody = bodyRows.length
+                        ? `<tbody>${bodyRows
+                            .map(
+                              (row) =>
+                                `<tr>${normalizeCells(row)
+                                  .map((cell, i) => renderTableCell("td", cell, alignments[i]))
+                                  .join("")}</tr>`,
+                            )
+                            .join("")}</tbody>`
+                        : "";
+
+                      blocks.push(`<table>${thead}${tbody}</table>`);
+                      continue;
+                    }
+
+                    const paragraphLines = [trimmed];
+                    index += 1;
+                    while (index < lines.length) {
+                      const nextLine = lines[index];
+                      if (isSpecialLine(nextLine)) break;
+                      paragraphLines.push(nextLine.trim());
+                      index += 1;
+                    }
+                    blocks.push(`<p>${renderInlineMarkdown(paragraphLines.join(" "))}</p>`);
+                  }
+
+                  let html = blocks.join("\n");
+                  html = html.replace(/@@CODE_BLOCK_(\d+)@@/g, (_, tokenIndex) => {
+                    return codeBlocks[Number(tokenIndex)] ?? "";
+                  });
+
+                  return html;
+                };
+
+                const slugifyHeadingText = (value) =>
+                  String(value || "")
+                    .toLowerCase()
+                    .normalize("NFKD")
+                    .replace(/[\u0300-\u036f]/g, "")
+                    .replace(/[^a-z0-9\u4e00-\u9fa5]+/g, "-")
+                    .replace(/^-+|-+$/g, "");
+
+                const buildHeadingsFromContent = (root) => {
+                  const nodes = Array.from(root.querySelectorAll("h1, h2, h3, h4, h5, h6"));
+                  const seenSlugs = new Map();
+
+                  return nodes.map((node, index) => {
+                    const depth = Number((node.tagName || "H2").replace("H", "")) || 2;
+                    const text = (node.textContent || "").trim() || `Section ${index + 1}`;
+                    const baseSlug = slugifyHeadingText(text) || `section-${index + 1}`;
+                    const count = seenSlugs.get(baseSlug) || 0;
+                    seenSlugs.set(baseSlug, count + 1);
+                    const slug = count > 0 ? `${baseSlug}-${count}` : baseSlug;
+                    const id = `heading-${index}`;
+                    node.id = id;
+                    return { depth, slug, text, id, index };
+                  });
+                };
+
+                const renderSidebarTOC = (headingEntries) => {
+                  const tocContainer = document.getElementById("toc-container");
+                  const tocList = tocContainer?.querySelector(".toc-nav ul");
+                  if (!tocContainer || !tocList) return;
+
+                  if (!headingEntries.length) {
+                    tocList.innerHTML =
+                      '<li class="px-2 py-2 text-sm opacity-60">No headings found in this article.</li>';
+                    return;
+                  }
+
+                  tocList.innerHTML = headingEntries
+                    .map(
+                      (heading) => `
+                        <li>
+                          <a
+                            href="#${heading.id}"
+                            data-heading-slug="${escapeHtml(heading.slug)}"
+                            data-heading-depth="${heading.depth}"
+                            data-index="${heading.index}"
+                            class="toc-link relative flex items-center py-2 px-2 rounded-lg ${heading.depth === 1 ? "font-medium" : ""}"
+                            style="padding-left: ${12 + (heading.depth - 1) * 16}px;"
+                          >
+                            <span class="icon-indicator absolute left-1 opacity-0 transition-all duration-200 w-4 h-4 text-primary">›</span>
+                            <span class="link-text transition-transform duration-200">${escapeHtml(heading.text)}</span>
+                          </a>
+                        </li>
+                      `,
+                    )
+                    .join("");
+                };
+
+                const renderMobileTOC = (headingEntries) => {
+                  const mobileBody = document.querySelector("#mobile_toc_modal .pt-4");
+                  if (!mobileBody) return;
+
+                  if (!headingEntries.length) {
+                    mobileBody.innerHTML =
+                      '<div class="py-4 text-center text-base-content/70"><p>No contents</p></div>';
+                    return;
+                  }
+
+                  mobileBody.innerHTML = `
+                    <ul class="menu menu-sm">
+                      ${headingEntries
+                        .map(
+                          (heading) => `
+                            <li class="my-1">
+                              <a
+                                href="#${heading.id}"
+                                class="mobile-toc-link flex items-center rounded-lg transition-color hover:bg-base-200"
+                                style="margin-left: ${(heading.depth - 1) * 12}px"
+                                data-mobile-heading-id="${heading.id}"
+                              >
+                                <span class="text-sm truncate">${escapeHtml(heading.text)}</span>
+                              </a>
+                            </li>
+                          `,
+                        )
+                        .join("")}
+                    </ul>
+                  `;
+                };
+
+                const refreshDynamicTOC = (contentRoot) => {
+                  if (!contentRoot) return;
+                  const headingEntries = buildHeadingsFromContent(contentRoot);
+                  renderSidebarTOC(headingEntries);
+                  renderMobileTOC(headingEntries);
+                  document.dispatchEvent(new Event("astro:page-load"));
+                };
+
+                const deriveKey = async (password, salt, iterations) => {
+                  if (!window.crypto?.subtle) {
+                    throw new Error("WebCrypto unavailable");
+                  }
+                  const keyMaterial = await crypto.subtle.importKey(
+                    "raw",
+                    new TextEncoder().encode(password),
+                    "PBKDF2",
+                    false,
+                    ["deriveKey"],
+                  );
+
+                  return crypto.subtle.deriveKey(
+                    {
+                      name: "PBKDF2",
+                      salt: toArrayBuffer(salt),
+                      iterations,
+                      hash: "SHA-256",
+                    },
+                    keyMaterial,
+                    {
+                      name: "AES-GCM",
+                      length: 256,
+                    },
+                    false,
+                    ["decrypt"],
+                  );
+                };
+
+                const buildPasswordCandidates = (rawPassword) => {
+                  const trimmed = rawPassword.trim();
+                  return [rawPassword, trimmed, trimmed.normalize("NFC"), trimmed.normalize("NFKC")]
+                    .filter((value, index, list) => value.length > 0 && list.indexOf(value) === index);
+                };
+
+                const initializeEncryptedPost = () => {
+                  const gate = document.getElementById("post-lock-gate");
+                  const contentWrap = document.getElementById("post-protected-content");
+                  const contentBody = document.getElementById("post-encrypted-content");
+                  const input = document.getElementById("post-password-input");
+                  const toggle = document.getElementById("post-password-toggle");
+                  const submit = document.getElementById("post-password-submit");
+                  const error = document.getElementById("post-password-error");
+
+                  if (!gate || !contentWrap || !contentBody || !input || !submit || !error) return;
+                  if (gate.dataset.initialized === "true") return;
+                  gate.dataset.initialized = "true";
+
+                  const showError = (message) => {
+                    error.textContent = message;
+                    error.classList.remove("hidden");
+                    input.setAttribute("aria-invalid", "true");
+                  };
+
+                  const hideError = () => {
+                    error.classList.add("hidden");
+                    input.removeAttribute("aria-invalid");
+                  };
+
+                  const setBusy = (busy) => {
+                    submit.disabled = busy;
+                    submit.textContent = busy ? "Unlocking..." : "Unlock";
+                    submit.setAttribute("aria-busy", busy ? "true" : "false");
+                    if (toggle) toggle.disabled = busy;
+                  };
+
+                  const unlockPost = () => {
+                    gate.classList.add("hidden");
+                    contentWrap.classList.remove("hidden");
+                  };
+
+                  const decryptWithPassword = async (password) => {
+                    try {
+                      const iterations = Number(payload.iterations) || 210000;
+                      const key = await deriveKey(
+                        password,
+                        base64ToBytes(payload.salt),
+                        iterations,
+                      );
+
+                      const cipherBytes = base64ToBytes(payload.content);
+                      const tagBytes = base64ToBytes(payload.tag);
+                      const encryptedBytes = new Uint8Array(cipherBytes.length + tagBytes.length);
+                      encryptedBytes.set(cipherBytes);
+                      encryptedBytes.set(tagBytes, cipherBytes.length);
+
+                      const decryptedBuffer = await crypto.subtle.decrypt(
+                        { name: "AES-GCM", iv: toArrayBuffer(base64ToBytes(payload.iv)) },
+                        key,
+                        toArrayBuffer(encryptedBytes),
+                      );
+
+                      const markdown = new TextDecoder().decode(decryptedBuffer);
+                      let renderedHtml = "";
+                      try {
+                        renderedHtml = renderMarkdownToHtml(markdown);
+                      } catch {
+                        renderedHtml = renderMarkdownFallback(markdown);
+                      }
+                      if (!renderedHtml.trim()) {
+                        renderedHtml = renderMarkdownFallback(markdown);
+                      }
+                      contentBody.innerHTML = sanitizeHtml(renderedHtml);
+                      refreshDynamicTOC(contentBody);
+                      window.dispatchEvent(new Event("post-content-updated"));
+                      return true;
+                    } catch {
+                      return false;
+                    }
+                  };
+
+                  if (toggle) {
+                    toggle.addEventListener("click", () => {
+                      const nextType = input.type === "password" ? "text" : "password";
+                      input.type = nextType;
+                      toggle.textContent = nextType === "password" ? "Show" : "Hide";
+                    });
+                  }
+
+                  const tryUnlock = async () => {
+                    if (!input.value.trim()) {
+                      showError("Please enter the password.");
+                      return;
+                    }
+
+                    if (!window.crypto?.subtle) {
+                      showError("This browser does not support local decryption.");
+                      return;
+                    }
+
+                    setBusy(true);
+                    try {
+                      const candidates = buildPasswordCandidates(input.value);
+                      let orderedCandidates = [...candidates];
+
+                      if (payload.passwordHash) {
+                        const digests = await Promise.all(
+                          candidates.map(async (candidate) => ({
+                            candidate,
+                            digest: toHex(
+                              await crypto.subtle.digest(
+                                "SHA-256",
+                                new TextEncoder().encode(candidate),
+                              ),
+                            ),
+                          })),
+                        );
+
+                        const matched = digests.find(
+                          ({ digest }) => digest === payload.passwordHash,
+                        )?.candidate;
+                        if (matched) orderedCandidates = [matched];
+                      }
+
+                      for (const candidate of orderedCandidates) {
+                        if (await decryptWithPassword(candidate)) {
+                          hideError();
+                          unlockPost();
+                          return;
+                        }
+                      }
+
+                      showError("Wrong password, please try again.");
+                    } finally {
+                      setBusy(false);
+                    }
+                  };
+
+                  input.focus({ preventScroll: true });
+                  submit.addEventListener("click", () => {
+                    void tryUnlock();
+                  });
+                  input.addEventListener("keydown", (event) => {
+                    if (event.key === "Enter") {
+                      event.preventDefault();
+                      void tryUnlock();
+                    }
+                  });
+                };
+
+                document.addEventListener("astro:page-load", initializeEncryptedPost);
+                document.addEventListener("DOMContentLoaded", initializeEncryptedPost, { once: true });
+                initializeEncryptedPost();
+              })();
+            </script>
+          </>
+        ) : isEncrypted ? (
+          <>
+            <div id="post-lock-gate" class="post-lock-shell">
+              <div class="post-lock-orb post-lock-orb-a" aria-hidden="true"></div>
+              <div class="post-lock-orb post-lock-orb-b" aria-hidden="true"></div>
+              <div class="post-lock-grid" aria-hidden="true"></div>
+              <div class="post-lock-card">
+                <div class="post-lock-head">
+                  <div class="post-lock-emblem" aria-hidden="true">
+                    <span class="post-lock-emblem-core"></span>
+                  </div>
+                  <div>
+                    <p class="post-lock-label">Encrypted Post</p>
+                    <p class="post-lock-micro">Private Notes Archive</p>
+                  </div>
+                  <div class="post-lock-signal" aria-hidden="true">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                </div>
+                <h2 class="post-lock-title">Enter Password to View</h2>
+                <p class="post-lock-subtitle">This article is protected. Unlock it to read the full content.</p>
+
+                <div class="post-lock-row">
+                  <div class="post-lock-input-wrap">
+                    <span class="post-lock-input-icon" aria-hidden="true">PW</span>
+                    <input
+                      id="post-password-input"
+                      type="password"
+                      placeholder="Enter password"
+                      class="input input-bordered post-lock-input"
+                      autocomplete="current-password"
+                    />
+                  </div>
+                  <button id="post-password-toggle" type="button" class="btn btn-ghost post-lock-toggle">Show</button>
+                  <button id="post-password-submit" type="button" class="btn btn-primary post-lock-submit">Unlock</button>
+                </div>
+
+                {blog.data.passwordHint && <p class="post-lock-hint">Hint: {blog.data.passwordHint}</p>}
+                <p class="post-lock-note">
+                  Password verification is done locally in your browser and is never sent to a server.
+                </p>
+                <p id="post-password-error" class="post-lock-error hidden" role="status" aria-live="polite">
+                  Wrong password, please try again.
+                </p>
+              </div>
+              {
+                certificateImagePath && (
+                  <section
+                    class="prolabs-certificate prolabs-certificate-preunlock"
+                    aria-label="Hack The Box Prolabs Certificate Preview"
+                  >
+                    <div class="prolabs-certificate-meta">
+                      <p class="prolabs-certificate-kicker">Hack The Box Prolabs</p>
+                      <h3 class="prolabs-certificate-title">Certificate Preview</h3>
+                      <p class="prolabs-certificate-subtitle">
+                        You can view the certificate before unlocking this article.
+                      </p>
+                    </div>
+                    <a
+                      class="prolabs-certificate-link"
+                      href={certificateImagePath}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <img
+                        src={certificateImagePath}
+                        alt={`${blog.data.title} completion certificate preview`}
+                        loading="lazy"
+                      />
+                    </a>
+                  </section>
+                )
+              }
+            </div>
+
+            <div id="post-protected-content" class="hidden" data-pagefind-ignore>
+              <div id="content" class="prose max-w-none prose-headings:scroll-mt-20 prose-img:rounded-xl prose-img:mx-auto">
+                <Content />
+                {
+                  certificateImagePath && (
+                    <section class="prolabs-certificate" aria-label="Hack The Box Prolabs Certificate">
+                      <div class="prolabs-certificate-meta">
+                        <p class="prolabs-certificate-kicker">Hack The Box Prolabs</p>
+                        <h3 class="prolabs-certificate-title">Completion Certificate</h3>
+                        <p class="prolabs-certificate-subtitle">
+                          宸茶В閿佹湰绡囨枃绔狅紝涓嬮潰鏄瀹為獙鐜鐨勯€氬叧璇佷功銆?                        </p>
+                      </div>
+                      <a
+                        class="prolabs-certificate-link"
+                        href={certificateImagePath}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <img
+                          src={certificateImagePath}
+                          alt={`${blog.data.title} completion certificate`}
+                          loading="lazy"
+                        />
+                      </a>
+                    </section>
+                  )
+                }
+                <License
+                  url={url}
+                  title={blog.data.title}
+                  image={blog.data.image}
+                  pubDate={blog.data.pubDate}
+                  badge={blog.data.badge}
+                  categories={blog.data.categories}
+                  tags={blog.data.tags}
+                  word={totalCharCount}
+                  time={readingTime}
+                />
+              </div>
+            </div>
+
+            <script is:inline define:vars={{ legacyPasswordHash, slug: blog.slug }}>
+              (() => {
+                const initializePostProtection = () => {
+                  const gate = document.getElementById("post-lock-gate");
+                  const content = document.getElementById("post-protected-content");
+                  const input = document.getElementById("post-password-input");
+                  const toggle = document.getElementById("post-password-toggle");
+                  const submit = document.getElementById("post-password-submit");
+                  const error = document.getElementById("post-password-error");
+
+                  if (!gate || !content || !input || !submit || !error) {
+                    return;
+                  }
+                  if (gate.dataset.initialized === "true") {
+                    return;
+                  }
+
+                  gate.dataset.initialized = "true";
+                  const storageKey = `post-unlocked:${slug}:${legacyPasswordHash}`;
+
+                  const showError = (message) => {
+                    error.textContent = message;
+                    error.classList.remove("hidden");
+                    input.setAttribute("aria-invalid", "true");
+                  };
+
+                  const hideError = () => {
+                    error.classList.add("hidden");
+                    input.removeAttribute("aria-invalid");
+                  };
+
+                  const setBusy = (busy) => {
+                    submit.disabled = busy;
+                    submit.textContent = busy ? "Unlocking..." : "Unlock";
+                    submit.setAttribute("aria-busy", busy ? "true" : "false");
+                    if (toggle) {
+                      toggle.disabled = busy;
+                    }
+                  };
+
+                  const unlockPost = () => {
+                    gate.classList.add("hidden");
+                    content.classList.remove("hidden");
+                  };
+
+                  if (toggle) {
+                    toggle.addEventListener("click", () => {
+                      const nextType = input.type === "password" ? "text" : "password";
+                      input.type = nextType;
+                      toggle.textContent = nextType === "password" ? "Show" : "Hide";
+                    });
+                  }
+
+                  const toHex = (buffer) =>
+                    Array.from(new Uint8Array(buffer))
+                      .map((byte) => byte.toString(16).padStart(2, "0"))
+                      .join("");
+
+                  const createSHA256 = async (value) => {
+                    const digest = await crypto.subtle.digest(
+                      "SHA-256",
+                      new TextEncoder().encode(value),
+                    );
+                    return toHex(digest);
+                  };
+
+                  const buildPasswordCandidates = (rawPassword) => {
+                    const trimmed = rawPassword.trim();
+                    return [rawPassword, trimmed, trimmed.normalize("NFC"), trimmed.normalize("NFKC")]
+                      .filter((value, index, list) => value.length > 0 && list.indexOf(value) === index);
+                  };
+
+                  if (localStorage.getItem(storageKey) === "1") {
+                    unlockPost();
+                    return;
+                  }
+
+                  const tryUnlock = async () => {
+                    if (!input.value.trim()) {
+                      showError("Please enter the password.");
+                      return;
+                    }
+
+                    setBusy(true);
+                    try {
+                      const candidates = buildPasswordCandidates(input.value);
+                      for (const candidate of candidates) {
+                        const digest = await createSHA256(candidate);
+                        if (digest === legacyPasswordHash) {
+                          localStorage.setItem(storageKey, "1");
+                          hideError();
+                          unlockPost();
+                          return;
+                        }
+                      }
+
+                      showError("Wrong password, please try again.");
+                    } finally {
+                      setBusy(false);
+                    }
+                  };
+
+                  input.focus({ preventScroll: true });
+
+                  submit.addEventListener("click", () => {
+                    void tryUnlock();
+                  });
+
+                  input.addEventListener("keydown", (event) => {
+                    if (event.key === "Enter") {
+                      event.preventDefault();
+                      void tryUnlock();
+                    }
+                  });
+                };
+
+                document.addEventListener("astro:page-load", initializePostProtection);
+                initializePostProtection();
+              })();
+            </script>
+          </>
+        ) : (
+          <div id="content" class="prose max-w-none prose-headings:scroll-mt-20 prose-img:rounded-xl prose-img:mx-auto">
+            <Content />
+            <License
+              url={url}
+              title={blog.data.title}
+              image={blog.data.image}
+              pubDate={blog.data.pubDate}
+              badge={blog.data.badge}
+              categories={blog.data.categories}
+              tags={blog.data.tags}
+              word={totalCharCount}
+              time={readingTime}
+            />
+          </div>
+        )
+      }
     </div>
+
+    <script is:inline data-astro-rerun>
+      (() => {
+        if (window.__codeStyleCyclerMounted) return;
+        window.__codeStyleCyclerMounted = true;
+
+        const STYLE_CLASSES = [
+          "preview-code-a",
+          "preview-code-b",
+          "preview-code-c",
+          "preview-code-d",
+          "preview-code-e",
+          "preview-code-f",
+          "preview-code-g",
+          "preview-code-h",
+          "preview-code-i",
+          "preview-code-j",
+        ];
+        const WRAPPER_SELECTOR = ".frosti-code, .expressive-code, figure[data-rehype-pretty-code-figure]";
+        const isPerfLite = document.documentElement.getAttribute("data-performance-mode") === "lite";
+
+        const isPlainLanguage = (value) => /^(plain|plaintext|text|txt)$/i.test(String(value || "").trim());
+
+        const normalizeToken = (value) =>
+          String(value || "")
+            .trim()
+            .toLowerCase()
+            .replace(/[_\-\s]+/g, "");
+
+        const looksLikeLanguageTitle = (title, language) => {
+          const normalizedTitle = normalizeToken(title);
+          const normalizedLanguage = normalizeToken(language);
+          if (!normalizedTitle || !normalizedLanguage) return false;
+          if (normalizedTitle === normalizedLanguage) return true;
+
+          const rawLanguage = String(language || "").trim().toLowerCase();
+          const aliasMap = {
+            sh: ["shell", "bash", "terminal"],
+            shell: ["sh", "bash", "terminal"],
+            bash: ["sh", "shell", "terminal"],
+            zsh: ["shell", "terminal"],
+            fish: ["shell", "terminal"],
+            pwsh: ["powershell", "ps1"],
+            powershell: ["pwsh", "ps1"],
+            ps1: ["powershell", "pwsh"],
+            cmd: ["batch", "commandprompt"],
+            bat: ["batch", "cmd"],
+            batch: ["bat", "cmd"],
+            js: ["javascript"],
+            javascript: ["js"],
+            ts: ["typescript"],
+            typescript: ["ts"],
+            yml: ["yaml"],
+            yaml: ["yml"],
+            py: ["python"],
+            python: ["py"],
+          };
+
+          const aliases = aliasMap[rawLanguage] || [];
+          return aliases.some((alias) => normalizeToken(alias) === normalizedTitle);
+        };
+
+        const normalizeCodeFrames = (scope) => {
+          scope.querySelectorAll(".expressive-code .frame").forEach((frame) => {
+            const header = frame.querySelector(":scope > .header");
+            const pre = frame.querySelector(":scope > pre[data-language]");
+            if (!header) return;
+
+            let title = header.querySelector(":scope > .title");
+            const language = String(pre?.getAttribute("data-language") || "").trim();
+
+            frame.classList.remove("code-frame-no-header", "code-frame-with-label");
+
+            if (title) {
+              const currentTitle = title.textContent?.trim() || "";
+              if (
+                !currentTitle ||
+                (language && !isPlainLanguage(language) && looksLikeLanguageTitle(currentTitle, language))
+              ) {
+                title.remove();
+                title = null;
+              }
+            }
+
+            const hasTitle = Boolean(title?.textContent?.trim());
+            if (hasTitle) {
+              frame.classList.add("code-frame-with-label");
+            } else {
+              frame.classList.add("code-frame-no-header");
+            }
+          });
+        };
+
+        if (isPerfLite) {
+          const applyLitePreviewStyles = ({ force = false } = {}) => {
+            const scopeLite =
+              document.getElementById("content") || document.getElementById("post-encrypted-content");
+            if (!scopeLite) return false;
+            if (!force && scopeLite.dataset.previewStyled === "true") return true;
+
+            normalizeCodeFrames(scopeLite);
+
+            scopeLite
+              .querySelectorAll(STYLE_CLASSES.map((cls) => `.${cls}`).join(", "))
+              .forEach((node) => node.classList.remove(...STYLE_CLASSES));
+
+            const wrappers = Array.from(scopeLite.querySelectorAll(WRAPPER_SELECTOR));
+            const fallbackPres = wrappers.length ? [] : Array.from(scopeLite.querySelectorAll("pre"));
+
+            const seen = new Set();
+            const blocks = [...wrappers, ...fallbackPres]
+              .filter((node) => {
+                if (!node || seen.has(node)) return false;
+                seen.add(node);
+                return true;
+              })
+              .slice(0, 120);
+
+            if (!blocks.length) return false;
+
+            blocks.forEach((block, index) => {
+              const className = STYLE_CLASSES[index % STYLE_CLASSES.length];
+              block.classList.add(className);
+              block.setAttribute("data-preview-code-style", `${(index % STYLE_CLASSES.length) + 1}`);
+            });
+
+            scopeLite.dataset.previewStyled = "true";
+            return true;
+          };
+
+          const initializeLitePreview = () => {
+            void applyLitePreviewStyles();
+          };
+
+          document.addEventListener("astro:page-load", initializeLitePreview);
+          document.addEventListener("DOMContentLoaded", initializeLitePreview, { once: true });
+          window.addEventListener("post-content-updated", () => {
+            const scopeLite =
+              document.getElementById("content") || document.getElementById("post-encrypted-content");
+            if (scopeLite) {
+              delete scopeLite.dataset.previewStyled;
+            }
+            void applyLitePreviewStyles({ force: true });
+          });
+          initializeLitePreview();
+          return;
+        }
+
+        const uniqueNodes = (nodes) => {
+          const seen = new Set();
+          return nodes.filter((node) => {
+            if (!node || seen.has(node)) return false;
+            seen.add(node);
+            return true;
+          });
+        };
+
+        const collectCodeBlocks = (root) => {
+          if (!root) return [];
+
+          const wrappers = Array.from(root.querySelectorAll(WRAPPER_SELECTOR));
+          const fallbackPres = Array.from(root.querySelectorAll("pre")).map(
+            (pre) => pre.closest(WRAPPER_SELECTOR) || pre,
+          );
+
+          return uniqueNodes([...wrappers, ...fallbackPres]);
+        };
+
+        const getScope = () =>
+          document.getElementById("content") || document.getElementById("post-encrypted-content");
+
+        const applyPreviewStyles = ({ force = false } = {}) => {
+          const scope = getScope();
+          if (!scope) return false;
+          if (!force && scope.dataset.previewStyled === "true") return true;
+
+          normalizeCodeFrames(scope);
+
+          scope
+            .querySelectorAll(STYLE_CLASSES.map((cls) => `.${cls}`).join(", "))
+            .forEach((node) => node.classList.remove(...STYLE_CLASSES));
+
+          const blocks = collectCodeBlocks(scope);
+          if (!blocks.length) return false;
+
+          blocks.forEach((block, index) => {
+            const className = STYLE_CLASSES[index % STYLE_CLASSES.length];
+            block.classList.add(className);
+            block.setAttribute("data-preview-code-style", `${(index % STYLE_CLASSES.length) + 1}`);
+          });
+
+          scope.dataset.previewStyled = "true";
+          return true;
+        };
+
+        const schedulePreview = ({ force = false } = {}) => {
+          const run = () => {
+            void applyPreviewStyles({ force });
+          };
+          if ("requestIdleCallback" in window) {
+            window.requestIdleCallback(run, { timeout: 1200 });
+          } else {
+            window.setTimeout(run, 0);
+          }
+        };
+
+        const initializePreview = () => {
+          schedulePreview();
+        };
+
+        document.addEventListener("astro:page-load", initializePreview);
+        document.addEventListener("DOMContentLoaded", initializePreview, { once: true });
+        window.addEventListener("post-content-updated", () => schedulePreview({ force: true }));
+        initializePreview();
+      })();
+    </script>
   </MainCard>
 </BaseLayout>
+
+<style>
+  .post-lock-shell {
+    position: relative;
+    margin-bottom: 1.25rem;
+    overflow: hidden;
+    border-radius: 1.25rem;
+    border: 1px solid hsl(var(--bc) / 0.14);
+    font-family: "Space Grotesk", "Manrope", "Noto Sans SC", sans-serif;
+    background:
+      radial-gradient(130% 135% at 6% 2%, hsl(var(--p) / 0.2), transparent 56%),
+      radial-gradient(120% 120% at 98% 94%, hsl(var(--s) / 0.2), transparent 58%),
+      linear-gradient(155deg, hsl(var(--b2) / 0.94), hsl(var(--b3) / 0.82));
+    box-shadow:
+      0 26px 52px -30px hsl(var(--bc) / 0.55),
+      inset 0 1px 0 hsl(var(--b1) / 0.35);
+  }
+
+  .post-lock-shell::before {
+    content: "";
+    position: absolute;
+    inset: 1px;
+    border-radius: 1.12rem;
+    border: 1px solid hsl(var(--b1) / 0.14);
+    pointer-events: none;
+  }
+
+  .post-lock-shell::after {
+    content: "";
+    position: absolute;
+    top: -140%;
+    left: -40%;
+    width: 60%;
+    height: 320%;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      hsl(var(--b1) / 0.16) 45%,
+      transparent 100%
+    );
+    transform: rotate(20deg);
+    animation: postLockSheen 10.5s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  .post-lock-grid {
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    opacity: 0.33;
+    background-image:
+      linear-gradient(to right, hsl(var(--bc) / 0.08) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(var(--bc) / 0.08) 1px, transparent 1px);
+    background-size: 30px 30px;
+    mask-image: radial-gradient(circle at center, black 50%, transparent 100%);
+  }
+
+  .post-lock-orb {
+    pointer-events: none;
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(24px);
+    opacity: 0.68;
+  }
+
+  .post-lock-orb-a {
+    top: -2.5rem;
+    left: -3rem;
+    width: 10rem;
+    height: 10rem;
+    background: hsl(var(--p) / 0.42);
+    animation: postLockFloatA 7.6s ease-in-out infinite;
+  }
+
+  .post-lock-orb-b {
+    right: -2.5rem;
+    bottom: -3rem;
+    width: 10.5rem;
+    height: 10.5rem;
+    background: hsl(var(--s) / 0.42);
+    animation: postLockFloatB 8.6s ease-in-out infinite;
+  }
+
+  .post-lock-card {
+    position: relative;
+    z-index: 1;
+    margin: 0.85rem;
+    border-radius: 1rem;
+    border: 1px solid hsl(var(--bc) / 0.15);
+    background: hsl(var(--b1) / 0.78);
+    padding: 1.1rem 1.2rem 1.2rem;
+    backdrop-filter: blur(8px);
+  }
+
+  .post-lock-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.9rem;
+    margin-bottom: 0.1rem;
+  }
+
+  .post-lock-emblem {
+    position: relative;
+    flex: 0 0 auto;
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 0.85rem;
+    border: 1px solid hsl(var(--bc) / 0.24);
+    background:
+      radial-gradient(circle at 26% 24%, hsl(var(--p) / 0.55), transparent 70%),
+      linear-gradient(145deg, hsl(var(--b2) / 0.88), hsl(var(--b3) / 0.72));
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 1px 0 hsl(var(--b1) / 0.26);
+  }
+
+  .post-lock-emblem-core {
+    width: 0.76rem;
+    height: 0.76rem;
+    border-radius: 999px;
+    background: linear-gradient(120deg, hsl(var(--p)), hsl(var(--s)));
+    box-shadow: 0 0 0 4px hsl(var(--p) / 0.14);
+  }
+
+  .post-lock-label {
+    margin: 0;
+    width: fit-content;
+    border-radius: 9999px;
+    border: 1px solid hsl(var(--bc) / 0.22);
+    background: hsl(var(--b2) / 0.56);
+    padding: 0.2rem 0.62rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .post-lock-micro {
+    margin: 0.28rem 0 0;
+    opacity: 0.7;
+    font-size: 0.74rem;
+    letter-spacing: 0.02em;
+  }
+
+  .post-lock-signal {
+    display: inline-flex;
+    gap: 0.28rem;
+    align-items: flex-end;
+    margin-left: auto;
+    opacity: 0.8;
+  }
+
+  .post-lock-signal span {
+    width: 0.25rem;
+    border-radius: 999px;
+    background: linear-gradient(180deg, hsl(var(--p) / 0.92), hsl(var(--s) / 0.78));
+  }
+
+  .post-lock-signal span:nth-child(1) {
+    height: 0.5rem;
+  }
+
+  .post-lock-signal span:nth-child(2) {
+    height: 0.76rem;
+  }
+
+  .post-lock-signal span:nth-child(3) {
+    height: 1.04rem;
+  }
+
+  .post-lock-title {
+    margin: 0.25rem 0 0;
+    font-size: clamp(1.1rem, 2.8vw, 1.62rem);
+    line-height: 1.2;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+
+  .post-lock-subtitle {
+    margin: 0.5rem 0 0;
+    max-width: 46ch;
+    opacity: 0.82;
+    font-size: 0.925rem;
+  }
+
+  .post-lock-row {
+    margin-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.62rem;
+    align-items: stretch;
+  }
+
+  .post-lock-input-wrap {
+    position: relative;
+    flex: 1 1 230px;
+    min-width: 0;
+  }
+
+  .post-lock-input-icon {
+    position: absolute;
+    top: 50%;
+    left: 0.72rem;
+    transform: translateY(-50%);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    opacity: 0.72;
+    pointer-events: none;
+  }
+
+  .post-lock-input {
+    width: 100%;
+    height: 100%;
+    min-height: 2.75rem;
+    padding-left: 2.25rem;
+    border-color: hsl(var(--bc) / 0.2);
+    background: hsl(var(--b1) / 0.75);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .post-lock-input:focus {
+    border-color: hsl(var(--p) / 0.58);
+    box-shadow:
+      0 0 0 3px hsl(var(--p) / 0.2),
+      inset 0 1px 0 hsl(var(--b1) / 0.36);
+  }
+
+  .post-lock-toggle {
+    min-width: 4.25rem;
+    border: 1px solid hsl(var(--bc) / 0.18);
+    background: hsl(var(--b2) / 0.54);
+    transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+  }
+
+  .post-lock-toggle:hover {
+    transform: translateY(-1px);
+    border-color: hsl(var(--bc) / 0.3);
+    background: hsl(var(--b2) / 0.72);
+  }
+
+  .post-lock-submit {
+    min-width: 6.3rem;
+    background-image: linear-gradient(120deg, hsl(var(--p)) 0%, hsl(var(--s)) 100%);
+    border: 0;
+    box-shadow: 0 10px 20px -16px hsl(var(--p) / 0.8);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+  }
+
+  .post-lock-submit:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 28px -18px hsl(var(--p) / 0.9);
+    filter: brightness(1.06);
+  }
+
+  .post-lock-toggle:disabled,
+  .post-lock-submit:disabled {
+    cursor: not-allowed;
+    opacity: 0.68;
+    filter: none;
+  }
+
+  .post-lock-hint {
+    margin: 0.78rem 0 0;
+    width: fit-content;
+    border-radius: 0.85rem;
+    border: 1px dashed hsl(var(--bc) / 0.22);
+    background: hsl(var(--b2) / 0.56);
+    padding: 0.34rem 0.66rem;
+    font-size: 0.82rem;
+    opacity: 0.9;
+  }
+
+  .post-lock-note {
+    margin: 0.62rem 0 0;
+    font-size: 0.78rem;
+    opacity: 0.62;
+    letter-spacing: 0.01em;
+  }
+
+  .post-lock-error {
+    margin: 0.72rem 0 0;
+    border-left: 3px solid hsl(var(--er));
+    background: hsl(var(--er) / 0.1);
+    border-radius: 0.55rem;
+    padding: 0.5rem 0.65rem;
+    font-size: 0.84rem;
+    color: hsl(var(--er));
+  }
+
+  .post-markdown-fallback {
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+    border-radius: 0.85rem;
+    border: 1px solid hsl(var(--bc) / 0.14);
+    background: hsl(var(--b2) / 0.32);
+    padding: 1rem 1.05rem;
+    font-family: "JetBrains Mono", "Fira Code", "Consolas", monospace;
+    font-size: 0.92rem;
+    line-height: 1.7;
+  }
+
+  .prolabs-certificate {
+    margin: 1.8rem 0 2.1rem;
+    border-radius: 1rem;
+    border: 1px solid hsl(var(--bc) / 0.14);
+    background:
+      radial-gradient(110% 130% at 98% -4%, hsl(var(--p) / 0.12), transparent 54%),
+      radial-gradient(120% 140% at 2% 102%, hsl(var(--s) / 0.12), transparent 56%),
+      hsl(var(--b1) / 0.72);
+    box-shadow: 0 16px 34px -24px hsl(var(--bc) / 0.54);
+    overflow: hidden;
+    backdrop-filter: blur(4px);
+  }
+
+  .prolabs-certificate-meta {
+    padding: 0.95rem 1.05rem 0;
+  }
+
+  .prolabs-certificate-kicker {
+    margin: 0;
+    opacity: 0.72;
+    font-size: 0.74rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+
+  .prolabs-certificate-title {
+    margin: 0.4rem 0 0;
+    font-size: clamp(1rem, 2.1vw, 1.3rem);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    font-weight: 780;
+  }
+
+  .prolabs-certificate-subtitle {
+    margin: 0.42rem 0 0;
+    font-size: 0.88rem;
+    opacity: 0.78;
+  }
+
+  .prolabs-certificate-link {
+    display: block;
+    padding: 0.95rem;
+  }
+
+  .prolabs-certificate-link img {
+    width: 100%;
+    border-radius: 0.75rem;
+    border: 1px solid hsl(var(--bc) / 0.12);
+    box-shadow: 0 14px 28px -24px hsl(var(--bc) / 0.7);
+    transition: transform 0.26s ease, box-shadow 0.26s ease, filter 0.26s ease;
+  }
+
+  .prolabs-certificate-link:hover img {
+    transform: translateY(-2px) scale(1.005);
+    box-shadow: 0 24px 32px -24px hsl(var(--bc) / 0.72);
+    filter: saturate(1.03);
+  }
+
+  .prolabs-certificate-preunlock {
+    position: relative;
+    z-index: 1;
+    margin: 0 0.85rem 0.92rem;
+    border-style: dashed;
+    border-color: hsl(var(--bc) / 0.2);
+    box-shadow: 0 14px 24px -22px hsl(var(--bc) / 0.84);
+  }
+
+  .prolabs-certificate-preunlock .prolabs-certificate-meta {
+    padding-top: 0.78rem;
+  }
+
+  .prolabs-certificate-preunlock .prolabs-certificate-title {
+    font-size: clamp(0.95rem, 2vw, 1.18rem);
+  }
+
+  @keyframes postLockFloatA {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(14px, 16px, 0);
+    }
+  }
+
+  @keyframes postLockFloatB {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(-14px, -12px, 0);
+    }
+  }
+
+  @keyframes postLockSheen {
+    0%,
+    100% {
+      transform: translate3d(-24%, 0, 0) rotate(20deg);
+      opacity: 0;
+    }
+    15%,
+    58% {
+      opacity: 0.55;
+    }
+    70% {
+      transform: translate3d(170%, 0, 0) rotate(20deg);
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .post-lock-shell::after,
+    .post-lock-orb-a,
+    .post-lock-orb-b {
+      animation: none;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .post-lock-card {
+      margin: 0.65rem;
+      padding: 0.95rem;
+    }
+
+    .post-lock-head {
+      gap: 0.55rem;
+    }
+
+    .post-lock-emblem {
+      width: 1.95rem;
+      height: 1.95rem;
+    }
+
+    .post-lock-title {
+      font-size: clamp(1.04rem, 6vw, 1.3rem);
+    }
+
+    .post-lock-submit {
+      flex: 1 1 100%;
+    }
+
+    .prolabs-certificate {
+      margin: 1.25rem 0 1.6rem;
+    }
+
+    .prolabs-certificate-preunlock {
+      margin: 0 0.65rem 0.72rem;
+    }
+
+    .prolabs-certificate-meta {
+      padding: 0.78rem 0.85rem 0;
+    }
+
+    .prolabs-certificate-link {
+      padding: 0.72rem;
+    }
+  }
+</style>
+

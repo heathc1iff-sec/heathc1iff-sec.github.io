@@ -9,7 +9,7 @@ const { headings = [], showTOC = true } = Astro.props as TOCBarProps;
 ---
 
 {
-  showTOC && headings.length > 0 && (
+  showTOC && (
     <div id="toc-container" class="mt-4 z-10 md:max-h-[calc(100vh-2rem)] ">
       <Card>
         <div class="p-4">
@@ -38,6 +38,9 @@ const { headings = [], showTOC = true } = Astro.props as TOCBarProps;
                   </a>
                 </li>
               ))}
+              {headings.length === 0 && (
+                <li class="px-2 py-2 text-sm opacity-60">Unlock article to load table of contents.</li>
+              )}
             </ul>
           </nav>
         </div>
@@ -100,6 +103,29 @@ const { headings = [], showTOC = true } = Astro.props as TOCBarProps;
           .forEach((link) => link.setAttribute("href", `#${newId}`));
       }
     });
+
+    const perfLite = document.documentElement.getAttribute("data-performance-mode") === "lite";
+    if (perfLite) {
+      activeIndicator.style.display = "none";
+
+      tocNav.addEventListener("click", (e: MouseEvent) => {
+        const target = e.target as HTMLElement;
+        const link = target.closest("a") as HTMLAnchorElement | null;
+        if (!link) return;
+
+        const href = link.getAttribute("href") || "";
+        if (!href || !href.startsWith("#")) return;
+
+        e.preventDefault();
+        const headingId = href.substring(1);
+        const targetHeading = document.getElementById(headingId);
+        if (!targetHeading) return;
+
+        targetHeading.scrollIntoView({ behavior: "auto" });
+        history.pushState(null, "", href);
+      });
+      return;
+    }
 
     // Position the active indicator - optimized
     function updateActiveIndicator(link: HTMLAnchorElement, animate = true): void {

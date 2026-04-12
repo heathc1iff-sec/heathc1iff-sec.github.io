@@ -9,6 +9,11 @@ tags:
   - Hackmyvm
   - Linux Machine
   - Wireless Network
+  - Enumeration
+  - Privilege Escalation
+  - Password Attacks
+  - Kerberos
+  - SSTI
 ---
 
 ![](/image/hmvmachines/Magifi-1.png)

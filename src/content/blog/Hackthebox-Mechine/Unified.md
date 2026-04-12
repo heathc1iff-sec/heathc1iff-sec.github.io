@@ -8,6 +8,9 @@ categories:
 tags:
   - Hackthebox
   - Linux Machine
+  - Command Injection
+  - Enumeration
+  - Privilege Escalation
 ---
 
 ## TASK 1

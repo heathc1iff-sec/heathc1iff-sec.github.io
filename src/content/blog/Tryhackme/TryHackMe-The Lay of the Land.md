@@ -7,6 +7,11 @@ categories:
   - Documentation
 tags:
   - Tryhackme
+  - Active Directory
+  - Blue Team
+  - Red Team
+  - Lateral Movement
+  - Privilege Escalation
 ---
 
 # Introduction

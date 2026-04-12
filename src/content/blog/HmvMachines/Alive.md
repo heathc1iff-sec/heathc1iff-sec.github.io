@@ -8,6 +8,9 @@ categories:
 tags:
   - Hackmyvm
   - Linux Machine
+  - Enumeration
+  - Kerberos
+  - Privilege Escalation
 ---
 
 # 信息收集

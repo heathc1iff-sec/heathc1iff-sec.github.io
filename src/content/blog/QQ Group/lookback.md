@@ -8,6 +8,15 @@ categories:
 tags:
   - MazeSec
   - Windows Machine
+  - Active Directory
+  - Kerberos
+  - Enumeration
+  - ADCS
+  - Password Attacks
+  - Lateral Movement
+  - Credential Dumping
+  - Privilege Escalation
+  - Docker
 ---
 
 # 靶机信息

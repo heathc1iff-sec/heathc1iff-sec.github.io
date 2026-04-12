@@ -6,7 +6,7 @@
     "dev": "astro dev",
     "start": "astro dev",
     "check": "astro check",
-    "build": "astro check && astro build && pagefind --site dist",
+    "build": "npm run encrypt:pending && astro check && astro build && pagefind --site dist",
     "search:clean": "rimraf public/pagefind",
     "search:index": "npm run build && cpy 'dist/pagefind/**' public/pagefind",
     "preview": "astro preview",
@@ -17,7 +17,10 @@
     "biome:summary": "biome check --reporter summary ./src",
     "format": "biome format --write ./src",
     "check-all": "pnpm astro-check && pnpm biome:check",
-	"deploy": "pnpm run build && gh-pages -d dist --dotfiles"
+    "deploy": "pnpm run build && gh-pages -d dist --dotfiles",
+    "encrypt:pending": "node tools/encrypt-pending-posts.mjs",
+    "encrypt:post": "node tools/post-encrypt.mjs",
+    "decrypt:post": "node tools/post-decrypt.mjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.6",

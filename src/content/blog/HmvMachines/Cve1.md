@@ -8,6 +8,11 @@ categories:
 tags:
   - Hackmyvm
   - Linux Machine
+  - Enumeration
+  - Privilege Escalation
+  - RCE
+  - Competition
+  - Persistence
 ---
 
 ![](/image/hmvmachines/Cve1-1.png)

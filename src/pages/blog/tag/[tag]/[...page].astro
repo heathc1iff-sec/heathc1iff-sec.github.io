@@ -6,7 +6,7 @@ import Pagination from "@components/widgets/Pagination.astro";
 import { t } from "@config";
 import type { Page, Post } from "@interfaces/data";
 import BaseLayout from "@layouts/BaseLayout.astro";
-import { generatePageLinks } from "@utils/blogUtils";
+import { encodeSlugPath, generatePageLinks } from "@utils/blogUtils";
 import { getTagPaginationPaths } from "@utils/paginationUtils";
 import { Icon } from "astro-icon/components";
 
@@ -44,7 +44,7 @@ const pageLinks = generatePageLinks(totalPages);
           title={blog.data.title}
           image={blog.data.image}
           description={blog.data.description}
-          url={"/blog/" + blog.slug}
+          url={`/blog/${encodeSlugPath(blog.slug)}`}
           pubDate={blog.data.pubDate}
           badge={blog.data.badge}
           categories={blog.data.categories}
@@ -55,5 +55,5 @@ const pageLinks = generatePageLinks(totalPages);
       ))
     }
   </CardGroup>
-  <Pagination page={page} totalPages={totalPages} pageLinks={pageLinks} baseUrl={`/blog/tag/${params.tag}`} />
+  <Pagination page={page} totalPages={totalPages} pageLinks={pageLinks} baseUrl={`/blog/tag/${encodeURIComponent(params.tag)}`} />
 </BaseLayout>

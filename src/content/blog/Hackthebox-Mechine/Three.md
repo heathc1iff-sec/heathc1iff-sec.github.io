@@ -8,6 +8,7 @@ categories:
 tags:
   - Hackthebox
   - Linux Machine
+  - Enumeration
 ---
 
 ![](/image/hackthebox/Three-1.png)根据邮件判断出域名为thetoppers.htb

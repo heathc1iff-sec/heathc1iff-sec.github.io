@@ -7,6 +7,11 @@ categories:
   - Documentation
 tags:
   - Tryhackme
+  - Persistence
+  - Credential Dumping
+  - Privilege Escalation
+  - Blue Team
+  - Windows
 ---
 
 # Introduction

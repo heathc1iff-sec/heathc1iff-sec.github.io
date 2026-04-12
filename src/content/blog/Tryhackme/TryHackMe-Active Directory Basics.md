@@ -7,6 +7,9 @@ categories:
   - Documentation
 tags:
   - Tryhackme
+  - Active Directory
+  - Kerberos
+  - Windows
 ---
 
 # Introduction

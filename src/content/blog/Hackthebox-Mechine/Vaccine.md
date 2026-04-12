@@ -8,6 +8,10 @@ categories:
 tags:
   - Hackthebox
   - Linux Machine
+  - Privilege Escalation
+  - Password Attacks
+  - Enumeration
+  - SQL Injection
 ---
 
 ## TASK 1
