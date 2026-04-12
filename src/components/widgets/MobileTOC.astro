@@ -65,7 +65,7 @@ const { headings = [], showTOC = true } = Astro.props as TOCBarProps;
     // Cache DOM elements and reduce queries
     const tocLinks = Array.from(document.querySelectorAll(".mobile-toc-link"));
     const headings = Array.from(document.querySelectorAll("h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]"));
-    let headingOffsets = [];
+    let headingOffsets: number[] = [];
 
     const recalcHeadingOffsets = () => {
       headingOffsets = headings.map((heading) => {
