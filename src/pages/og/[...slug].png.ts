@@ -32,6 +32,48 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 let fontCache: { regular: Buffer | null; bold: Buffer | null } | null = null;
 
+function readFirstFont(candidates: string[]) {
+  for (const filePath of candidates) {
+    try {
+      if (fs.existsSync(filePath)) {
+        return fs.readFileSync(filePath);
+      }
+    } catch {
+      // Ignore unreadable path and try next candidate.
+    }
+  }
+  return null;
+}
+
+function getLocalFallbackFonts() {
+  const regular = readFirstFont([
+    "./public/fonts/NotoSansSC-Regular.ttf",
+    "./public/fonts/NotoSansSC-Regular.otf",
+    "C:/Windows/Fonts/msyh.ttc",
+    "C:/Windows/Fonts/simsun.ttc",
+    "/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc",
+    "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
+    "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+    "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
+    "/System/Library/Fonts/PingFang.ttc",
+    "/System/Library/Fonts/Supplemental/Arial Unicode.ttf",
+  ]);
+
+  const bold = readFirstFont([
+    "./public/fonts/NotoSansSC-Bold.ttf",
+    "./public/fonts/NotoSansSC-Bold.otf",
+    "C:/Windows/Fonts/msyhbd.ttc",
+    "/usr/share/fonts/truetype/noto/NotoSansCJK-Bold.ttc",
+    "/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc",
+    "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+    "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf",
+    "/System/Library/Fonts/PingFang.ttc",
+    "/System/Library/Fonts/Supplemental/Arial Bold.ttf",
+  ]);
+
+  return { regular, bold: bold ?? regular };
+}
+
 async function fetchNotoSansSCFonts() {
   if (fontCache) {
     return fontCache;
@@ -60,9 +102,9 @@ async function fetchNotoSansSCFonts() {
 
     if (!regularUrl || !boldUrl) {
       console.warn(
-        "Could not find font urls in Google Fonts CSS; falling back to no fonts.",
+        "Could not find font URLs in Google Fonts CSS; trying local fallback fonts.",
       );
-      fontCache = { regular: null, bold: null };
+      fontCache = getLocalFallbackFonts();
       return fontCache;
     }
 
@@ -72,9 +114,9 @@ async function fetchNotoSansSCFonts() {
     ]);
     if (!rResp.ok || !bResp.ok) {
       console.warn(
-        "Failed to download font files from Google; falling back to no fonts.",
+        "Failed to download font files from Google; trying local fallback fonts.",
       );
-      fontCache = { regular: null, bold: null };
+      fontCache = getLocalFallbackFonts();
       return fontCache;
     }
 
@@ -85,7 +127,7 @@ async function fetchNotoSansSCFonts() {
     return fontCache;
   } catch (err) {
     console.warn("Error fetching fonts:", err);
-    fontCache = { regular: null, bold: null };
+    fontCache = getLocalFallbackFonts();
     return fontCache;
   }
 }
@@ -301,6 +343,26 @@ export async function GET({
       data: fontBold,
       weight: 700,
       style: "normal",
+    });
+  }
+
+  if (!fonts.length) {
+    const fallbackPng = await sharp({
+      create: {
+        width: 1200,
+        height: 630,
+        channels: 3,
+        background: "#111827",
+      },
+    })
+      .png()
+      .toBuffer();
+
+    return new Response(new Uint8Array(fallbackPng), {
+      headers: {
+        "Content-Type": "image/png",
+        "Cache-Control": "public, max-age=31536000, immutable",
+      },
     });
   }
 
