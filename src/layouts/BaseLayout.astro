@@ -26,7 +26,8 @@ const {
 } = Astro.props;
 
 const currentPathname = Astro.url.pathname;
-const isBlogRoute = currentPathname === "/blog" || currentPathname.startsWith("/blog/");
+const isBlogRoute =
+  currentPathname === "/blog" || currentPathname.startsWith("/blog/");
 ---
 
 <!doctype html>

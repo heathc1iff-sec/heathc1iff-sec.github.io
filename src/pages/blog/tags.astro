@@ -2,10 +2,7 @@
 import BaseCard from "@components/BaseCard.astro";
 import { t } from "@config";
 import BaseLayout from "@layouts/BaseLayout.astro";
-import {
-  getAllPosts,
-  getTagsWithCount,
-} from "@utils/blogUtils";
+import { getAllPosts, getTagsWithCount } from "@utils/blogUtils";
 import { Icon } from "astro-icon/components";
 
 const allPosts = await getAllPosts();
@@ -14,23 +11,48 @@ const tagEntries = Array.from(tagCounts.entries()).sort((a, b) => b[1] - a[1]);
 const maxCount = tagEntries.length > 0 ? tagEntries[0][1] : 0;
 
 const COLORS = [
-  '#818cf8', '#2dd4bf', '#fb7185', '#fbbf24', '#a78bfa', 
-  '#38bdf8', '#4ade80', '#f472b6', '#f87171', '#22d3ee'
+  "#818cf8",
+  "#2dd4bf",
+  "#fb7185",
+  "#fbbf24",
+  "#a78bfa",
+  "#38bdf8",
+  "#4ade80",
+  "#f472b6",
+  "#f87171",
+  "#22d3ee",
 ];
 
 const totalNodes = tagEntries.length;
 const nodes = tagEntries.map((entry, index) => {
   const [tag, count] = entry;
   const color = COLORS[index % COLORS.length];
-  let zone, orbitBase, sizeClass;
+  let zone: "inner" | "mid" | "outer";
+  let orbitBase: number;
+  let sizeClass: string;
   if (index < totalNodes * 0.15) {
-    zone = 'inner'; orbitBase = 220; sizeClass = 'text-base font-black';
+    zone = "inner";
+    orbitBase = 220;
+    sizeClass = "text-base font-black";
   } else if (index < totalNodes * 0.45) {
-    zone = 'mid'; orbitBase = 360; sizeClass = 'text-sm font-bold';
+    zone = "mid";
+    orbitBase = 360;
+    sizeClass = "text-sm font-bold";
   } else {
-    zone = 'outer'; orbitBase = 520; sizeClass = 'text-xs font-semibold opacity-70';
+    zone = "outer";
+    orbitBase = 520;
+    sizeClass = "text-xs font-semibold opacity-70";
   }
-  return { id: `node-${index}`, tag, count, color, zone, sizeClass, orbit: orbitBase, href: `/blog/tag/${encodeURIComponent(tag)}` };
+  return {
+    id: `node-${index}`,
+    tag,
+    count,
+    color,
+    zone,
+    sizeClass,
+    orbit: orbitBase,
+    href: `/blog/tag/${encodeURIComponent(tag)}`,
+  };
 });
 ---
 

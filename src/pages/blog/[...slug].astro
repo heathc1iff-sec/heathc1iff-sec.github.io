@@ -1,8 +1,8 @@
 ---
+import { type CollectionEntry, getCollection } from "astro:content";
 import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
-import { type CollectionEntry, getCollection } from "astro:content";
 import License from "@components/widgets/License.astro";
 import PostFilter from "@components/widgets/PostFilter.astro";
 import PostInfo from "@components/widgets/PostInfo.astro";
@@ -85,7 +85,9 @@ const PROLABS_CERTIFICATES: Record<string, string> = {
 };
 const slugTail = blog.slug.split("/").at(-1)?.toLowerCase() ?? "";
 const normalizedSlugTail = slugTail.replace(/[^a-z0-9]+/g, "");
-const isProlabsArticle = blog.slug.toLowerCase().includes("hackthebox-prolabs/");
+const isProlabsArticle = blog.slug
+  .toLowerCase()
+  .includes("hackthebox-prolabs/");
 const certificateFilename = isProlabsArticle
   ? PROLABS_CERTIFICATES[normalizedSlugTail]
   : undefined;
@@ -106,7 +108,9 @@ const resolvePublicAssetPath = (value: string | undefined | null) => {
 
 const certificateImagePath =
   resolvePublicAssetPath(blog.data.certificate) ||
-  resolvePublicAssetPath(certificateFilename ? `/certificate/${certificateFilename}` : null);
+  resolvePublicAssetPath(
+    certificateFilename ? `/certificate/${certificateFilename}` : null,
+  );
 
 const displayHeadings = isEncrypted ? [] : headings;
 const displayDate = blog.data.pubDate

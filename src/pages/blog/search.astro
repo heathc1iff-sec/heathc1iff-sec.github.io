@@ -2,23 +2,33 @@
 import BaseCard from "@components/BaseCard.astro";
 import { t } from "@config";
 import BaseLayout from "@layouts/BaseLayout.astro";
-import { encodeSlugPath, getAllPosts, sortPostsByPinAndDate } from "@utils/blogUtils";
+import {
+  encodeSlugPath,
+  getAllPosts,
+  sortPostsByPinAndDate,
+} from "@utils/blogUtils";
 import { Icon } from "astro-icon/components";
 
-const fallbackSearchEntries = sortPostsByPinAndDate(await getAllPosts()).map((post) => {
-  const pubDateSource =
-    post.data.pubDate instanceof Date ? post.data.pubDate : new Date(post.data.pubDate);
-  const pubDate = Number.isNaN(pubDateSource.getTime()) ? "" : pubDateSource.toISOString();
+const fallbackSearchEntries = sortPostsByPinAndDate(await getAllPosts()).map(
+  (post) => {
+    const pubDateSource =
+      post.data.pubDate instanceof Date
+        ? post.data.pubDate
+        : new Date(post.data.pubDate);
+    const pubDate = Number.isNaN(pubDateSource.getTime())
+      ? ""
+      : pubDateSource.toISOString();
 
-  return {
-    slug: `/blog/${encodeSlugPath(post.slug)}`,
-    title: post.data.title ?? "",
-    description: post.data.description ?? "",
-    tags: post.data.tags ?? [],
-    categories: post.data.categories ?? [],
-    pubDate,
-  };
-});
+    return {
+      slug: `/blog/${encodeSlugPath(post.slug)}`,
+      title: post.data.title ?? "",
+      description: post.data.description ?? "",
+      tags: post.data.tags ?? [],
+      categories: post.data.categories ?? [],
+      pubDate,
+    };
+  },
+);
 ---
 
 <BaseLayout title={t("label.searchPage")}>
