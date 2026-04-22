@@ -11,9 +11,7 @@ import rehypeKatex from "rehype-katex";
 import remarkMath from "remark-math";
 
 import { CODE_THEME, USER_SITE } from "./src/config.ts";
-
 import updateConfig from "./src/integration/updateConfig.ts";
-
 import { remarkReadingTime } from "./src/plugins/remark-reading-time";
 
 // https://astro.build/config
@@ -25,27 +23,43 @@ export default defineConfig({
       includePaths: ["./src/styles"],
     },
   },
-  integrations: [updateConfig(), expressiveCode({
-    themes: [CODE_THEME],
-    styleOverrides: {
-      borderRadius: "0.75rem",
-    },
-  }), mdx(), icon(), terser({
-    compress: true,
-    mangle: true,
-  }), sitemap(), tailwind({
-    configFile: "./tailwind.config.mjs",
-  }), playformCompress()],
+  integrations: [
+    updateConfig(),
+    expressiveCode({
+      themes: [CODE_THEME],
+      styleOverrides: {
+        borderRadius: "0.75rem",
+      },
+    }),
+    mdx(),
+    icon(),
+    sitemap(),
+    tailwind({
+      configFile: "./tailwind.config.mjs",
+    }),
+    playformCompress(),
+  ],
   markdown: {
     remarkPlugins: [remarkMath, remarkReadingTime],
-    rehypePlugins: [rehypeKatex, [
-      rehypeExternalLinks,
-      {
-        content: { type: "text", value: "↗" },
-      },
-    ]],
+    rehypePlugins: [
+      rehypeKatex,
+      [
+        rehypeExternalLinks,
+        {
+          target: "_blank",
+          rel: ["noopener", "noreferrer"],
+          content: { type: "text", value: "↗" },
+        },
+      ],
+    ],
   },
   vite: {
+    plugins: [
+      terser({
+        compress: true,
+        mangle: true,
+      }),
+    ],
     css: {
       preprocessorOptions: {
         scss: {

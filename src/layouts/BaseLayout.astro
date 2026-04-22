@@ -41,7 +41,7 @@ const isBlogRoute =
   data-performance-mode={isBlogRoute ? "lite" : "normal"}
 >
   <head>
-    {!isBlogRoute && <ClientRouter />}
+    <ClientRouter />
     {!isBlogRoute && <ElementCrossing />}
     {!isBlogRoute && <PointerOnNavigation />}
     <Header title={title} description={description} favicon={SITE_FAVICON} image={image} />
@@ -112,7 +112,8 @@ const isBlogRoute =
       isBlogRoute ? (
         <div class="theme-background theme-background--lite" aria-hidden="true">
           <div class="theme-background__gradient"></div>
-          <div class="theme-background__stars theme-background__stars--lite" data-starfield></div>
+          <div class="theme-background__stars theme-background__stars--lite"></div>
+          <div class="theme-background__moon"></div>
           <div class="theme-background__vignette"></div>
         </div>
       ) : (
@@ -146,17 +147,18 @@ const isBlogRoute =
     <div class="site-content-layer">
       <Navbar />
 
-      <div class="max-w-6xl mx-auto w-full flex-grow">
-        <div class="grid grid-cols-1 md:grid-cols-5 lg:grid-cols-4 gap-4 p-4 h-full">
-          <main
-            class="col-span-1 md:col-span-4 lg:col-span-3 bg-transparent order-1 md:order-2 mt-16 md:mt-0 flex flex-col gap-4"
-          >
-            <div class="flex-grow flex flex-col gap-4" {...isIndexed ? { "data-pagefind-body": true } : {}}>
+      <div class="site-shell">
+        <div class="layout-grid">
+          <main class="layout-main bg-transparent">
+            <div
+              class="layout-main__content"
+              {...isIndexed ? { "data-pagefind-body": true } : {}}
+            >
               <slot />
             </div>
             <Footer />
           </main>
-          <aside class="col-span-1 bg-transparent order-2 md:order-1 md:top-4">
+          <aside class="layout-sidebar bg-transparent">
             <Sidebar headings={headings} showTOC={showTOC} />
             <slot name="sidebar" />
           </aside>

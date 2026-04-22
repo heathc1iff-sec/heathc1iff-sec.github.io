@@ -35,7 +35,14 @@ const {
 
     /* Add dividers between cards except the last one */
     :global(.card-group > :not(:last-child)) {
-      border-bottom: 1px dashed oklch(var(--bc) / 0.2);
+      border-bottom: 1px solid oklch(var(--bc) / 0.12);
+      border-image: linear-gradient(
+          to right,
+          transparent,
+          oklch(var(--bc) / 0.22),
+          transparent
+        )
+        1;
       margin-bottom: 0;
       border-bottom-left-radius: 0 !important;
       border-bottom-right-radius: 0 !important;

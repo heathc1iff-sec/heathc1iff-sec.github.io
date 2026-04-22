@@ -4,6 +4,9 @@ function getRobotsTxt(sitemapURL: URL) {
   return `
 User-agent: *
 Allow: /
+Disallow: /pagefind/
+Disallow: /og/
+
 Sitemap: ${sitemapURL.href}
 `;
 }

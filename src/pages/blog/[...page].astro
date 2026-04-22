@@ -106,35 +106,71 @@ const pageLinks = generatePageLinks(totalPages);
 
   <script is:inline>
     (() => {
-      const schedulePrefetch = () => {
-        const run = () => {
-          const urls = Array.from(document.querySelectorAll("a[data-post-link]"))
-            .map((link) => link.getAttribute("href") || "")
-            .filter((href) => href && href.startsWith("/"))
-            .filter((href, index, list) => list.indexOf(href) === index)
-            .slice(0, 8);
+      const win = window;
+      if (win.__frostiPostPrefetchReady) return;
+      win.__frostiPostPrefetchReady = true;
 
-          urls.forEach((href) => {
-            const key = `link[rel="prefetch"][href="${href}"][data-post-prefetch="1"]`;
-            if (document.head.querySelector(key)) return;
-            const link = document.createElement("link");
-            link.rel = "prefetch";
-            link.as = "document";
-            link.href = href;
-            link.setAttribute("data-post-prefetch", "1");
-            document.head.appendChild(link);
-          });
+      const prefetched = new Set();
+
+      const getUniquePostUrls = () =>
+        Array.from(document.querySelectorAll("a[data-post-link]"))
+          .map((link) => link.getAttribute("href") || "")
+          .filter((href) => href && href.startsWith("/"))
+          .filter((href, index, list) => list.indexOf(href) === index);
+
+      const prefetchUrl = (href) => {
+        if (!href || prefetched.has(href)) return;
+
+        const exists = Array.from(
+          document.head.querySelectorAll('link[data-post-prefetch="1"]'),
+        ).some((link) => link.getAttribute("href") === href);
+
+        if (exists) {
+          prefetched.add(href);
+          return;
+        }
+
+        const link = document.createElement("link");
+        link.rel = "prefetch";
+        link.as = "document";
+        link.href = href;
+        link.setAttribute("data-post-prefetch", "1");
+        document.head.appendChild(link);
+        prefetched.add(href);
+      };
+
+      const warmupPrefetch = () => {
+        const run = () => {
+          getUniquePostUrls()
+            .slice(0, 2)
+            .forEach((href) => prefetchUrl(href));
         };
 
         if ("requestIdleCallback" in window) {
-          window.requestIdleCallback(run, { timeout: 1800 });
+          window.requestIdleCallback(run, { timeout: 2200 });
         } else {
-          window.setTimeout(run, 220);
+          window.setTimeout(run, 260);
         }
       };
 
-      document.addEventListener("astro:page-load", schedulePrefetch);
-      schedulePrefetch();
+      const prefetchFromIntent = (event) => {
+        const target = event.target;
+        if (!(target instanceof Element)) return;
+
+        const link = target.closest("a[data-post-link]");
+        if (!(link instanceof HTMLAnchorElement)) return;
+
+        const href = link.getAttribute("href") || "";
+        if (!href.startsWith("/")) return;
+        prefetchUrl(href);
+      };
+
+      document.addEventListener("pointerover", prefetchFromIntent, {
+        passive: true,
+      });
+      document.addEventListener("focusin", prefetchFromIntent);
+      document.addEventListener("astro:page-load", warmupPrefetch);
+      warmupPrefetch();
     })();
   </script>
 </BaseLayout>

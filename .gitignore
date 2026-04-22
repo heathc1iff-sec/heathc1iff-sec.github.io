@@ -23,5 +23,11 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 
+# build/check logs
+build_output.log
+check-output.log
+tmp-dev.err.log
+tmp-dev.log
+
 # pagefind
 public/pagefind/

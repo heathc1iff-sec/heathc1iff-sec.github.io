@@ -34,17 +34,33 @@ import Card from "../temple/Card.astro";
 </Card>
 
 <script>
-  // Focus search input when pressing '/' key
-  document.addEventListener("astro:page-load", () => {
-    document.addEventListener("keydown", (e) => {
-      const target = e.target as HTMLElement;
-      if (e.key === "/" && target && target.tagName !== "INPUT" && target.tagName !== "TEXTAREA") {
-        e.preventDefault();
-        const searchInput = document.querySelector('input[name="q"]');
-        if (searchInput) {
-          (searchInput as HTMLInputElement).focus();
-        }
+  (() => {
+    const win = window as typeof window & {
+      __frostiSearchHotkeyBound?: boolean;
+    };
+
+    if (win.__frostiSearchHotkeyBound) return;
+    win.__frostiSearchHotkeyBound = true;
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key !== "/" || event.ctrlKey || event.metaKey || event.altKey) return;
+
+      const target = event.target;
+      if (!(target instanceof HTMLElement)) return;
+      if (
+        target.tagName === "INPUT" ||
+        target.tagName === "TEXTAREA" ||
+        target.isContentEditable
+      ) {
+        return;
       }
+
+      const searchInput = document.querySelector('input[name="q"]');
+      if (!(searchInput instanceof HTMLInputElement)) return;
+
+      event.preventDefault();
+      searchInput.focus();
+      searchInput.select();
     });
-  });
+  })();
 </script>

@@ -6,10 +6,10 @@ import { Icon } from "astro-icon/components";
 const { pubDate, badge, word, time } = Astro.props as PostData;
 ---
 
-<div class="flex flex-wrap items-center gap-4 text-xs font-bold uppercase tracking-widest text-base-content/40">
+<div class="post-meta-row">
   {
     pubDate && (
-      <span class="flex items-center gap-1.5 hover:text-primary transition-colors">
+      <span class="post-meta-chip">
         <Icon name="lucide:calendar-days" class="h-3.5 w-3.5" />
         <span>{pubDate}</span>
       </span>
@@ -17,13 +17,13 @@ const { pubDate, badge, word, time } = Astro.props as PostData;
   }
   {
     badge && (
-      <span class="flex items-center gap-1.5 px-2 py-0.5 rounded bg-primary/10 text-primary">
+      <span class="post-meta-chip post-meta-chip--accent">
         <Icon name="lucide:hash" class="h-3 w-3" />
         <span>{badge}</span>
       </span>
     )
   }
-  <span class="flex items-center gap-1.5 ml-auto sm:ml-0">
+  <span class="post-meta-chip post-meta-spacer">
     <Icon name="lucide:timer" class="h-3.5 w-3.5" />
     <span>{word} / {time}m</span>
   </span>

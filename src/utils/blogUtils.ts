@@ -1,46 +1,117 @@
 import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
 
-/**
- * 获取所有博客文章并根据环境过滤草稿
- * @returns 博客文章集合
- */
-export async function getAllPosts(): Promise<CollectionEntry<"blog">[]> {
-  const allBlogPosts = await getCollection("blog");
+type BlogPostEntry = CollectionEntry<"blog">;
 
-  // 在生产环境中过滤掉草稿文章
-  return import.meta.env.PROD
-    ? allBlogPosts.filter((post: CollectionEntry<"blog">) => !post.data.draft)
-    : allBlogPosts;
+type PostStats = {
+  readingTime: string;
+  totalCharCount: string;
+};
+
+type PostWithStats = BlogPostEntry & {
+  remarkPluginFrontmatter: PostStats;
+};
+
+let allPostsCache: Promise<BlogPostEntry[]> | null = null;
+const postStatsCache = new Map<string, PostStats>();
+
+function shouldUseContentCache(): boolean {
+  return import.meta.env.PROD;
+}
+
+function getPostCacheKey(post: BlogPostEntry): string {
+  return post.id || post.slug;
+}
+
+function resolveFallbackStats(post: BlogPostEntry): PostStats {
+  return {
+    readingTime: post.data.encryptedReadTime ?? "0",
+    totalCharCount: post.data.encryptedWordCount ?? "0",
+  };
+}
+
+const WORDS_PER_MINUTE = 200;
+const CHINESE_CHARS_PER_MINUTE = 300;
+const LINES_PER_MINUTE = 50;
+
+function computeStatsFromBody(body: string): PostStats {
+  const wordCount = body.split(/\s+/).filter(Boolean).length;
+  const chineseCount = body.match(/[\u4E00-\u9FA5]/g)?.length || 0;
+  const lineCount = body.split(/\r?\n/).length;
+
+  const readingTime =
+    wordCount / WORDS_PER_MINUTE +
+    chineseCount / CHINESE_CHARS_PER_MINUTE +
+    lineCount / LINES_PER_MINUTE;
+
+  return {
+    readingTime: String(Math.ceil(readingTime)),
+    totalCharCount: String(wordCount + chineseCount),
+  };
+}
+
+function resolvePostStats(post: BlogPostEntry): PostStats {
+  if (!shouldUseContentCache()) {
+    return post.data.encryption
+      ? resolveFallbackStats(post)
+      : computeStatsFromBody(post.body ?? "");
+  }
+
+  const cacheKey = getPostCacheKey(post);
+  const cached = postStatsCache.get(cacheKey);
+  if (cached) return cached;
+
+  const fallback = resolveFallbackStats(post);
+
+  // Encrypted posts already carry precomputed values.
+  if (post.data.encryption) {
+    postStatsCache.set(cacheKey, fallback);
+    return fallback;
+  }
+
+  const stats = computeStatsFromBody(post.body ?? "");
+  postStatsCache.set(cacheKey, stats);
+  return stats;
 }
 
 /**
- * 按发布日期对文章进行排序（最新的排在前面）
- * @param posts 需要排序的文章
- * @returns 排序后的文章
+ * Get all blog posts and filter drafts in production builds.
  */
-export function sortPostsByDate(
-  posts: CollectionEntry<"blog">[],
-): CollectionEntry<"blog">[] {
+export async function getAllPosts(): Promise<BlogPostEntry[]> {
+  if (!shouldUseContentCache()) {
+    return [...(await getCollection("blog"))];
+  }
+
+  if (!allPostsCache) {
+    allPostsCache = (async () => {
+      const allBlogPosts = await getCollection("blog");
+      return allBlogPosts.filter((post: BlogPostEntry) => !post.data.draft);
+    })();
+  }
+
+  const posts = await allPostsCache;
+  return [...posts];
+}
+
+/**
+ * Sort posts by publish date (newest first).
+ */
+export function sortPostsByDate(posts: BlogPostEntry[]): BlogPostEntry[] {
   return [...posts].sort(
-    (a: CollectionEntry<"blog">, b: CollectionEntry<"blog">) =>
+    (a: BlogPostEntry, b: BlogPostEntry) =>
       new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime(),
   );
 }
 
 /**
- * 将文章按置顶和日期排序
- * @param posts 需要排序的文章
- * @returns 排序后的文章 (置顶文章优先，然后是按日期排序)
+ * Sort posts by pin status first, then by publish date.
  */
-export function sortPostsByPinAndDate(
-  posts: CollectionEntry<"blog">[],
-): CollectionEntry<"blog">[] {
+export function sortPostsByPinAndDate(posts: BlogPostEntry[]): BlogPostEntry[] {
   const topPosts = posts.filter(
-    (blog: CollectionEntry<"blog">) => blog.data.badge === "Pin",
+    (blog: BlogPostEntry) => blog.data.badge === "Pin",
   );
   const otherPosts = posts.filter(
-    (blog: CollectionEntry<"blog">) => blog.data.badge !== "Pin",
+    (blog: BlogPostEntry) => blog.data.badge !== "Pin",
   );
 
   const sortedTopPosts = sortPostsByDate(topPosts);
@@ -50,84 +121,74 @@ export function sortPostsByPinAndDate(
 }
 
 /**
- * 获取所有文章标签并统计每个标签的数量
- * @param posts 文章集合
- * @returns 标签映射 (标签名 -> 计数)
+ * Count tag frequencies across posts.
  */
-export function getTagsWithCount(
-  posts: CollectionEntry<"blog">[],
-): Map<string, number> {
+export function getTagsWithCount(posts: BlogPostEntry[]): Map<string, number> {
   const tagMap = new Map<string, number>();
 
-  posts.forEach((post: CollectionEntry<"blog">) => {
-    if (post.data.tags) {
-      post.data.tags.forEach((tag: string) => {
-        tagMap.set(tag, (tagMap.get(tag) || 0) + 1);
-      });
-    }
+  posts.forEach((post: BlogPostEntry) => {
+    if (!post.data.tags) return;
+
+    post.data.tags.forEach((tag: string) => {
+      tagMap.set(tag, (tagMap.get(tag) || 0) + 1);
+    });
   });
 
   return tagMap;
 }
 
 /**
- * 获取所有文章分类并按分类对文章进行分组
- * @param posts 文章集合
- * @returns 分类映射 (分类名 -> 文章数组)
+ * Group posts by category.
  */
 export function getCategoriesWithPosts(
-  posts: CollectionEntry<"blog">[],
-): Map<string, CollectionEntry<"blog">[]> {
-  const categoryMap = new Map<string, CollectionEntry<"blog">[]>();
+  posts: BlogPostEntry[],
+): Map<string, BlogPostEntry[]> {
+  const categoryMap = new Map<string, BlogPostEntry[]>();
 
-  posts.forEach((post: CollectionEntry<"blog">) => {
-    if (post.data.categories) {
-      post.data.categories.forEach((category: string) => {
-        if (!categoryMap.has(category)) {
-          categoryMap.set(category, []);
-        }
-        categoryMap.get(category)!.push(post);
-      });
-    }
+  posts.forEach((post: BlogPostEntry) => {
+    if (!post.data.categories) return;
+
+    post.data.categories.forEach((category: string) => {
+      if (!categoryMap.has(category)) {
+        categoryMap.set(category, []);
+      }
+      categoryMap.get(category)?.push(post);
+    });
   });
 
   return categoryMap;
 }
 
 /**
- * 获取按年份和月份分组的文章
- * @param posts 文章集合
- * @returns 嵌套映射 (年份 -> (月份 -> 文章数组))
+ * Group posts by year and month.
  */
 export function getPostsByYearAndMonth(
-  posts: CollectionEntry<"blog">[],
-): Map<string, Map<string, CollectionEntry<"blog">[]>> {
-  const postsByDate = new Map<string, Map<string, CollectionEntry<"blog">[]>>();
+  posts: BlogPostEntry[],
+): Map<string, Map<string, BlogPostEntry[]>> {
+  const postsByDate = new Map<string, Map<string, BlogPostEntry[]>>();
 
-  posts.forEach((post: CollectionEntry<"blog">) => {
+  posts.forEach((post: BlogPostEntry) => {
     const date = new Date(post.data.pubDate);
     const year = date.getFullYear().toString();
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
 
     if (!postsByDate.has(year)) {
-      postsByDate.set(year, new Map<string, CollectionEntry<"blog">[]>());
+      postsByDate.set(year, new Map<string, BlogPostEntry[]>());
     }
 
-    const yearMap = postsByDate.get(year)!;
-    if (!yearMap.has(month)) {
-      yearMap.set(month, []);
+    const yearMap = postsByDate.get(year);
+    if (!yearMap?.has(month)) {
+      yearMap?.set(month, []);
     }
 
-    yearMap.get(month)!.push(post);
+    yearMap?.get(month)?.push(post);
   });
 
   return postsByDate;
 }
 
 /**
- * 为分页生成页面链接
- * @param totalPages 总页数
- * @returns 包含活动链接和隐藏链接的对象
+ * Build visible and hidden page-link buckets for pagination UI.
  */
 export function generatePageLinks(totalPages: number): {
   active: string[];
@@ -142,11 +203,11 @@ export function generatePageLinks(totalPages: number): {
     pages.active.push("1");
     pages.active.push("...");
     pages.active.push(totalPages.toString());
-    for (let i = 2; i <= totalPages - 1; i++) {
+    for (let i = 2; i <= totalPages - 1; i += 1) {
       pages.hidden.push(i.toString());
     }
   } else {
-    for (let i = 1; i <= totalPages; i++) {
+    for (let i = 1; i <= totalPages; i += 1) {
       pages.active.push(i.toString());
     }
   }
@@ -155,42 +216,24 @@ export function generatePageLinks(totalPages: number): {
 }
 
 /**
- * 获取文章并添加阅读时间和字数统计
- * @param posts 文章集合
- * @returns 带有统计信息的文章集合
+ * Attach reading statistics to posts.
  */
-export async function getPostsWithStats(
-  posts: CollectionEntry<"blog">[],
-): Promise<any[]> {
-  return Promise.all(
-    posts.map(async (blog: CollectionEntry<"blog">) => {
-      let readingTime = blog.data.encryptedReadTime ?? "0";
-      let totalCharCount = blog.data.encryptedWordCount ?? "0";
+export function getPostsWithStats(posts: BlogPostEntry[]): PostWithStats[] {
+  return posts.map((blog: BlogPostEntry) => {
+    const { readingTime, totalCharCount } = resolvePostStats(blog);
 
-      try {
-        const { remarkPluginFrontmatter } = await blog.render();
-        readingTime = remarkPluginFrontmatter.readingTime;
-        totalCharCount = remarkPluginFrontmatter.totalCharCount;
-      } catch {
-        // Keep fallback stats from frontmatter for encrypted/edge-case posts.
-      }
-
-      return {
-        ...blog,
-        remarkPluginFrontmatter: {
-          readingTime,
-          totalCharCount,
-        },
-      };
-    }),
-  );
+    return {
+      ...blog,
+      remarkPluginFrontmatter: {
+        readingTime,
+        totalCharCount,
+      },
+    };
+  });
 }
 
 /**
- * 获取标签的颜色类，基于标签频率
- * @param count 标签计数
- * @param max 最大计数
- * @returns 颜色类名
+ * Derive tag color intensity from frequency.
  */
 export function getTagColorClass(count: number, max: number): string {
   const ratio = count / max;
@@ -202,27 +245,19 @@ export function getTagColorClass(count: number, max: number): string {
 }
 
 /**
- * 计算标签的字体大小，基于标签频率
- * @param count 标签计数
- * @param max 最大计数
- * @param min 最小计数
- * @returns 字体大小 (rem)
+ * Derive tag font size from frequency.
  */
 export function getTagFontSize(
   count: number,
   max: number,
   min: number,
 ): number {
-  // 将计数值规范化到 0-1 之间
   const normalized = (count - min) / (max - min || 1);
-  // 映射到 0.9rem 到 2rem 之间的字体大小
   return 0.9 + normalized * 1.1;
 }
 
 /**
- * 生成分类的颜色类
- * @param index 分类索引
- * @returns 颜色类名
+ * Assign category color class from index.
  */
 export function getCategoryColorClass(index: number): string {
   const colorClasses = [

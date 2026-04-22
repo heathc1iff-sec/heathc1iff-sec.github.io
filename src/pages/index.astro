@@ -1,143 +1,166 @@
 ---
-import { Code } from "astro-expressive-code/components";
 import { Icon } from "astro-icon/components";
 import MainCard from "@/components/MainCard.astro";
 import FeatureCard from "@/components/mdx/FeatureCard.astro";
-import GitHubStats from "@/components/mdx/GitHubStats.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const heroPills = [
+  {
+    icon: "lucide:shield-check",
+    text: "Security Notes",
+  },
+  {
+    icon: "lucide:crosshair",
+    text: "Red Team Practice",
+  },
+  {
+    icon: "lucide:book-marked",
+    text: "Learning Journal",
+  },
+];
+
+const disclaimerCards = [
+  {
+    icon: "lucide:ban",
+    title: "No Misuse",
+    tone: "text-error/80",
+    description:
+      "This blog does not encourage any illegal attacks, software bypassing, or unauthorized intrusion activities.",
+  },
+  {
+    icon: "lucide:scale",
+    title: "Use at Your Own Risk",
+    tone: "text-warning/80",
+    description:
+      "Any losses, consequences, or legal liabilities from applying this content are solely the reader's responsibility.",
+  },
+  {
+    icon: "lucide:gavel",
+    title: "Legal Use Only",
+    tone: "text-success/80",
+    description:
+      "Content must be used only in authorized environments and lawful security testing contexts.",
+  },
+  {
+    icon: "lucide:refresh-cw",
+    title: "Updates",
+    tone: "text-info/80",
+    description:
+      "The author may revise and update this disclaimer as the scope and content of the blog evolve.",
+  },
+];
 ---
 
 <BaseLayout title="Home">
   <MainCard
     title="Welcome to Wuthering Heights"
-    description="欢迎来到呼啸山庄."
+    description="A personal security lab journal with write-ups, notes, and reflections."
     image="/image/home-banner.png"
     infoIcon="lucide:info"
   >
-    <div class="space-y-12">
-      <!-- Hero Section -->
-      <section class="py-6">
-        <div class="flex flex-col items-center text-center">
-          <h1
-            class="text-4xl md:text-5xl font-black mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent leading-relaxed py-2"
+    <div class="home-shell space-y-14">
+      <section class="home-hero">
+        <div class="home-hero-glow" aria-hidden="true"></div>
+        <span class="home-kicker">
+          <Icon name="lucide:sparkles" class="w-4 h-4" />
+          <span>Security Research Journal</span>
+        </span>
+
+        <h1 class="home-title">Castlevania</h1>
+
+        <p class="home-subtitle">曾经沧海难为水 除却巫山不是云</p>
+
+        <div class="home-pill-row">
+          {
+            heroPills.map((pill) => (
+              <span class="home-pill">
+                <Icon name={pill.icon} class="w-4 h-4" />
+                <span>{pill.text}</span>
+              </span>
+            ))
+          }
+        </div>
+
+        <div class="flex flex-wrap gap-4 justify-center">
+          <a href="/blog" class="btn btn-primary btn-lg gap-2 home-cta-primary">
+            <Icon name="lucide:book-open" class="w-5 h-5" />
+            <span>Explore Blog</span>
+          </a>
+          <a
+            href="https://github.com/heathc1iff-sec/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn btn-outline btn-lg gap-2 home-cta-secondary"
           >
-            🌟 Castlevania
-          </h1>
-          <p class="text-xl text-base-content/80 max-w-3xl mb-8 italic font-medium">
-            "曾经沧海难为水 除却巫山不是云"
-          </p>
-          <div class="flex flex-wrap gap-4 justify-center">
-            <a href="/blog" class="btn btn-primary btn-lg gap-2 shadow-lg hover:shadow-xl transition-all duration-300">
-              <Icon name="lucide:book-open" class="w-5 h-5" />
-              <span>Explore Blog</span>
-            </a>
-            <a href="https://github.com/heathc1iff-sec/" target="_blank" class="btn btn-outline btn-lg gap-2 hover:bg-base-200 transition-all duration-300">
-              <Icon name="lucide:github" class="w-5 h-5" />
-              <span>Star on GitHub</span>
-            </a>
-          </div>
+            <Icon name="lucide:github" class="w-5 h-5" />
+            <span>Star on GitHub</span>
+          </a>
         </div>
       </section>
 
-      <!-- Features Section -->
-      <section class="py-6">
-        <h2 class="text-2xl font-bold mb-8 flex items-center gap-2 border-b border-base-content/10 pb-2">
+      <section class="py-2">
+        <h2 class="home-section-title">
           <Icon name="lucide:sparkles" class="w-6 h-6 text-primary" />
-          <span>Preface</span>
+          <span>What You Will Find</span>
         </h2>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FeatureCard
             title="My Life"
-            description="Share insights and experiences from my personal life journey."
+            description="Personal reflections, growth moments, and the journey behind continuous practice."
             icon="lucide:sword"
-            color="oklch(0.65 0.2 280)"
+            color="oklch(0.69 0.18 240)"
           />
-
           <FeatureCard
             title="CTF Write-Ups"
-            description="Detailed write-ups of CTF challenges, including solutions and techniques."
+            description="Clear challenge breakdowns, practical payload ideas, and reproducible solving paths."
             icon="lucide:flag"
-            color="oklch(0.6 0.2 160)"
+            color="oklch(0.68 0.2 198)"
           />
-
           <FeatureCard
             title="Virtual Machines"
-            description="Attack labs and vulnerable virtual machines for penetration testing practice."
+            description="Lab machine walkthroughs from enumeration to exploitation and privilege escalation."
             icon="lucide:book-text"
-            color="oklch(0.6 0.2 200)"
+            color="oklch(0.72 0.18 274)"
           />
-
           <FeatureCard
             title="Learning Notes"
-            description="Organized notes from my studies, experiments."
+            description="Organized notes from experiments, tool usage, and security methodology practice."
             icon="lucide:orbit"
-            color="oklch(0.8 0.2 80)"
+            color="oklch(0.74 0.2 35)"
           />
         </div>
       </section>
 
-      <!-- Disclaimer Section -->
-      <section class="py-12 bg-base-200/40 mt-12 rounded-3xl border border-base-content/5 p-8 backdrop-blur-md shadow-inner">
+      <section class="home-disclaimer">
         <div class="max-w-4xl mx-auto space-y-8">
-          <h2 class="text-3xl font-black text-center flex items-center justify-center gap-3">
+          <h2 class="home-disclaimer-title">
             <Icon name="lucide:shield-alert" class="w-8 h-8 text-primary" />
             <span>Blog Disclaimer</span>
           </h2>
 
           <p class="text-lg text-base-content/80 leading-relaxed text-center max-w-2xl mx-auto">
-            The content of this blog is intended for <strong class="text-primary">educational and research purposes</strong> only, 
-            focusing on <strong class="text-secondary">personal computer security</strong> knowledge.
+            This blog is for <strong class="text-primary">educational and research purposes</strong>, focused on
+            personal cybersecurity practice.
           </p>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-base-content/80">
-            <div class="p-6 rounded-2xl bg-base-100/50 border border-base-content/10 shadow-sm hover:shadow-md transition-all duration-300">
-              <h3 class="font-bold text-lg mb-2 flex items-center gap-2 text-error/80">
-                <Icon name="lucide:ban" class="w-5 h-5" />
-                No Misuse
-              </h3>
-              <p class="text-sm opacity-80 leading-relaxed">
-                This blog does <strong>not encourage</strong> any form of illegal attacks, 
-                security software bypassing, or unauthorized intrusion activities.
-              </p>
-            </div>
-
-            <div class="p-6 rounded-2xl bg-base-100/50 border border-base-content/10 shadow-sm hover:shadow-md transition-all duration-300">
-              <h3 class="font-bold text-lg mb-2 flex items-center gap-2 text-warning/80">
-                <Icon name="lucide:scale" class="w-5 h-5" />
-                Use at Your Own Risk
-              </h3>
-              <p class="text-sm opacity-80 leading-relaxed">
-                Any losses, consequences, or legal liabilities arising from applying the content in real-world environments 
-                are the sole responsibility of the reader.
-              </p>
-            </div>
-
-            <div class="p-6 rounded-2xl bg-base-100/50 border border-base-content/10 shadow-sm hover:shadow-md transition-all duration-300">
-              <h3 class="font-bold text-lg mb-2 flex items-center gap-2 text-success/80">
-                <Icon name="lucide:gavel" class="w-5 h-5" />
-                Legal Use Only
-              </h3>
-              <p class="text-sm opacity-80 leading-relaxed">
-                The content must not be used for any illegal purposes and is strictly prohibited from being applied 
-                to unauthorized systems.
-              </p>
-            </div>
-
-            <div class="p-6 rounded-2xl bg-base-100/50 border border-base-content/10 shadow-sm hover:shadow-md transition-all duration-300">
-              <h3 class="font-bold text-lg mb-2 flex items-center gap-2 text-info/80">
-                <Icon name="lucide:refresh-cw" class="w-5 h-5" />
-                Updates
-              </h3>
-              <p class="text-sm opacity-80 leading-relaxed">
-                The author reserves the right to modify, supplement, or update this disclaimer when deemed necessary.
-              </p>
-            </div>
+            {
+              disclaimerCards.map((card) => (
+                <article class="home-disclaimer-card">
+                  <h3 class={`font-bold text-lg mb-2 flex items-center gap-2 ${card.tone}`}>
+                    <Icon name={card.icon} class="w-5 h-5" />
+                    <span>{card.title}</span>
+                  </h3>
+                  <p class="text-sm opacity-80 leading-relaxed">{card.description}</p>
+                </article>
+              ))
+            }
           </div>
 
           <div class="pt-6 border-t border-base-content/10">
             <p class="text-center text-sm text-base-content/40 italic">
-              By accessing this blog, you acknowledge and agree to the above terms.
+              By accessing this blog, you acknowledge and accept the terms above.
             </p>
           </div>
         </div>
@@ -145,3 +168,239 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
     </div>
   </MainCard>
 </BaseLayout>
+
+<style>
+  .home-shell {
+    position: relative;
+  }
+
+  .home-hero {
+    position: relative;
+    border-radius: 1.8rem;
+    border: 1px solid hsl(var(--bc) / 0.1);
+    background:
+      radial-gradient(130% 150% at -8% -20%, hsl(var(--p) / 0.15), transparent 60%),
+      radial-gradient(130% 150% at 108% 120%, hsl(var(--s) / 0.14), transparent 62%),
+      linear-gradient(156deg, hsl(var(--b1) / 0.86), hsl(var(--b2) / 0.78));
+    box-shadow:
+      0 26px 46px -34px hsl(var(--bc) / 0.75),
+      inset 0 1px 0 hsl(var(--b1) / 0.35);
+    padding: clamp(1.4rem, 4.8vw, 2.4rem);
+    text-align: center;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .home-hero-glow {
+    position: absolute;
+    width: clamp(18rem, 42vw, 28rem);
+    aspect-ratio: 1;
+    top: -48%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 999px;
+    pointer-events: none;
+    background: radial-gradient(circle, hsl(var(--p) / 0.26), transparent 68%);
+    filter: blur(1px);
+    z-index: 0;
+  }
+
+  .home-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    border-radius: 999px;
+    border: 1px solid hsl(var(--bc) / 0.18);
+    background: hsl(var(--b1) / 0.72);
+    color: hsl(var(--bc) / 0.72);
+    padding: 0.36rem 0.82rem;
+    font-size: 0.73rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 1;
+  }
+
+  .home-title {
+    margin-top: 1rem;
+    margin-inline: auto;
+    max-width: 10ch;
+    font-size: clamp(2.3rem, 8vw, 4.4rem);
+    line-height: 1.05;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+    color: #eaf4ff;
+    text-shadow: 0 10px 26px rgba(7, 23, 42, 0.55);
+    position: relative;
+    z-index: 1;
+  }
+
+  .home-subtitle {
+    margin: 0.95rem auto 0;
+    max-width: 62ch;
+    color: hsl(var(--bc) / 0.74);
+    font-size: clamp(0.98rem, 2.4vw, 1.1rem);
+    line-height: 1.75;
+    text-wrap: pretty;
+    position: relative;
+    z-index: 1;
+  }
+
+  .home-pill-row {
+    margin-top: 1.15rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.6rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .home-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border-radius: 999px;
+    border: 1px solid hsl(var(--bc) / 0.14);
+    background: hsl(var(--b1) / 0.76);
+    color: hsl(var(--bc) / 0.68);
+    padding: 0.4rem 0.84rem;
+    font-size: 0.76rem;
+    font-weight: 700;
+  }
+
+  .home-cta-primary,
+  .home-cta-secondary {
+    margin-top: 1.35rem;
+  }
+
+  .home-section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: clamp(1.35rem, 4vw, 1.8rem);
+    font-weight: 800;
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid hsl(var(--bc) / 0.1);
+  }
+
+  .home-disclaimer {
+    margin-top: 0.35rem;
+    border-radius: 1.8rem;
+    border: 1px solid hsl(var(--bc) / 0.08);
+    background:
+      radial-gradient(120% 140% at 90% -12%, hsl(var(--p) / 0.12), transparent 56%),
+      radial-gradient(120% 140% at 0% 102%, hsl(var(--s) / 0.12), transparent 62%),
+      hsl(var(--b2) / 0.56);
+    padding: clamp(1.4rem, 4vw, 2.1rem);
+    box-shadow:
+      inset 0 1px 0 hsl(var(--b1) / 0.36),
+      0 20px 34px -28px hsl(var(--bc) / 0.8);
+  }
+
+  .home-disclaimer-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    text-align: center;
+    font-size: clamp(1.8rem, 4vw, 2.2rem);
+    font-weight: 900;
+  }
+
+  .home-disclaimer-card {
+    border-radius: 1rem;
+    border: 1px solid hsl(var(--bc) / 0.1);
+    background: hsl(var(--b1) / 0.6);
+    padding: 1rem 1rem 1.05rem;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  }
+
+  .home-disclaimer-card:hover {
+    transform: translateY(-2px);
+    border-color: hsl(var(--p) / 0.24);
+    box-shadow: 0 18px 28px -24px hsl(var(--bc) / 0.86);
+  }
+
+  [data-theme-type="light"] .home-hero {
+    border-color: rgba(178, 208, 236, 0.48);
+    background:
+      radial-gradient(130% 150% at -8% -20%, rgba(150, 206, 255, 0.24), transparent 60%),
+      radial-gradient(130% 150% at 108% 120%, rgba(255, 228, 180, 0.22), transparent 62%),
+      linear-gradient(
+        158deg,
+        rgba(255, 255, 255, 0.86),
+        rgba(241, 248, 255, 0.8)
+      );
+    box-shadow:
+      0 26px 46px -34px rgba(71, 118, 166, 0.48),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  }
+
+  [data-theme-type="light"] .home-kicker,
+  [data-theme-type="light"] .home-pill {
+    border-color: rgba(184, 212, 238, 0.46);
+    background: linear-gradient(
+      150deg,
+      rgba(255, 255, 255, 0.84),
+      rgba(240, 248, 255, 0.76)
+    );
+    color: rgba(47, 81, 115, 0.78);
+  }
+
+  [data-theme-type="light"] .home-title {
+    color: #123a60;
+    text-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.84),
+      0 14px 28px rgba(48, 101, 155, 0.18);
+  }
+
+  [data-theme-type="dark"] .home-title {
+    color: #ecf5ff;
+    text-shadow:
+      0 10px 24px rgba(8, 22, 44, 0.62),
+      0 0 18px rgba(125, 200, 255, 0.12);
+  }
+
+  [data-theme-type="light"] .home-disclaimer {
+    border-color: rgba(181, 210, 236, 0.44);
+    background:
+      radial-gradient(120% 140% at 90% -12%, rgba(156, 207, 254, 0.18), transparent 56%),
+      radial-gradient(120% 140% at 0% 102%, rgba(255, 227, 179, 0.14), transparent 62%),
+      linear-gradient(
+        155deg,
+        rgba(255, 255, 255, 0.84),
+        rgba(241, 249, 255, 0.8)
+      );
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.5),
+      0 22px 36px -30px rgba(67, 117, 166, 0.48);
+  }
+
+  [data-theme-type="light"] .home-disclaimer-card {
+    border-color: rgba(184, 212, 239, 0.42);
+    background: linear-gradient(
+      150deg,
+      rgba(255, 255, 255, 0.88),
+      rgba(243, 250, 255, 0.76)
+    );
+  }
+
+  @media (max-width: 640px) {
+    .home-hero {
+      text-align: left;
+    }
+
+    .home-pill-row {
+      justify-content: flex-start;
+    }
+
+    .home-title {
+      line-height: 1.02;
+      margin-inline: 0;
+    }
+  }
+</style>

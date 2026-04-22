@@ -16,16 +16,19 @@ export async function GET(context: any) {
       new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime(),
   );
 
-  function replacePath(content: string, siteUrl: string): string {
-    return content.replace(/(src|img|r|l)="([^"]+)"/g, (match, attr, src) => {
+  function replaceRelativeLinks(content: string, siteUrl: string): string {
+    return content.replace(/(src|href)="([^"]+)"/g, (match, attr, value) => {
       if (
-        !src.startsWith("http") &&
-        !src.startsWith("//") &&
-        !src.startsWith("data:")
+        value.startsWith("http") ||
+        value.startsWith("//") ||
+        value.startsWith("data:") ||
+        value.startsWith("mailto:") ||
+        value.startsWith("#")
       ) {
-        return `${attr}="${new URL(src, siteUrl).toString()}"`;
+        return match;
       }
-      return match;
+
+      return `${attr}="${new URL(value, siteUrl).toString()}"`;
     });
   }
 
@@ -41,7 +44,7 @@ export async function GET(context: any) {
       const content = encryption
         ? `<p>This article is password-protected. Please visit <a href="${postURL}">${postURL}</a> to unlock and view the full content.</p>`
         : body
-          ? replacePath(await marked(body), context.site)
+          ? replaceRelativeLinks(await marked(body), context.site)
           : "No content available.";
 
       return {

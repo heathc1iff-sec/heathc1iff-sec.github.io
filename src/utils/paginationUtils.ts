@@ -19,7 +19,7 @@ export async function getMainBlogPaginationPaths({
 }) {
   const allPosts = await getAllPosts();
   const sortedPosts = sortPostsByPinAndDate(allPosts);
-  const postsWithStats = await getPostsWithStats(sortedPosts);
+  const postsWithStats = getPostsWithStats(sortedPosts);
 
   return paginate(postsWithStats, { pageSize: BLOG_PAGE_SIZE });
 }
@@ -39,7 +39,7 @@ export async function getTagPaginationPaths({ paginate }: { paginate: any }) {
       ),
     ),
   ];
-  const postsWithStats = await getPostsWithStats(sortedPosts);
+  const postsWithStats = getPostsWithStats(sortedPosts);
 
   return allTags.flatMap((tag) => {
     const filteredPosts = postsWithStats.filter((blog: any) =>
@@ -71,7 +71,7 @@ export async function getCategoryPaginationPaths({
       ),
     ),
   ];
-  const postsWithStats = await getPostsWithStats(sortedPosts);
+  const postsWithStats = getPostsWithStats(sortedPosts);
 
   return allCategories.flatMap((category) => {
     const filteredPosts = postsWithStats.filter((blog: any) =>

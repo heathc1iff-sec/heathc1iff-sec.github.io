@@ -17,12 +17,14 @@ import { Icon } from "astro-icon/components";
 ---
 
 <div
-  class="frosti-card group hover:-translate-y-1 transition-all duration-500"
+  class="frosti-card group hover:-translate-y-1 transition-all duration-500 feature-polish-card"
+  style={`--feature-color: ${color};`}
 >
+  <div class="feature-polish-halo" aria-hidden="true"></div>
   <div class="card-body p-6">
     <div class="flex flex-col items-center text-center sm:items-start sm:text-left">
       <div
-        class="mb-4 p-3 rounded-2xl transition-transform duration-500 group-hover:scale-110"
+        class="mb-4 p-3 rounded-2xl transition-transform duration-500 group-hover:scale-110 feature-polish-icon"
         style={`background-color: color-mix(in oklch, ${color}, transparent 90%); color: ${color};`}
       >
         <Icon name={icon} class="w-8 h-8" />
@@ -33,3 +35,56 @@ import { Icon } from "astro-icon/components";
     </div>
   </div>
 </div>
+
+<style>
+  .feature-polish-card {
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .feature-polish-halo {
+    position: absolute;
+    inset: -50% auto auto -10%;
+    width: 70%;
+    aspect-ratio: 1;
+    pointer-events: none;
+    border-radius: 999px;
+    background: radial-gradient(
+      circle,
+      color-mix(in oklch, var(--feature-color), transparent 76%),
+      transparent 72%
+    );
+    opacity: 0.56;
+    transition: transform 0.6s ease, opacity 0.35s ease;
+    z-index: 0;
+  }
+
+  .feature-polish-card:hover .feature-polish-halo {
+    transform: translate3d(6%, 5%, 0) scale(1.08);
+    opacity: 0.78;
+  }
+
+  .feature-polish-card :global(.card-body) {
+    position: relative;
+    z-index: 1;
+  }
+
+  .feature-polish-icon {
+    box-shadow:
+      0 14px 22px -18px color-mix(in oklch, var(--feature-color), transparent 8%),
+      inset 0 1px 0 rgba(255, 255, 255, 0.24);
+  }
+
+  [data-theme-type="light"] .feature-polish-card {
+    border-color: color-mix(in oklch, var(--feature-color), white 68%);
+    background: linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.82),
+      color-mix(in oklch, var(--feature-color), white 88%)
+    );
+  }
+
+  [data-theme-type="light"] .feature-polish-card h3 {
+    color: color-mix(in oklch, var(--feature-color), black 48%);
+  }
+</style>

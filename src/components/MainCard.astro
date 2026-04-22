@@ -39,7 +39,11 @@ const accessibleHelpText = `${helpText}: ${title}`;
             <img
               src={image}
               alt={title}
+              width="1200"
+              height="675"
               loading="eager"
+              decoding="async"
+              fetchpriority="high"
               class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
             />
           ) : (
@@ -50,13 +54,15 @@ const accessibleHelpText = `${helpText}: ${title}`;
               height={630}
               format="webp"
               loading="eager"
+              decoding="async"
+              fetchpriority="high"
               class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
             />
           )}
         </div>
 
         {/* Gradient Overlay for better text readability */}
-        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500 maincard-hero-overlay"></div>
 
         <div class="absolute bottom-6 left-6 right-6 lg:bottom-8 lg:left-8 lg:right-8 flex items-end justify-between gap-6 z-20">
           <div class="flex-1">
@@ -76,12 +82,14 @@ const accessibleHelpText = `${helpText}: ${title}`;
                 <label
                   tabindex="0"
                   aria-label={accessibleHelpText}
+                  data-maincard-help-trigger="1"
                   class="btn btn-circle btn-sm bg-white/10 backdrop-blur-xl border-white/20 text-white hover:bg-white/20"
                 >
                   <Icon name={infoIcon} class="w-4 h-4" />
                 </label>
                 <div
                   tabindex="0"
+                  data-maincard-help-panel="1"
                   class="dropdown-content z-[1] card w-64 p-4 shadow-2xl bg-black/80 backdrop-blur-2xl text-white border border-white/10 mb-4 rounded-2xl"
                 >
                   <p class="text-xs leading-relaxed opacity-80">{description}</p>
@@ -111,30 +119,59 @@ const accessibleHelpText = `${helpText}: ${title}`;
 </Card>
 
 <script>
-  document.addEventListener("astro:page-load", () => {
-    // Get all info buttons and dropdown contents
-    const infoButtons = document.querySelectorAll(".dropdown label");
-    const dropdownContents = document.querySelectorAll(".dropdown-content");
+  (() => {
+    const win = window as typeof window & { __frostiMainCardHelpBound?: boolean };
+    if (win.__frostiMainCardHelpBound) return;
+    win.__frostiMainCardHelpBound = true;
 
-    // Add click event listeners
-    infoButtons.forEach((button, index) => {
-      button.addEventListener("click", () => {
-        const content = dropdownContents[index];
-        const currentState = content.getAttribute("data-state");
+    const hiddenClasses = ["scale-90", "opacity-0", "pointer-events-none"];
 
-        // Toggle state
-        if (currentState === "closed") {
-          content.setAttribute("data-state", "open");
-          // Add animation classes when opening
-          content.classList.add("scale-100", "opacity-100");
-          content.classList.remove("scale-90", "opacity-0");
-        } else {
-          content.setAttribute("data-state", "closed");
-          // Remove animation classes when closing
-          content.classList.add("scale-90", "opacity-0");
-          content.classList.remove("scale-100", "opacity-100");
+    const setPanelState = (panel: HTMLElement, open: boolean) => {
+      panel.setAttribute("data-state", open ? "open" : "closed");
+      panel.classList.add("transition-all", "duration-200", "origin-bottom-right");
+      panel.classList.toggle("scale-100", open);
+      panel.classList.toggle("opacity-100", open);
+      hiddenClasses.forEach((className) => {
+        panel.classList.toggle(className, !open);
+      });
+    };
+
+    const ensureInitialState = () => {
+      document.querySelectorAll("[data-maincard-help-panel]").forEach((node) => {
+        if (!(node instanceof HTMLElement)) return;
+        if (!node.getAttribute("data-state")) {
+          setPanelState(node, false);
         }
       });
+    };
+
+    document.addEventListener("astro:page-load", ensureInitialState);
+
+    document.addEventListener("click", (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLElement)) return;
+
+      const trigger = target.closest("[data-maincard-help-trigger]");
+      if (!trigger) {
+        if (target.closest("[data-maincard-help-panel]")) return;
+
+        document.querySelectorAll("[data-maincard-help-panel][data-state='open']").forEach((node) => {
+          if (node instanceof HTMLElement) {
+            setPanelState(node, false);
+          }
+        });
+        return;
+      }
+
+      event.preventDefault();
+      const dropdown = trigger.closest(".dropdown");
+      const panel = dropdown?.querySelector("[data-maincard-help-panel]");
+      if (!(panel instanceof HTMLElement)) return;
+
+      const shouldOpen = panel.getAttribute("data-state") !== "open";
+      setPanelState(panel, shouldOpen);
     });
-  });
+
+    ensureInitialState();
+  })();
 </script>

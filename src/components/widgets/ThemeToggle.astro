@@ -25,6 +25,7 @@ const { className = "" } = Astro.props as ThemeToggleProps;
 <script is:inline define:vars={{ SITE_THEME }}>
   (() => {
     const THEME_MODE_KEY = "theme-mode";
+    const THEME_TRANSITION_TIMER_KEY = "__themeTransitionTimer";
 
     // Function to update icons based on current theme for a specific toggle button
     const updateThemeIcons = (toggleButton, isDark) => {
@@ -43,6 +44,22 @@ const { className = "" } = Astro.props as ThemeToggleProps;
       }
     };
 
+    const setThemeTransitionGuard = () => {
+      const root = document.documentElement;
+      if (root.getAttribute("data-performance-mode") !== "lite") return;
+
+      root.setAttribute("data-theme-transition", "off");
+      const existingTimer = window[THEME_TRANSITION_TIMER_KEY];
+      if (existingTimer) {
+        window.clearTimeout(existingTimer);
+      }
+
+      window[THEME_TRANSITION_TIMER_KEY] = window.setTimeout(() => {
+        root.removeAttribute("data-theme-transition");
+        window[THEME_TRANSITION_TIMER_KEY] = null;
+      }, 220);
+    };
+
     const initThemeToggles = () => {
       const allToggles = document.querySelectorAll("[data-theme-toggle]");
       const currentTheme = document.documentElement.getAttribute("data-theme");
@@ -57,6 +74,7 @@ const { className = "" } = Astro.props as ThemeToggleProps;
 
         // Toggle theme on click
         themeToggle.addEventListener("click", () => {
+          setThemeTransitionGuard();
           const nowTheme = document.documentElement.getAttribute("data-theme");
           const newTheme = nowTheme === SITE_THEME.light ? SITE_THEME.dark : SITE_THEME.light;
 
@@ -81,6 +99,7 @@ const { className = "" } = Astro.props as ThemeToggleProps;
         // Right-click for auto mode
         themeToggle.addEventListener("contextmenu", (event) => {
           event.preventDefault();
+          setThemeTransitionGuard();
           localStorage.removeItem("theme");
           localStorage.removeItem(THEME_MODE_KEY);
 

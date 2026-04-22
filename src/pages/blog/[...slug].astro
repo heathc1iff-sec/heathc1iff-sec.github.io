@@ -6,7 +6,7 @@ import { join } from "node:path";
 import License from "@components/widgets/License.astro";
 import PostFilter from "@components/widgets/PostFilter.astro";
 import PostInfo from "@components/widgets/PostInfo.astro";
-import { DATE_FORMAT } from "@config";
+import { DATE_FORMAT, SITE_LANGUAGE, SITE_TAB, USER_NAME } from "@config";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { encodeSlugPath } from "@utils/blogUtils";
 import dayjs from "@utils/dayjs";
@@ -118,7 +118,37 @@ const displayDate = blog.data.pubDate
   : "";
 const encodedSlugPath = encodeSlugPath(blog.slug);
 const image = new URL(`/og/${encodedSlugPath}.png`, Astro.site).toString();
-const url = new URL(`/blog/${encodedSlugPath}`, Astro.url.origin);
+const canonicalPostUrl = new URL(
+  `/blog/${encodedSlugPath}/`,
+  Astro.site,
+).toString();
+const url = new URL(canonicalPostUrl);
+const postKeywords = [
+  ...(blog.data.categories || []),
+  ...(blog.data.tags || []),
+];
+const articleJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  headline: blog.data.title,
+  description: blog.data.description,
+  datePublished: blog.data.pubDate.toISOString(),
+  dateModified: (blog.data.updated || blog.data.pubDate).toISOString(),
+  inLanguage: SITE_LANGUAGE,
+  mainEntityOfPage: canonicalPostUrl,
+  url: canonicalPostUrl,
+  image: [image],
+  ...(postKeywords.length ? { keywords: postKeywords } : {}),
+  ...(isEncrypted ? { isAccessibleForFree: false } : {}),
+  author: {
+    "@type": "Person",
+    name: USER_NAME,
+  },
+  publisher: {
+    "@type": "Organization",
+    name: SITE_TAB,
+  },
+});
 ---
 
 <BaseLayout
@@ -130,6 +160,8 @@ const url = new URL(`/blog/${encodedSlugPath}`, Astro.url.origin);
   isIndexed={true}
   pageType="blog-post"
 >
+  <script type="application/ld+json" set:html={articleJsonLd}></script>
+
   <MainCard title={blog.data.title} description={blog.data.description} image={blog.data.image} infoIcon="lucide:info">
     <PostInfo
       pubDate={displayDate}

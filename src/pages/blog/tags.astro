@@ -1,4 +1,5 @@
 ---
+import "@/styles/global.scss";
 import BaseCard from "@components/BaseCard.astro";
 import { t } from "@config";
 import BaseLayout from "@layouts/BaseLayout.astro";
@@ -8,7 +9,6 @@ import { Icon } from "astro-icon/components";
 const allPosts = await getAllPosts();
 const tagCounts = getTagsWithCount(allPosts);
 const tagEntries = Array.from(tagCounts.entries()).sort((a, b) => b[1] - a[1]);
-const maxCount = tagEntries.length > 0 ? tagEntries[0][1] : 0;
 
 const COLORS = [
   "#818cf8",
@@ -27,9 +27,11 @@ const totalNodes = tagEntries.length;
 const nodes = tagEntries.map((entry, index) => {
   const [tag, count] = entry;
   const color = COLORS[index % COLORS.length];
+
   let zone: "inner" | "mid" | "outer";
   let orbitBase: number;
   let sizeClass: string;
+
   if (index < totalNodes * 0.15) {
     zone = "inner";
     orbitBase = 220;
@@ -43,6 +45,7 @@ const nodes = tagEntries.map((entry, index) => {
     orbitBase = 520;
     sizeClass = "text-xs font-semibold opacity-70";
   }
+
   return {
     id: `node-${index}`,
     tag,
@@ -58,8 +61,6 @@ const nodes = tagEntries.map((entry, index) => {
 
 <BaseLayout title="Brain Map" description={t("label.tagsPageDescription")}>
   <div class="space-y-12 py-6">
-    
-    <!-- 脑图展示区 (满足 8/9 条) -->
     <section>
       <BaseCard>
         <div class="relative p-4 flex flex-col min-h-[750px]">
@@ -90,7 +91,7 @@ const nodes = tagEntries.map((entry, index) => {
                   </a>
                 ))}
               </div>
-              <!-- 中心大脑 (满足 5/6 条) -->
+
               <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-40 pointer-events-none">
                 <div class="center-aura"></div>
                 <Icon name="mdi:brain" class="w-14 h-14 text-primary drop-shadow-[0_0_10px_oklch(var(--p)/0.5)]" />
@@ -101,7 +102,6 @@ const nodes = tagEntries.map((entry, index) => {
       </BaseCard>
     </section>
 
-    <!-- 索引区 (满足 9 条) -->
     <section>
       <BaseCard>
         <div class="relative p-8 flex flex-col">
@@ -146,91 +146,313 @@ const nodes = tagEntries.map((entry, index) => {
   .tile-val { font-weight: 900; color: var(--tile-clr); font-size: 11px; opacity: 0.5; }
 </style>
 
-<script is:inline define:vars={{ nodes }}>
-  (function() {
-    const viewport = document.getElementById('viewport');
-    const world = document.getElementById('world');
-    const starField = document.getElementById('star-field');
-    const resetBtn = document.getElementById('reset-system');
-    if (!viewport || !world) return;
-
-    let width, height;
-    let scale = 1; let panX = 0; let panY = 0;
-    const DAMPING = 0.45; // 极高阻尼
-    const MIN_DIST = 95; // 安全半径
-
-    const nodeData = nodes.map((n, i) => {
-      const groupLen = nodes.filter(x => x.zone === n.zone).length;
-      const groupIdx = nodes.filter(x => x.zone === n.zone).indexOf(n);
-      const angle = (groupIdx / groupLen) * Math.PI * 2;
-      return { ...n, angle, x: Math.cos(angle)*n.orbit, y: Math.sin(angle)*n.orbit, vx: 0, vy: 0, isDragging: false, el: document.querySelector(`[data-id="${n.id}"]`) };
-    });
-
-    function solve() {
-      for (let k = 0; k < 2; k++) {
-        nodeData.forEach((a, i) => {
-          if (a.isDragging) return;
-          nodeData.forEach((b, j) => {
-            if (i >= j) return;
-            const dx = b.x - a.x; const dy = b.y - a.y;
-            const d = Math.hypot(dx, dy) || 1;
-            if (d < MIN_DIST) {
-              const push = (MIN_DIST - d) * 0.05;
-              const ox = (dx / d) * push; const oy = (dy / d) * push;
-              a.x -= ox; a.y -= oy; b.x += ox; b.y += oy;
-            }
-          });
-          const r = Math.hypot(a.x, a.y) || 1;
-          a.x = (a.x / r) * a.orbit; a.y = (a.y / r) * a.orbit;
-        });
-      }
+<script is:inline define:vars={{ nodes }} data-astro-rerun>
+  (function () {
+    const CLEANUP_KEY = "__brainMapCleanup";
+    const previousCleanup = window[CLEANUP_KEY];
+    if (typeof previousCleanup === "function") {
+      previousCleanup();
     }
 
-    function tick() {
-      const cx = width / 2; const cy = height / 2;
-      nodeData.forEach(a => {
-        if (a.isDragging) return;
-        a.angle += speeds[a.zone];
-        const tx = Math.cos(a.angle) * a.orbit; const ty = Math.sin(a.angle) * a.orbit;
-        a.vx = (a.vx + (tx - a.x) * 0.02) * DAMPING;
-        a.vy = (a.vy + (ty - a.y) * 0.02) * DAMPING;
-        a.x += a.vx; a.y += a.vy;
-      });
-      solve();
-      nodeData.forEach(n => {
-        if (n.el) n.el.style.transform = `translate3d(${cx + n.x}px, ${cy + n.y}px, 0) translate(-50%, -50%)`;
-      });
-      requestAnimationFrame(tick);
-    }
+    const viewport = document.getElementById("viewport");
+    const world = document.getElementById("world");
+    const starField = document.getElementById("star-field");
+    const resetBtn = document.getElementById("reset-system");
+    if (!viewport || !world || !starField || !resetBtn) return;
 
+    const cleanupFns = [];
+    const on = (target, type, handler, options) => {
+      target.addEventListener(type, handler, options);
+      cleanupFns.push(() => target.removeEventListener(type, handler, options));
+    };
+
+    let width = 0;
+    let height = 0;
+    let scale = 1;
+    let panX = 0;
+    let panY = 0;
+    let frameId = 0;
+    let running = true;
+    let hasStarted = false;
+
+    const DAMPING = 0.45;
+    const MIN_DIST = 95;
     const speeds = { inner: 0.0005, mid: 0.0003, outer: 0.0002 };
-    function init() {
-      const rect = viewport.getBoundingClientRect(); width = rect.width; height = rect.height;
-      for(let i=0; i<200; i++) solve();
-      let h = ''; for(let i=0; i<100; i++) h += `<div style="left:${Math.random()*100}%; top:${Math.random()*100}%; width:1.5px; height:1.5px; position:absolute; background:white; opacity:0.3; border-radius:50%"></div>`;
-      starField.innerHTML = h;
-      tick();
-    }
 
-    let isPanning = false; let sx, sy;
-    viewport.addEventListener('mousedown', e => { if (e.target.closest('.planet-node')) return; isPanning = true; sx = e.clientX - panX; sy = e.clientY - panY; });
-    window.addEventListener('mousemove', e => { if (!isPanning) return; panX = e.clientX - sx; panY = e.clientY - sy; world.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`; });
-    window.addEventListener('mouseup', () => isPanning = false);
-    viewport.addEventListener('wheel', e => { e.preventDefault(); const zoom = e.deltaY > 0 ? 0.95 : 1.05; scale = Math.min(Math.max(0.3, scale * zoom), 3); world.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`; }, { passive: false });
-
-    nodeData.forEach(node => {
-      node.el.addEventListener('mousedown', e => { e.stopPropagation(); node.isDragging = true; node.el.style.zIndex = "1000"; });
-      window.addEventListener('mousemove', e => {
-        if (!node.isDragging) return;
-        const rect = viewport.getBoundingClientRect();
-        node.x = (e.clientX - rect.left - panX) / scale - width/2;
-        node.y = (e.clientY - rect.top - panY) / scale - height/2;
-      });
-      window.addEventListener('mouseup', () => { if(node.isDragging) { node.isDragging = false; node.el.style.zIndex = "30"; node.angle = Math.atan2(node.y, node.x); node.orbit = Math.hypot(node.x, node.y); } });
+    const zoneTotals = { inner: 0, mid: 0, outer: 0 };
+    nodes.forEach((node) => {
+      zoneTotals[node.zone] += 1;
     });
+    const zoneCursor = { inner: 0, mid: 0, outer: 0 };
 
-    resetBtn.addEventListener('click', () => { panX = 0; panY = 0; scale = 1; world.style.transform = `translate(0,0) scale(1)`; });
-    window.addEventListener('resize', () => { const r = viewport.getBoundingClientRect(); width = r.width; height = r.height; });
-    init();
+    const nodeData = nodes
+      .map((node) => {
+        const groupLen = Math.max(zoneTotals[node.zone], 1);
+        const groupIdx = zoneCursor[node.zone]++;
+        const angle = (groupIdx / groupLen) * Math.PI * 2;
+        const el = viewport.querySelector(`[data-id="${node.id}"]`);
+        return {
+          ...node,
+          angle,
+          x: Math.cos(angle) * node.orbit,
+          y: Math.sin(angle) * node.orbit,
+          vx: 0,
+          vy: 0,
+          isDragging: false,
+          el,
+        };
+      })
+      .filter((node) => node.el);
+
+    const nodeByElement = new Map(nodeData.map((node) => [node.el, node]));
+
+    const updateViewportMetrics = () => {
+      const rect = viewport.getBoundingClientRect();
+      width = rect.width;
+      height = rect.height;
+      return rect;
+    };
+
+    const applyWorldTransform = () => {
+      world.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
+    };
+
+    const solve = () => {
+      for (let cycle = 0; cycle < 2; cycle += 1) {
+        for (let i = 0; i < nodeData.length; i += 1) {
+          const a = nodeData[i];
+          if (a.isDragging) continue;
+
+          for (let j = i + 1; j < nodeData.length; j += 1) {
+            const b = nodeData[j];
+            const dx = b.x - a.x;
+            const dy = b.y - a.y;
+            const dist = Math.hypot(dx, dy) || 1;
+            if (dist < MIN_DIST) {
+              const push = (MIN_DIST - dist) * 0.05;
+              const ox = (dx / dist) * push;
+              const oy = (dy / dist) * push;
+              a.x -= ox;
+              a.y -= oy;
+              b.x += ox;
+              b.y += oy;
+            }
+          }
+
+          const radius = Math.hypot(a.x, a.y) || 1;
+          a.x = (a.x / radius) * a.orbit;
+          a.y = (a.y / radius) * a.orbit;
+        }
+      }
+    };
+
+    const tick = () => {
+      if (!running) return;
+      const cx = width / 2;
+      const cy = height / 2;
+
+      nodeData.forEach((node) => {
+        if (node.isDragging) return;
+        node.angle += speeds[node.zone];
+        const tx = Math.cos(node.angle) * node.orbit;
+        const ty = Math.sin(node.angle) * node.orbit;
+        node.vx = (node.vx + (tx - node.x) * 0.02) * DAMPING;
+        node.vy = (node.vy + (ty - node.y) * 0.02) * DAMPING;
+        node.x += node.vx;
+        node.y += node.vy;
+      });
+
+      solve();
+      nodeData.forEach((node) => {
+        node.el.style.transform = `translate3d(${cx + node.x}px, ${cy + node.y}px, 0) translate(-50%, -50%)`;
+      });
+
+      frameId = requestAnimationFrame(tick);
+    };
+
+    const buildStarField = () => {
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const starCount = prefersReducedMotion ? 60 : 100;
+      const fragment = document.createDocumentFragment();
+
+      for (let i = 0; i < starCount; i += 1) {
+        const star = document.createElement("span");
+        star.style.position = "absolute";
+        star.style.left = `${Math.random() * 100}%`;
+        star.style.top = `${Math.random() * 100}%`;
+        star.style.width = "1.5px";
+        star.style.height = "1.5px";
+        star.style.background = "white";
+        star.style.opacity = "0.3";
+        star.style.borderRadius = "50%";
+        fragment.appendChild(star);
+      }
+
+      starField.replaceChildren(fragment);
+    };
+
+    const positionNodesImmediately = () => {
+      const cx = width / 2;
+      const cy = height / 2;
+
+      nodeData.forEach((node) => {
+        node.el.style.transform = `translate3d(${cx + node.x}px, ${cy + node.y}px, 0) translate(-50%, -50%)`;
+      });
+    };
+
+    const bootstrapLayout = () => {
+      if (hasStarted) return true;
+
+      const rect = updateViewportMetrics();
+      if (rect.width < 40 || rect.height < 40) {
+        return false;
+      }
+
+      applyWorldTransform();
+      for (let i = 0; i < 200; i += 1) solve();
+      buildStarField();
+      positionNodesImmediately();
+      frameId = requestAnimationFrame(tick);
+      hasStarted = true;
+      return true;
+    };
+
+    const waitForStableViewport = (attempt = 0) => {
+      if (bootstrapLayout()) return;
+      if (attempt > 24) {
+        updateViewportMetrics();
+        positionNodesImmediately();
+        frameId = requestAnimationFrame(tick);
+        hasStarted = true;
+        return;
+      }
+
+      requestAnimationFrame(() => waitForStableViewport(attempt + 1));
+    };
+
+    let isPanning = false;
+    let panStartX = 0;
+    let panStartY = 0;
+    let activeNode = null;
+    let movedWhileDragging = false;
+    let dragStartX = 0;
+    let dragStartY = 0;
+
+    const handlePointerDown = (event) => {
+      const element = event.target instanceof Element ? event.target.closest(".planet-node") : null;
+      const node = element ? nodeByElement.get(element) : null;
+
+      if (node) {
+        activeNode = node;
+        activeNode.isDragging = true;
+        activeNode.el.style.zIndex = "1000";
+        movedWhileDragging = false;
+        dragStartX = event.clientX;
+        dragStartY = event.clientY;
+        return;
+      }
+
+      isPanning = true;
+      panStartX = event.clientX - panX;
+      panStartY = event.clientY - panY;
+      viewport.style.cursor = "grabbing";
+    };
+
+    const handlePointerMove = (event) => {
+      if (activeNode) {
+        const dx = event.clientX - dragStartX;
+        const dy = event.clientY - dragStartY;
+        if (Math.hypot(dx, dy) > 3) {
+          movedWhileDragging = true;
+        }
+
+        const rect = viewport.getBoundingClientRect();
+        activeNode.x = (event.clientX - rect.left - panX) / scale - width / 2;
+        activeNode.y = (event.clientY - rect.top - panY) / scale - height / 2;
+        return;
+      }
+
+      if (!isPanning) return;
+      panX = event.clientX - panStartX;
+      panY = event.clientY - panStartY;
+      applyWorldTransform();
+    };
+
+    const handlePointerUp = () => {
+      if (activeNode) {
+        activeNode.isDragging = false;
+        activeNode.el.style.zIndex = "30";
+        activeNode.angle = Math.atan2(activeNode.y, activeNode.x);
+        activeNode.orbit = Math.hypot(activeNode.x, activeNode.y);
+        activeNode = null;
+
+        if (movedWhileDragging) {
+          const suppressClick = (clickEvent) => {
+            clickEvent.preventDefault();
+            clickEvent.stopPropagation();
+            window.removeEventListener("click", suppressClick, true);
+          };
+          window.addEventListener("click", suppressClick, true);
+        }
+      }
+
+      isPanning = false;
+      viewport.style.cursor = "grab";
+    };
+
+    const handleWheel = (event) => {
+      event.preventDefault();
+      const zoom = event.deltaY > 0 ? 0.95 : 1.05;
+      scale = Math.min(Math.max(0.3, scale * zoom), 3);
+      applyWorldTransform();
+    };
+
+    const handleReset = () => {
+      panX = 0;
+      panY = 0;
+      scale = 1;
+      applyWorldTransform();
+      positionNodesImmediately();
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        running = false;
+        cancelAnimationFrame(frameId);
+      } else if (!running) {
+        running = true;
+        if (hasStarted) {
+          frameId = requestAnimationFrame(tick);
+        } else {
+          waitForStableViewport();
+        }
+      }
+    };
+
+    const cleanup = () => {
+      running = false;
+      cancelAnimationFrame(frameId);
+      cleanupFns.splice(0).forEach((fn) => fn());
+      if (window[CLEANUP_KEY] === cleanup) {
+        window[CLEANUP_KEY] = null;
+      }
+    };
+
+    on(viewport, "pointerdown", handlePointerDown);
+    on(window, "pointermove", handlePointerMove, { passive: true });
+    on(window, "pointerup", handlePointerUp);
+    on(window, "pointercancel", handlePointerUp);
+    on(viewport, "wheel", handleWheel, { passive: false });
+    on(resetBtn, "click", handleReset);
+    on(window, "resize", () => {
+      updateViewportMetrics();
+      positionNodesImmediately();
+    });
+    on(document, "visibilitychange", handleVisibilityChange);
+    on(document, "astro:before-swap", cleanup, { once: true });
+    on(window, "beforeunload", cleanup, { once: true });
+
+    waitForStableViewport();
+    window[CLEANUP_KEY] = cleanup;
   })();
 </script>
