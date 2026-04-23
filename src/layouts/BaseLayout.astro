@@ -28,6 +28,21 @@ const {
 const currentPathname = Astro.url.pathname;
 const isBlogRoute =
   currentPathname === "/blog" || currentPathname.startsWith("/blog/");
+const shellClass = isBlogRoute
+  ? "max-w-6xl mx-auto w-full flex-grow"
+  : "site-shell site-shell--comfort";
+const gridClass = isBlogRoute
+  ? "grid grid-cols-1 md:grid-cols-5 lg:grid-cols-4 gap-4 p-4 h-full"
+  : "layout-grid";
+const mainClass = isBlogRoute
+  ? "col-span-1 md:col-span-4 lg:col-span-3 bg-transparent order-1 md:order-2 mt-16 md:mt-0 flex flex-col gap-4"
+  : "layout-main bg-transparent";
+const mainContentClass = isBlogRoute
+  ? "flex-grow flex flex-col gap-4"
+  : "layout-main__content";
+const sidebarClass = isBlogRoute
+  ? "col-span-1 bg-transparent order-2 md:order-1 md:top-4"
+  : "layout-sidebar bg-transparent";
 ---
 
 <!doctype html>
@@ -147,18 +162,18 @@ const isBlogRoute =
     <div class="site-content-layer">
       <Navbar />
 
-      <div class="site-shell">
-        <div class="layout-grid">
-          <main class="layout-main bg-transparent">
+      <div class={shellClass}>
+        <div class={gridClass}>
+          <main class={mainClass}>
             <div
-              class="layout-main__content"
+              class={mainContentClass}
               {...isIndexed ? { "data-pagefind-body": true } : {}}
             >
               <slot />
             </div>
             <Footer />
           </main>
-          <aside class="layout-sidebar bg-transparent">
+          <aside class={sidebarClass}>
             <Sidebar headings={headings} showTOC={showTOC} />
             <slot name="sidebar" />
           </aside>
