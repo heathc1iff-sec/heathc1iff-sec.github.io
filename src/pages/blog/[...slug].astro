@@ -383,7 +383,7 @@ const articleJsonLd = JSON.stringify({
                   let text = escapeHtml(input ?? "");
 
                   text = text.replace(/`([^`]+?)`/g, (_, code) => {
-                    const token = `@@INLINE_CODE_${codeSnippets.length}@@`;
+                    const token = `@@INLINETOKEN${codeSnippets.length}@@`;
                     codeSnippets.push(`<code>${escapeHtml(code)}</code>`);
                     return token;
                   });
@@ -409,9 +409,15 @@ const articleJsonLd = JSON.stringify({
                   text = text.replace(/_([^_\n]+?)_/g, "<em>$1</em>");
                   text = text.replace(/~~([^~]+?)~~/g, "<del>$1</del>");
 
-                  text = text.replace(/@@INLINE_CODE_(\d+)@@/g, (_, index) => {
-                    return codeSnippets[Number(index)] ?? "";
-                  });
+                  text = text.replace(
+                    /@@(?:INLINETOKEN(\d+)|INLINE_CODE_(\d+)|INLINE(?:<em>)?CODE(?:<\/em>)?(\d+))@@/g,
+                    (_, nextTokenIndex, legacyTokenIndex, contaminatedTokenIndex) => {
+                      const index = Number(
+                        nextTokenIndex ?? legacyTokenIndex ?? contaminatedTokenIndex,
+                      );
+                      return codeSnippets[index] ?? "";
+                    },
+                  );
 
                   return text;
                 };
@@ -1454,13 +1460,11 @@ const articleJsonLd = JSON.stringify({
             const fallbackPres = wrappers.length ? [] : Array.from(scopeLite.querySelectorAll("pre"));
 
             const seen = new Set();
-            const blocks = [...wrappers, ...fallbackPres]
-              .filter((node) => {
+              const blocks = [...wrappers, ...fallbackPres].filter((node) => {
                 if (!node || seen.has(node)) return false;
                 seen.add(node);
                 return true;
-              })
-              .slice(0, 120);
+              });
 
             if (!blocks.length) return false;
 
