@@ -4,7 +4,8 @@ const FRONTMATTER_PATTERN = /^---\s*\r?\n[\s\S]*?\r?\n---\s*\r?\n?/;
 const HTML_COMMENT_PATTERN = /<!--[\s\S]*?-->/g;
 const REFERENCE_LINK_PATTERN = /^[\t ]*\[[^\]]+]:\s+\S+(?:\s+["(].*)?$/gm;
 const AUTO_LINK_PATTERN = /<https?:\/\/[^>\s]+>/g;
-const FALLBACK_FENCED_CODE_PATTERN = /(?:^|\n)(```|~~~)[^\n]*\n[\s\S]*?\n\1(?=\n|$)/g;
+const FALLBACK_FENCED_CODE_PATTERN =
+  /(?:^|\n)(```|~~~)[^\n]*\n[\s\S]*?\n\1(?=\n|$)/g;
 const FALLBACK_INLINE_CODE_PATTERN = /`[^`\n]+`/g;
 const FALLBACK_IMAGE_PATTERN = /!\[[^\]]*]\([^)]*\)/g;
 const FALLBACK_LINK_PATTERN = /\[([^\]]+)\]\([^)]+\)/g;
