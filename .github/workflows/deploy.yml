@@ -16,7 +16,9 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # This repository currently builds a complete blog on Windows, while the
+    # Linux runner drops a fixed subset of posts from the generated output.
+    runs-on: windows-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
