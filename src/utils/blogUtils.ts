@@ -1,5 +1,6 @@
 import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
+import { calculateReadingStats } from "./readingStats.js";
 
 type BlogPostEntry = CollectionEntry<"blog">;
 
@@ -30,23 +31,12 @@ function resolveFallbackStats(post: BlogPostEntry): PostStats {
   };
 }
 
-const WORDS_PER_MINUTE = 200;
-const CHINESE_CHARS_PER_MINUTE = 300;
-const LINES_PER_MINUTE = 50;
-
 function computeStatsFromBody(body: string): PostStats {
-  const wordCount = body.split(/\s+/).filter(Boolean).length;
-  const chineseCount = body.match(/[\u4E00-\u9FA5]/g)?.length || 0;
-  const lineCount = body.split(/\r?\n/).length;
-
-  const readingTime =
-    wordCount / WORDS_PER_MINUTE +
-    chineseCount / CHINESE_CHARS_PER_MINUTE +
-    lineCount / LINES_PER_MINUTE;
+  const { readingTime, totalCharCount } = calculateReadingStats(body);
 
   return {
-    readingTime: String(Math.ceil(readingTime)),
-    totalCharCount: String(wordCount + chineseCount),
+    readingTime: String(readingTime),
+    totalCharCount: String(totalCharCount),
   };
 }
 

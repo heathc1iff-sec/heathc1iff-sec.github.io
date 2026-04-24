@@ -3,6 +3,7 @@ import path from "node:path";
 import { createCipheriv, createHash, pbkdf2Sync, randomBytes } from "node:crypto";
 import { pathToFileURL } from "node:url";
 import yaml from "js-yaml";
+import { calculateReadingStats } from "../src/utils/readingStats.js";
 
 const ITERATIONS = 210000;
 const FRONTMATTER_PATTERN = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/;
@@ -23,18 +24,6 @@ function parseMarkdownFile(content) {
     frontmatterRaw: match[1],
     body: match[2],
   };
-}
-
-function stripMarkdown(markdown) {
-  return markdown
-    .replace(/```[\s\S]*?```/g, " ")
-    .replace(/`[^`\n]+`/g, " ")
-    .replace(/!\[[^\]]*\]\([^)]*\)/g, " ")
-    .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
-    .replace(/<[^>]+>/g, " ")
-    .replace(/[#>*_~\-]/g, " ")
-    .replace(/\s+/g, "")
-    .trim();
 }
 
 export async function encryptPostFile(targetFile, passwordFromArg) {
@@ -81,9 +70,7 @@ export async function encryptPostFile(targetFile, passwordFromArg) {
   const encryptedBody = Buffer.concat([cipher.update(body, "utf8"), cipher.final()]);
   const authTag = cipher.getAuthTag();
 
-  const plainText = stripMarkdown(body);
-  const charCount = plainText.length;
-  const estimatedReadTime = Math.max(1, Math.ceil(charCount / 500));
+  const { totalCharCount, readingTime } = calculateReadingStats(body);
 
   meta.passwordHash = createHash("sha256").update(password).digest("hex");
   meta.encryptionSalt = salt.toString("base64");
@@ -91,8 +78,8 @@ export async function encryptPostFile(targetFile, passwordFromArg) {
   meta.encryptionTag = authTag.toString("base64");
   meta.encryptionContent = encryptedBody.toString("base64");
   meta.encryptionIterations = ITERATIONS;
-  meta.encryptedWordCount = String(charCount);
-  meta.encryptedReadTime = String(estimatedReadTime);
+  meta.encryptedWordCount = String(totalCharCount);
+  meta.encryptedReadTime = String(readingTime);
 
   delete meta.password;
 

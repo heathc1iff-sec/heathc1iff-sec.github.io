@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { createDecipheriv, createHash, pbkdf2Sync } from "node:crypto";
+import { pathToFileURL } from "node:url";
 import yaml from "js-yaml";
 
 const FRONTMATTER_PATTERN = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/;
@@ -38,6 +39,11 @@ async function main() {
     process.exit(1);
   }
 
+  const decryptedFile = await decryptPostFile(targetFile, password);
+  console.log(`[decrypt-post] Decrypted ${decryptedFile}`);
+}
+
+export async function decryptPostFile(targetFile, password) {
   const resolvedPath = path.resolve(process.cwd(), targetFile);
   const source = await fs.readFile(resolvedPath, "utf8");
   const { frontmatterRaw } = parseMarkdownFile(source);
@@ -55,7 +61,11 @@ async function main() {
   }
 
   const iterationsRaw = meta.encryptionIterations;
-  if (typeof iterationsRaw !== "number" || !Number.isInteger(iterationsRaw) || iterationsRaw <= 0) {
+  if (
+    typeof iterationsRaw !== "number" ||
+    !Number.isInteger(iterationsRaw) ||
+    iterationsRaw <= 0
+  ) {
     throw new Error("Invalid encryptionIterations value.");
   }
 
@@ -92,10 +102,12 @@ async function main() {
   const output = `---\n${serializedFrontmatter}\n---\n\n${markdown.endsWith("\n") ? markdown : `${markdown}\n`}`;
   await fs.writeFile(resolvedPath, output, "utf8");
 
-  console.log(`[decrypt-post] Decrypted ${path.relative(process.cwd(), resolvedPath)}`);
+  return path.relative(process.cwd(), resolvedPath);
 }
 
-main().catch((error) => {
-  console.error(`[decrypt-post] ${error instanceof Error ? error.message : String(error)}`);
-  process.exit(1);
-});
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main().catch((error) => {
+    console.error(`[decrypt-post] ${error instanceof Error ? error.message : String(error)}`);
+    process.exit(1);
+  });
+}
