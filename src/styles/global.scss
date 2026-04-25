@@ -1185,6 +1185,46 @@ html[data-page-type="blog-post"] #post-encrypted-content :is(pre, .frosti-code, 
   contain-intrinsic-size: 360px;
 }
 
+html[data-page-type="blog-post"] #content :is(.frosti-code-content, .expressive-code, figure[data-rehype-pretty-code-figure]),
+html[data-page-type="blog-post"] #post-encrypted-content :is(.frosti-code-content, .expressive-code, figure[data-rehype-pretty-code-figure]) {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: oklch(var(--bc) / 0.22) transparent;
+}
+
+html[data-page-type="blog-post"] #content :is(.frosti-code-content, .expressive-code, figure[data-rehype-pretty-code-figure])::-webkit-scrollbar,
+html[data-page-type="blog-post"] #post-encrypted-content :is(.frosti-code-content, .expressive-code, figure[data-rehype-pretty-code-figure])::-webkit-scrollbar {
+  height: 0.68rem;
+}
+
+html[data-page-type="blog-post"] #content :is(.frosti-code-content, .expressive-code, figure[data-rehype-pretty-code-figure])::-webkit-scrollbar-thumb,
+html[data-page-type="blog-post"] #post-encrypted-content :is(.frosti-code-content, .expressive-code, figure[data-rehype-pretty-code-figure])::-webkit-scrollbar-thumb {
+  background: oklch(var(--bc) / 0.22);
+  border-radius: 999px;
+}
+
+html[data-page-type="blog-post"] #content :is(.frosti-code-content, .expressive-code, figure[data-rehype-pretty-code-figure])::-webkit-scrollbar-track,
+html[data-page-type="blog-post"] #post-encrypted-content :is(.frosti-code-content, .expressive-code, figure[data-rehype-pretty-code-figure])::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+html[data-page-type="blog-post"] #content :is(.frosti-code-content pre, .expressive-code pre, figure[data-rehype-pretty-code-figure] pre),
+html[data-page-type="blog-post"] #post-encrypted-content :is(.frosti-code-content pre, .expressive-code pre, figure[data-rehype-pretty-code-figure] pre) {
+  width: max-content;
+  min-width: 100%;
+  max-width: none;
+  overflow: visible;
+}
+
+html[data-page-type="blog-post"] #content :is(.frosti-code-content pre code, .expressive-code pre code, figure[data-rehype-pretty-code-figure] pre code),
+html[data-page-type="blog-post"] #post-encrypted-content :is(.frosti-code-content pre code, .expressive-code pre code, figure[data-rehype-pretty-code-figure] pre code) {
+  white-space: pre;
+  word-break: normal;
+  overflow-wrap: normal;
+}
+
 @keyframes skyBreath {
   0% {
     transform: translate3d(0, 0, 0) scale(1);

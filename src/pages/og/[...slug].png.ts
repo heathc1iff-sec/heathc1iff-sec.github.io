@@ -49,6 +49,10 @@ function getLocalFallbackFonts() {
   const regular = readFirstFont([
     "./public/fonts/NotoSansSC-Regular.ttf",
     "./public/fonts/NotoSansSC-Regular.otf",
+    "C:/Windows/Fonts/Noto Sans SC (TrueType).otf",
+    "C:/Windows/Fonts/SourceHanSansCN-Normal.ttf",
+    "C:/Windows/Fonts/simhei.ttf",
+    "C:/Windows/Fonts/ARIALUNI.ttf",
     "C:/Windows/Fonts/msyh.ttc",
     "C:/Windows/Fonts/simsun.ttc",
     "/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc",
@@ -62,6 +66,10 @@ function getLocalFallbackFonts() {
   const bold = readFirstFont([
     "./public/fonts/NotoSansSC-Bold.ttf",
     "./public/fonts/NotoSansSC-Bold.otf",
+    "C:/Windows/Fonts/Noto Sans SC Bold (TrueType).otf",
+    "C:/Windows/Fonts/Dengb.ttf",
+    "C:/Windows/Fonts/simsunb.ttf",
+    "C:/Windows/Fonts/seguisb.ttf",
     "C:/Windows/Fonts/msyhbd.ttc",
     "/usr/share/fonts/truetype/noto/NotoSansCJK-Bold.ttc",
     "/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc",
@@ -76,6 +84,12 @@ function getLocalFallbackFonts() {
 
 async function fetchNotoSansSCFonts() {
   if (fontCache) {
+    return fontCache;
+  }
+
+  const localFonts = getLocalFallbackFonts();
+  if (localFonts.regular) {
+    fontCache = localFonts;
     return fontCache;
   }
 
