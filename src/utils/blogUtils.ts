@@ -1,8 +1,12 @@
-import type { CollectionEntry } from "astro:content";
+import type { CollectionEntry, RenderResult } from "astro:content";
 import { getCollection } from "astro:content";
 import { calculateReadingStats } from "./readingStats.js";
 
-type BlogPostEntry = CollectionEntry<"blog">;
+export type BlogPostEntry = CollectionEntry<"blog"> & {
+  slug: string;
+  body?: string;
+  render: () => Promise<RenderResult>;
+};
 
 type PostStats = {
   readingTime: string;
@@ -16,12 +20,16 @@ type PostWithStats = BlogPostEntry & {
 let allPostsCache: Promise<BlogPostEntry[]> | null = null;
 const postStatsCache = new Map<string, PostStats>();
 
+export function getPostSlug(post: CollectionEntry<"blog">): string {
+  return (post as BlogPostEntry).slug || post.id;
+}
+
 function shouldUseContentCache(): boolean {
   return import.meta.env.PROD;
 }
 
 function getPostCacheKey(post: BlogPostEntry): string {
-  return post.id || post.slug;
+  return post.id || getPostSlug(post);
 }
 
 function resolveFallbackStats(post: BlogPostEntry): PostStats {
@@ -69,12 +77,12 @@ function resolvePostStats(post: BlogPostEntry): PostStats {
  */
 export async function getAllPosts(): Promise<BlogPostEntry[]> {
   if (!shouldUseContentCache()) {
-    return [...(await getCollection("blog"))];
+    return [...(await getCollection("blog"))] as BlogPostEntry[];
   }
 
   if (!allPostsCache) {
     allPostsCache = (async () => {
-      const allBlogPosts = await getCollection("blog");
+      const allBlogPosts = (await getCollection("blog")) as BlogPostEntry[];
       return allBlogPosts.filter((post: BlogPostEntry) => !post.data.draft);
     })();
   }

@@ -5,6 +5,7 @@ import BaseLayout from "@layouts/BaseLayout.astro";
 import {
   encodeSlugPath,
   getAllPosts,
+  getPostSlug,
   sortPostsByPinAndDate,
 } from "@utils/blogUtils";
 import { Icon } from "astro-icon/components";
@@ -20,7 +21,7 @@ const fallbackSearchEntries = sortPostsByPinAndDate(await getAllPosts()).map(
       : pubDateSource.toISOString();
 
     return {
-      slug: `/blog/${encodeSlugPath(post.slug)}`,
+      slug: `/blog/${encodeSlugPath(getPostSlug(post))}`,
       title: post.data.title ?? "",
       description: post.data.description ?? "",
       tags: post.data.tags ?? [],

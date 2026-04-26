@@ -2,7 +2,11 @@ import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
 import rss from "@astrojs/rss";
 import { SITE_DESCRIPTION, SITE_LANGUAGE, SITE_TAB, SITE_TITLE } from "@config";
-import { encodeSlugPath } from "@utils/blogUtils";
+import {
+  encodeSlugPath,
+  getPostSlug,
+  type BlogPostEntry,
+} from "@utils/blogUtils";
 import { marked } from "marked";
 
 export async function GET(context: any) {
@@ -34,11 +38,12 @@ export async function GET(context: any) {
 
   const items = await Promise.all(
     sortedPosts.map(async (blog: CollectionEntry<"blog">) => {
+      const post = blog as BlogPostEntry;
+      const slug = getPostSlug(post);
       const {
         data: { title, description, pubDate, encryption },
         body,
-        slug,
-      } = blog;
+      } = post;
 
       const postURL = new URL(`/blog/${encodeSlugPath(slug)}/`, context.site);
       const content = encryption

@@ -1,7 +1,10 @@
 import { defineCollection, z } from "astro:content";
+import { blogLoader } from "./blog-loader.js";
 
 const blog = defineCollection({
-  type: "content",
+  type: "content_layer",
+  loader: blogLoader,
+  _legacy: true,
   schema: z
     .object({
       title: z.string(),

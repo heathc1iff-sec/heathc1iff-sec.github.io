@@ -2,6 +2,7 @@ import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
 import fs from "node:fs";
 import { SITE_TAB, USER_AVATAR, USER_NAME } from "@config";
+import { getPostSlug } from "@utils/blogUtils";
 import type { APIContext, GetStaticPaths } from "astro";
 import satori from "satori";
 
@@ -25,7 +26,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   );
 
   return publishedPosts.map((post: CollectionEntry<"blog">) => ({
-    params: { slug: post.slug },
+    params: { slug: getPostSlug(post) },
     props: { post },
   }));
 };

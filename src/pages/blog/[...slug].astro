@@ -1,5 +1,5 @@
 ---
-import { type CollectionEntry, getCollection } from "astro:content";
+import { render, type CollectionEntry, getCollection } from "astro:content";
 import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
@@ -8,7 +8,7 @@ import PostFilter from "@components/widgets/PostFilter.astro";
 import PostInfo from "@components/widgets/PostInfo.astro";
 import { DATE_FORMAT, SITE_LANGUAGE, SITE_TAB, USER_NAME } from "@config";
 import BaseLayout from "@layouts/BaseLayout.astro";
-import { encodeSlugPath } from "@utils/blogUtils";
+import { encodeSlugPath, getPostSlug, type BlogPostEntry } from "@utils/blogUtils";
 import dayjs from "@utils/dayjs";
 import MainCard from "@/components/MainCard.astro";
 
@@ -18,18 +18,20 @@ export async function getStaticPaths() {
   const filteredPosts = import.meta.env.PROD
     ? posts.filter((post: CollectionEntry<"blog">) => !post.data.draft)
     : posts;
+  const blogPosts = filteredPosts as BlogPostEntry[];
 
-  return filteredPosts.map((blog: CollectionEntry<"blog">) => ({
-    params: { slug: blog.slug },
+  return blogPosts.map((blog: BlogPostEntry) => ({
+    params: { slug: getPostSlug(blog) },
     props: { blog },
   }));
 }
 
 interface Props {
-  blog: CollectionEntry<"blog">;
+  blog: BlogPostEntry;
 }
 
-const { blog } = Astro.props;
+const { blog } = Astro.props as Props;
+const blogSlug = getPostSlug(blog);
 const isEncrypted = blog.data.encryption;
 const hasEncryptedPayload = Boolean(
   isEncrypted &&
@@ -47,7 +49,7 @@ let totalCharCount = blog.data.encryptedWordCount ?? "-";
 let readingTime = blog.data.encryptedReadTime ?? "-";
 
 if (!hasEncryptedPayload) {
-  const rendered = await blog.render();
+  const rendered = await render(blog);
   Content = rendered.Content;
   headings = rendered.headings;
   totalCharCount = rendered.remarkPluginFrontmatter.totalCharCount;
@@ -67,7 +69,7 @@ const encryptedPayload = hasEncryptedPayload
       tag: blog.data.encryptionTag,
       content: blog.data.encryptionContent,
       iterations: blog.data.encryptionIterations,
-      slug: blog.slug,
+      slug: blogSlug,
     }
   : null;
 
@@ -83,9 +85,9 @@ const PROLABS_CERTIFICATES: Record<string, string> = {
   xen: "prolabs-xen-certificate.png",
   zephyr: "prolabs-zephyr-certificate.png",
 };
-const slugTail = blog.slug.split("/").at(-1)?.toLowerCase() ?? "";
+const slugTail = blogSlug.split("/").at(-1)?.toLowerCase() ?? "";
 const normalizedSlugTail = slugTail.replace(/[^a-z0-9]+/g, "");
-const isProlabsArticle = blog.slug
+const isProlabsArticle = blogSlug
   .toLowerCase()
   .includes("hackthebox-prolabs/");
 const certificateFilename = isProlabsArticle
@@ -116,7 +118,7 @@ const displayHeadings = isEncrypted ? [] : headings;
 const displayDate = blog.data.pubDate
   ? dayjs(blog.data.pubDate).format(DATE_FORMAT)
   : "";
-const encodedSlugPath = encodeSlugPath(blog.slug);
+const encodedSlugPath = encodeSlugPath(blogSlug);
 const image = new URL(`/og/${encodedSlugPath}.png`, Astro.site).toString();
 const canonicalPostUrl = new URL(
   `/blog/${encodedSlugPath}/`,
@@ -1165,7 +1167,7 @@ const articleJsonLd = JSON.stringify({
               </div>
             </div>
 
-            <script is:inline define:vars={{ legacyPasswordHash, slug: blog.slug }}>
+            <script is:inline define:vars={{ legacyPasswordHash, slug: blogSlug }}>
               (() => {
                 const initializePostProtection = () => {
                   const gate = document.getElementById("post-lock-gate");
