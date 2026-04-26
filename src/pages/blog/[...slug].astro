@@ -1,5 +1,5 @@
 ---
-import { render, type CollectionEntry, getCollection } from "astro:content";
+import { type CollectionEntry, getCollection, render } from "astro:content";
 import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
@@ -8,7 +8,11 @@ import PostFilter from "@components/widgets/PostFilter.astro";
 import PostInfo from "@components/widgets/PostInfo.astro";
 import { DATE_FORMAT, SITE_LANGUAGE, SITE_TAB, USER_NAME } from "@config";
 import BaseLayout from "@layouts/BaseLayout.astro";
-import { encodeSlugPath, getPostSlug, type BlogPostEntry } from "@utils/blogUtils";
+import {
+  type BlogPostEntry,
+  encodeSlugPath,
+  getPostSlug,
+} from "@utils/blogUtils";
 import dayjs from "@utils/dayjs";
 import MainCard from "@/components/MainCard.astro";
 
@@ -87,9 +91,7 @@ const PROLABS_CERTIFICATES: Record<string, string> = {
 };
 const slugTail = blogSlug.split("/").at(-1)?.toLowerCase() ?? "";
 const normalizedSlugTail = slugTail.replace(/[^a-z0-9]+/g, "");
-const isProlabsArticle = blogSlug
-  .toLowerCase()
-  .includes("hackthebox-prolabs/");
+const isProlabsArticle = blogSlug.toLowerCase().includes("hackthebox-prolabs/");
 const certificateFilename = isProlabsArticle
   ? PROLABS_CERTIFICATES[normalizedSlugTail]
   : undefined;

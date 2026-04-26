@@ -3,9 +3,9 @@ import { getCollection } from "astro:content";
 import rss from "@astrojs/rss";
 import { SITE_DESCRIPTION, SITE_LANGUAGE, SITE_TAB, SITE_TITLE } from "@config";
 import {
+  type BlogPostEntry,
   encodeSlugPath,
   getPostSlug,
-  type BlogPostEntry,
 } from "@utils/blogUtils";
 import { marked } from "marked";
 

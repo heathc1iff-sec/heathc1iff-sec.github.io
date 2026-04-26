@@ -64,8 +64,8 @@ export const blogLoader = {
     const renderMarkdownEntry = markdownEntryType.getRenderFunction
       ? await markdownEntryType.getRenderFunction(config)
       : null;
-    const markdownFiles = (await walkMarkdownFiles(BLOG_ROOT_PATH)).sort((a, b) =>
-      a.localeCompare(b),
+    const markdownFiles = (await walkMarkdownFiles(BLOG_ROOT_PATH)).sort(
+      (a, b) => a.localeCompare(b),
     );
     const untouchedEntries = new Set(store.keys());
 
@@ -77,7 +77,10 @@ export const blogLoader = {
         fileUrl,
       });
       const legacyEntry = getLegacyEntry(fullPath);
-      const id = typeof slug === "string" && slug.trim() ? slug.trim() : legacyEntry.slug;
+      const id =
+        typeof slug === "string" && slug.trim()
+          ? slug.trim()
+          : legacyEntry.slug;
       const digest = generateDigest(contents);
       const rendered = renderMarkdownEntry
         ? await renderMarkdownEntry({
@@ -94,7 +97,9 @@ export const blogLoader = {
         id,
         data: await parseData({ id, data, filePath: fullPath }),
         body,
-        filePath: toPosixPath(path.relative(fileURLToPath(config.root), fullPath)),
+        filePath: toPosixPath(
+          path.relative(fileURLToPath(config.root), fullPath),
+        ),
         digest,
         rendered,
         assetImports: rendered?.metadata?.imagePaths,
@@ -102,7 +107,9 @@ export const blogLoader = {
       });
     }
 
-    untouchedEntries.forEach((id) => store.delete(id));
+    for (const id of untouchedEntries) {
+      store.delete(id);
+    }
     logger.info(`Loaded ${markdownFiles.length} blog markdown files.`);
   },
 };
