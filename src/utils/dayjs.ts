@@ -70,7 +70,10 @@ const toDate = (input: unknown) => {
   return null;
 };
 
-export function formatSiteDate(input: unknown, format: string = DATE_FORMAT): string {
+export function formatSiteDate(
+  input: unknown,
+  format: string = DATE_FORMAT,
+): string {
   const date = toDate(input);
   if (!date) return "";
 
