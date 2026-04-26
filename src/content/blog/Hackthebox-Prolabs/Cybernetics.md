@@ -1,7 +1,7 @@
 ---
 title: HTB-Cybernetics
 description: Pro Labs-Cybernetics
-pubDate: 2026-04-23T16:24:00.000Z
+pubDate: 2026-04-24T03:10:20+08:00
 image: /Pro-Labs/cybernetics.png
 certificate: /certificate/Cybernetics.jpg
 categories:

@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import BaseCard from "@components/BaseCard.astro";
-import { DATE_FORMAT, t } from "@config";
+import { t } from "@config";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import {
   encodeSlugPath,
@@ -10,7 +10,7 @@ import {
   getCategoryColorClass,
   getPostSlug,
 } from "@utils/blogUtils";
-import dayjs from "@utils/dayjs";
+import { formatSiteDate } from "@utils/dayjs";
 import { Icon } from "astro-icon/components";
 
 // 获取所有博客文章
@@ -78,7 +78,7 @@ const totalCategories = categoryMap.size;
                         <li class="post-item">
                           <a href={`/blog/${encodeSlugPath(getPostSlug(post))}`} class="post-link">
                             <span class="post-title">{post.data.title}</span>
-                            <span class="post-date">{dayjs(post.data.pubDate).format(DATE_FORMAT)}</span>
+                            <span class="post-date">{formatSiteDate(post.data.pubDate)}</span>
                           </a>
                         </li>
                       ))}

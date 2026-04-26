@@ -3,6 +3,7 @@ import { getCollection } from "astro:content";
 import fs from "node:fs";
 import { SITE_TAB, USER_AVATAR, USER_NAME } from "@config";
 import { getPostSlug } from "@utils/blogUtils";
+import { formatSiteDate } from "@utils/dayjs";
 import type { APIContext, GetStaticPaths } from "astro";
 import satori from "satori";
 
@@ -164,11 +165,7 @@ export async function GET({
   const subtleTextColor = "#64748B";
   const backgroundColor = "#FFFFFF";
 
-  const pubDate = post.data.pubDate.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
+  const pubDate = formatSiteDate(post.data.pubDate, "MMM DD YYYY");
 
   const description = post.data.description;
 

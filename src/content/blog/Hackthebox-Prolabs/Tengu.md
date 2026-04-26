@@ -1,7 +1,7 @@
 ---
 title: HTB-Tengu
 description: Pro Labs-Tengu
-pubDate: 2026-04-24T16:00:00.000Z
+pubDate: 2026-04-25T13:23:55+08:00
 image: /Pro-Labs/Tengu.png
 certificate: /certificate/Tengu.jpg
 categories:

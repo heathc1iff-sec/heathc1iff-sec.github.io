@@ -8,6 +8,7 @@ import {
   getPostSlug,
   sortPostsByPinAndDate,
 } from "@utils/blogUtils";
+import { formatSiteDate } from "@utils/dayjs";
 import { Icon } from "astro-icon/components";
 
 const fallbackSearchEntries = sortPostsByPinAndDate(await getAllPosts()).map(
@@ -27,6 +28,7 @@ const fallbackSearchEntries = sortPostsByPinAndDate(await getAllPosts()).map(
       tags: post.data.tags ?? [],
       categories: post.data.categories ?? [],
       pubDate,
+      pubDateLabel: post.data.pubDate ? formatSiteDate(post.data.pubDate) : "",
     };
   },
 );
@@ -146,13 +148,7 @@ const fallbackSearchEntries = sortPostsByPinAndDate(await getAllPosts()).map(
     };
 
     const renderResult = (entry) => {
-      const dateText = entry?.pubDate
-        ? new Date(entry.pubDate).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-          })
-        : "";
+      const dateText = String(entry?.pubDateLabel || "").trim();
 
       return `
         <a class="title-search__item" href="${escapeHtml(entry.slug)}">

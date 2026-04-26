@@ -6,14 +6,14 @@ import { join } from "node:path";
 import License from "@components/widgets/License.astro";
 import PostFilter from "@components/widgets/PostFilter.astro";
 import PostInfo from "@components/widgets/PostInfo.astro";
-import { DATE_FORMAT, SITE_LANGUAGE, SITE_TAB, USER_NAME } from "@config";
+import { SITE_LANGUAGE, SITE_TAB, USER_NAME } from "@config";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import {
   type BlogPostEntry,
   encodeSlugPath,
   getPostSlug,
 } from "@utils/blogUtils";
-import dayjs from "@utils/dayjs";
+import { formatSiteDate } from "@utils/dayjs";
 import MainCard from "@/components/MainCard.astro";
 
 export async function getStaticPaths() {
@@ -117,9 +117,7 @@ const certificateImagePath =
   );
 
 const displayHeadings = isEncrypted ? [] : headings;
-const displayDate = blog.data.pubDate
-  ? dayjs(blog.data.pubDate).format(DATE_FORMAT)
-  : "";
+const displayDate = blog.data.pubDate ? formatSiteDate(blog.data.pubDate) : "";
 const encodedSlugPath = encodeSlugPath(blogSlug);
 const image = new URL(`/og/${encodedSlugPath}.png`, Astro.site).toString();
 const canonicalPostUrl = new URL(

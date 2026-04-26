@@ -1,7 +1,7 @@
 ---
 title: HTB-Heron
 description: Pro Labs-Heron
-pubDate: 2026-04-25T16:00:00.000Z
+pubDate: 2026-04-26T04:23:20+08:00
 image: /Pro-Labs/Heron.png
 certificate: /certificate/Heron.jpg
 categories:

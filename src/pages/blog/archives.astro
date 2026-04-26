@@ -1,6 +1,6 @@
 ---
 import BaseCard from "@components/BaseCard.astro";
-import { DATE_FORMAT, t } from "@config";
+import { t } from "@config";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import {
   encodeSlugPath,
@@ -9,7 +9,7 @@ import {
   getPostsByYearAndMonth,
   sortPostsByDate,
 } from "@utils/blogUtils";
-import dayjs from "@utils/dayjs";
+import { formatSiteDate } from "@utils/dayjs";
 import { Icon } from "astro-icon/components";
 
 // 获取所有博客文章
@@ -80,7 +80,7 @@ const totalPosts = allPosts.length;
                           {posts.map((post) => (
                             <li class="archive-item">
                               <a href={`/blog/${encodeSlugPath(getPostSlug(post))}`} class="archive-card">
-                                <time class="archive-date">{dayjs(post.data.pubDate).format(DATE_FORMAT)}</time>
+                                <time class="archive-date">{formatSiteDate(post.data.pubDate)}</time>
                                 <h4 class="archive-title">{post.data.title}</h4>
                                 {post.data.description && <p class="archive-description">{post.data.description}</p>}
                               </a>
