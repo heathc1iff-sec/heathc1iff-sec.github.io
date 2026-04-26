@@ -1185,8 +1185,8 @@ html[data-page-type="blog-post"] #post-encrypted-content :is(pre, .frosti-code, 
   contain-intrinsic-size: 360px;
 }
 
-html[data-page-type="blog-post"] #content :is(.frosti-code-content, .expressive-code, figure[data-rehype-pretty-code-figure]),
-html[data-page-type="blog-post"] #post-encrypted-content :is(.frosti-code-content, .expressive-code, figure[data-rehype-pretty-code-figure]) {
+html[data-page-type="blog-post"] #content .frosti-code-content,
+html[data-page-type="blog-post"] #post-encrypted-content .frosti-code-content {
   max-width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
@@ -1194,28 +1194,61 @@ html[data-page-type="blog-post"] #post-encrypted-content :is(.frosti-code-conten
   scrollbar-color: oklch(var(--bc) / 0.22) transparent;
 }
 
-html[data-page-type="blog-post"] #content :is(.frosti-code-content, .expressive-code, figure[data-rehype-pretty-code-figure])::-webkit-scrollbar,
-html[data-page-type="blog-post"] #post-encrypted-content :is(.frosti-code-content, .expressive-code, figure[data-rehype-pretty-code-figure])::-webkit-scrollbar {
+html[data-page-type="blog-post"] #content .frosti-code-content::-webkit-scrollbar,
+html[data-page-type="blog-post"] #post-encrypted-content .frosti-code-content::-webkit-scrollbar {
   height: 0.68rem;
 }
 
-html[data-page-type="blog-post"] #content :is(.frosti-code-content, .expressive-code, figure[data-rehype-pretty-code-figure])::-webkit-scrollbar-thumb,
-html[data-page-type="blog-post"] #post-encrypted-content :is(.frosti-code-content, .expressive-code, figure[data-rehype-pretty-code-figure])::-webkit-scrollbar-thumb {
+html[data-page-type="blog-post"] #content .frosti-code-content::-webkit-scrollbar-thumb,
+html[data-page-type="blog-post"] #post-encrypted-content .frosti-code-content::-webkit-scrollbar-thumb {
   background: oklch(var(--bc) / 0.22);
   border-radius: 999px;
 }
 
-html[data-page-type="blog-post"] #content :is(.frosti-code-content, .expressive-code, figure[data-rehype-pretty-code-figure])::-webkit-scrollbar-track,
-html[data-page-type="blog-post"] #post-encrypted-content :is(.frosti-code-content, .expressive-code, figure[data-rehype-pretty-code-figure])::-webkit-scrollbar-track {
+html[data-page-type="blog-post"] #content .frosti-code-content::-webkit-scrollbar-track,
+html[data-page-type="blog-post"] #post-encrypted-content .frosti-code-content::-webkit-scrollbar-track {
   background: transparent;
 }
 
-html[data-page-type="blog-post"] #content :is(.frosti-code-content pre, .expressive-code pre, figure[data-rehype-pretty-code-figure] pre),
-html[data-page-type="blog-post"] #post-encrypted-content :is(.frosti-code-content pre, .expressive-code pre, figure[data-rehype-pretty-code-figure] pre) {
+html[data-page-type="blog-post"] #content .frosti-code-content pre,
+html[data-page-type="blog-post"] #post-encrypted-content .frosti-code-content pre {
   width: max-content;
   min-width: 100%;
   max-width: none;
   overflow: visible;
+}
+
+html[data-page-type="blog-post"] #content :is(.expressive-code, figure[data-rehype-pretty-code-figure]),
+html[data-page-type="blog-post"] #post-encrypted-content :is(.expressive-code, figure[data-rehype-pretty-code-figure]) {
+  max-width: 100%;
+}
+
+html[data-page-type="blog-post"] #content :is(.expressive-code pre, figure[data-rehype-pretty-code-figure] pre),
+html[data-page-type="blog-post"] #post-encrypted-content :is(.expressive-code pre, figure[data-rehype-pretty-code-figure] pre) {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: oklch(var(--bc) / 0.22) transparent;
+  scrollbar-gutter: stable both-edges;
+}
+
+html[data-page-type="blog-post"] #content :is(.expressive-code pre, figure[data-rehype-pretty-code-figure] pre)::-webkit-scrollbar,
+html[data-page-type="blog-post"] #post-encrypted-content :is(.expressive-code pre, figure[data-rehype-pretty-code-figure] pre)::-webkit-scrollbar {
+  height: 0.68rem;
+}
+
+html[data-page-type="blog-post"] #content :is(.expressive-code pre, figure[data-rehype-pretty-code-figure] pre)::-webkit-scrollbar-thumb,
+html[data-page-type="blog-post"] #post-encrypted-content :is(.expressive-code pre, figure[data-rehype-pretty-code-figure] pre)::-webkit-scrollbar-thumb {
+  background: oklch(var(--bc) / 0.22);
+  border-radius: 999px;
+}
+
+html[data-page-type="blog-post"] #content :is(.expressive-code pre, figure[data-rehype-pretty-code-figure] pre)::-webkit-scrollbar-track,
+html[data-page-type="blog-post"] #post-encrypted-content :is(.expressive-code pre, figure[data-rehype-pretty-code-figure] pre)::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 html[data-page-type="blog-post"] #content :is(.frosti-code-content pre code, .expressive-code pre code, figure[data-rehype-pretty-code-figure] pre code),
