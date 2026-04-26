@@ -16,6 +16,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Normalize line endings for checks
+        run: |
+          git config --local core.autocrlf false
+          git config --local core.eol lf
+          git reset --hard HEAD
+
       - name: Setup pnpm
         uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061
         with:

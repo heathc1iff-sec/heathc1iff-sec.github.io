@@ -1,11 +1,13 @@
-import type { CollectionEntry, RenderResult } from "astro:content";
+import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
 import { calculateReadingStats } from "./readingStats.js";
+
+type BlogRenderResult = Awaited<ReturnType<CollectionEntry<"blog">["render"]>>;
 
 export type BlogPostEntry = CollectionEntry<"blog"> & {
   slug: string;
   body?: string;
-  render: () => Promise<RenderResult>;
+  render: () => Promise<BlogRenderResult>;
 };
 
 type PostStats = {
