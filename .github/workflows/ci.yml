@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
 
 jobs:
   build-and-check:
@@ -40,7 +41,47 @@ jobs:
         run: pnpm astro-check
 
       - name: Biome check (lint + formatting) on src
-        run: pnpm biome:check
+        shell: pwsh
+        run: |
+          $attempts = 2
+          $exitCode = 0
+
+          for ($i = 1; $i -le $attempts; $i++) {
+            Write-Host "Biome lint attempt $i/$attempts"
+            pnpm biome:check
+            $exitCode = $LASTEXITCODE
+
+            if ($exitCode -eq 0) {
+              exit 0
+            }
+
+            if ($i -lt $attempts) {
+              Write-Warning "Biome lint failed with exit code $exitCode. Retrying in 5 seconds..."
+              Start-Sleep -Seconds 5
+            }
+          }
+
+          exit $exitCode
 
       - name: Biome formatting check on src
-        run: pnpm biome:format:check
+        shell: pwsh
+        run: |
+          $attempts = 2
+          $exitCode = 0
+
+          for ($i = 1; $i -le $attempts; $i++) {
+            Write-Host "Biome format attempt $i/$attempts"
+            pnpm biome:format:check
+            $exitCode = $LASTEXITCODE
+
+            if ($exitCode -eq 0) {
+              exit 0
+            }
+
+            if ($i -lt $attempts) {
+              Write-Warning "Biome format check failed with exit code $exitCode. Retrying in 5 seconds..."
+              Start-Sleep -Seconds 5
+            }
+          }
+
+          exit $exitCode
