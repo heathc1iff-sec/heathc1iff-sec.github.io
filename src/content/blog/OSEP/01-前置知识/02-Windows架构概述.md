@@ -1853,5 +1853,5 @@ LSTATUS RegSetValueExA(
 
 ---
 
-**下一章**：PowerShell 基础正在整理中，发布后会补上跳转链接。
+**下一章**：[03-PowerShell基础](/blog/osep/01-前置知识/03-powershell基础/)
 
