@@ -30,33 +30,32 @@ tags:
 
 ![](/image/osep-%E5%89%8D%E8%A8%80/OSEP-%E5%A4%87%E8%80%83%E6%97%A5%E8%AE%B0-4.png)
 
-# 2025年5月8日（星期五-第一天）
+# 2026年5月8日（星期五-第一天）
 ## Outlook-邮件
 中午上完课回来发现邀请邮件已经发送过来了，效率好高啊
 
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1778219075056-4111c9d6-a56a-4143-beaf-f07f3ad18e7b.png)
+![](/image/osep-%E5%89%8D%E8%A8%80/OSEP-%E5%A4%87%E8%80%83%E6%97%A5%E8%AE%B0-5.png)
 
 ## OffSec-Dashboard
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1778219166517-d7e37faa-e7ca-4adf-9a44-85dea99d644b.png)
+![](/image/osep-%E5%89%8D%E8%A8%80/OSEP-%E5%A4%87%E8%80%83%E6%97%A5%E8%AE%B0-6.png)
 
 ## OffSec-Course
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1778219208360-df307387-7103-4942-a243-391bced95578.png)
+![](/image/osep-%E5%89%8D%E8%A8%80/OSEP-%E5%A4%87%E8%80%83%E6%97%A5%E8%AE%B0-7.png)
 
 ## VPN代理
 > 适用场景：人在国内，直接连接 OffSec/OSEP VPN 延迟高、丢包明显，或者 UDP 到境外 VPN 服务器不稳定。  
 核心目标：让 Kali 最终仍然像“正常直连 OffSec VPN”一样工作，`tun0`、靶场动态路由、`nmap`、`smbclient`、`xfreerdp` 都在 Kali 本机使用；VPS 只负责把 OpenVPN 的 UDP 流量从更稳定的境外出口转发出去。
->
 
 ### 1. 网络架构
 原始连接方式是：
 
-```latex
+```text
 Kali OpenVPN  ->  OffSec VPN
 ```
 
 优化后的连接方式是：
 
-```latex
+```text
 Kali OpenVPN
     |
     | UDP 127.0.0.1:1195
@@ -121,7 +120,7 @@ openssl rand -hex 8
 
 博客里不要公开真实值，可以写成：
 
-```latex
+```text
 UUID: <UUID>
 Private key: <REALITY_PRIVATE_KEY>
 Public key: <REALITY_PUBLIC_KEY>
@@ -202,7 +201,7 @@ ss -tlnp | grep ':443'
 #### 3.4 VPS 安全组
 在云厂商控制台放行：
 
-```latex
+```text
 TCP 443 入站
 TCP 22222 入站，或你自己的 SSH 端口
 ```
@@ -338,7 +337,7 @@ ss -ulnp | grep 1195
 
 正常应该看到：
 
-```latex
+```text
 127.0.0.1:1195
 ```
 
@@ -382,7 +381,7 @@ openvpn --config "/home/kali/Desktop/OSEP/VPN/universal-vpsproxy.ovpn"
 
 正常日志应包含：
 
-```latex
+```text
 UDPv4 link remote: [AF_INET]127.0.0.1:1195
 Initialization Sequence Completed
 ```
@@ -399,7 +398,7 @@ ip route
 
 应该能看到 `tun0`，以及 OffSec 推送下来的真实靶场路由，例如：
 
-```latex
+```text
 192.168.106.0/24 via 192.168.45.254 dev tun0
 ```
 
@@ -525,4 +524,4 @@ remote 127.0.0.1 1195 udp
 + OpenVPN 永远只连 `127.0.0.1 1195 udp`。
 
 ## 课程进度
-![](https://cdn.nlark.com/yuque/0/2026/png/40628873/1778257103069-1a510f94-5d45-494f-bc79-b62ac8864f69.png)
+![](/image/osep-%E5%89%8D%E8%A8%80/OSEP-%E5%A4%87%E8%80%83%E6%97%A5%E8%AE%B0-8.png)
