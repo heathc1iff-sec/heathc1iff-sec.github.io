@@ -6,7 +6,6 @@ image: /machine/Matrioshka.png
 categories:
   - Documentation
   - Hackmyvm
-  - HMVMachines
 tags:
   - Hackmyvm
   - Linux Machine

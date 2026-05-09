@@ -6,7 +6,6 @@ image: /machine/Deba.png
 categories:
   - Documentation
   - Hackmyvm
-  - HMVMachines
 tags:
   - Hackmyvm
   - Linux Machine

@@ -6,7 +6,6 @@ image: /machine/Ephemeral2.png
 categories:
   - Documentation
   - Hackmyvm
-  - HMVMachines
 tags:
   - Hackmyvm
   - Linux Machine

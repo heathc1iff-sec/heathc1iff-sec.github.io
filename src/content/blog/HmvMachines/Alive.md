@@ -6,7 +6,6 @@ image: /machine/Alive.png
 categories:
   - Documentation
   - Hackmyvm
-  - HMVMachines
 tags:
   - Hackmyvm
   - Linux Machine

@@ -6,7 +6,6 @@ image: /machine/Always.png
 categories:
   - Documentation
   - Hackmyvm
-  - HMVMachines
 tags:
   - Hackmyvm
   - Windows Machine

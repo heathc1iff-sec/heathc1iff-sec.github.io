@@ -6,7 +6,6 @@ image: /machine/Liar.png
 categories:
   - Documentation
   - Hackmyvm
-  - HMVMachines
 tags:
   - Hackmyvm
   - Windows Machine

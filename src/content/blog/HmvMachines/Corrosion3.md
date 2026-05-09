@@ -6,7 +6,6 @@ image: /machine/Corrosion3.png
 categories:
   - Documentation
   - Hackmyvm
-  - HMVMachines
 tags:
   - Hackmyvm
   - Linux Machine

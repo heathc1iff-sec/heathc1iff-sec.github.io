@@ -6,7 +6,6 @@ image: /machine/Cve1.png
 categories:
   - Documentation
   - Hackmyvm
-  - HMVMachines
 tags:
   - Hackmyvm
   - Linux Machine

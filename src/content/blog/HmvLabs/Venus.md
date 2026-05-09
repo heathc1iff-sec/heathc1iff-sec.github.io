@@ -6,7 +6,6 @@ image: /machine/Venus.jpg
 categories:
   - Documentation
   - Hackmyvm
-  - HMVLabs
 tags:
   - Hackmyvm
   - HMVLabs
