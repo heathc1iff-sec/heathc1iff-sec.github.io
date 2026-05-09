@@ -346,7 +346,7 @@ ss -ulnp | grep 1195
 
 ```bash
 cd /home/kali/Desktop/OSEP/VPN
-cp "universal(2).ovpn" universal-vpsproxy.ovpn
+cp "universal.ovpn" universal-vpsproxy.ovpn
 ```
 
 编辑副本：
@@ -525,3 +525,21 @@ remote 127.0.0.1 1195 udp
 
 ## 课程进度
 ![](/image/osep-%E5%89%8D%E8%A8%80/OSEP-%E5%A4%87%E8%80%83%E6%97%A5%E8%AE%B0-8.png)
+
+# 2026年5月9日（星期六-第二天）
+## 课程进度
+白天美美的休息了，下午学了一阵然后打瓦去了
+
+![](/image/osep-%E5%89%8D%E8%A8%80/OSEP-%E5%A4%87%E8%80%83%E6%97%A5%E8%AE%B0-9.png)
+
+## 个人感受
+感觉购买前准备的还是太充分了，又臭又长的pdf文档在购买前我已经啃完了一半，ai搭建的知识库我也都过了一遍，这导致我处于速通状态，后悔没早点买了
+
+## 笔记整理
+主要分为俩个部分，一个是course笔记：用于汇总章节内容和处理章节习题等
+
+另一个是code笔记，提取章节内有用的代码进行汇总整理，方便二次查阅使用代码
+
+格式like this，这章节标题写成英文看着挺高级的但是令我发晕
+
+![](/image/osep-%E5%89%8D%E8%A8%80/OSEP-%E5%A4%87%E8%80%83%E6%97%A5%E8%AE%B0-10.png)
