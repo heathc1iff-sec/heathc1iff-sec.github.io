@@ -12,7 +12,9 @@ tags:
   - Enumeration
 ---
 
-![](/image/hackthebox/Three-1.png)根据邮件判断出域名为thetoppers.htb
+![](/image/hackthebox/Three-1.png)
+
+根据邮件判断出域名为thetoppers.htb
 
 
 
@@ -90,7 +92,6 @@ python3 -m http.server 8090
 也可以直接浏览器输入以下命令获取flag
 
 http://thetoppers.htb/shell.php?cmd=cat%20../flag.txt（先ls../一下）
-
 
 
 

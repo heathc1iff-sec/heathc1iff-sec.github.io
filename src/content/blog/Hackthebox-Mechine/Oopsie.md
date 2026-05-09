@@ -35,11 +35,15 @@ uploads网页又不给访问
 
 审查一下主站的源码
 
-发现了这个![](/image/hackthebox/Oopsie-5.png)
+发现了这个
+
+![](/image/hackthebox/Oopsie-5.png)
 
 尝试了下没什么用
 
-再去瞅瞅![](/image/hackthebox/Oopsie-6.png)
+再去瞅瞅
+
+![](/image/hackthebox/Oopsie-6.png)
 
 发现了登录接口，去掉script.js即可
 
@@ -49,7 +53,9 @@ uploads网页又不给访问
 答案是cookie
 
 ## TASK 4
-![](/image/hackthebox/Oopsie-8.png)这里尝试了下admin/admin弱口令失败
+![](/image/hackthebox/Oopsie-8.png)
+
+这里尝试了下admin/admin弱口令失败
 
 直接使用guest账户进行登录
 
@@ -59,11 +65,15 @@ uploads网页又不给访问
 
 尝试修改为1
 
-成功得到adminID ![](/image/hackthebox/Oopsie-10.png)
+成功得到adminID
+
+![](/image/hackthebox/Oopsie-10.png)
 
 这里我们尝试吧cookie值修改为admin账户
 
-第一遍没有成功，第二遍成功了![](/image/hackthebox/Oopsie-11.png)
+第一遍没有成功，第二遍成功了
+
+![](/image/hackthebox/Oopsie-11.png)
 
 ## TASK 5
 ![](/image/hackthebox/Oopsie-12.png)
@@ -104,7 +114,9 @@ uploads网页又不给访问
 
 ![](/image/hackthebox/Oopsie-17.png)
 
+```php
 $conn = mysqli_connect('localhost','robert','M3g4C0rpUs3r!','garage');
+```
 
 然后切换robert用户
 
@@ -124,7 +136,9 @@ $conn = mysqli_connect('localhost','robert','M3g4C0rpUs3r!','garage');
 
 用find看下bugtracker这个组的用户能执行哪些文件
 
+```bash
 find / -group bugtracker 2>/dev/null
+```
 
 > （查找属于 "bugtracker" 用户组的文件，并输出它们的路径其中**2>/dev/null**: 这部分是将标准错误重定向到 **/dev/null**。**2>**表示将标准错误（stderr）重定向，**/dev/null** 是一个特殊的设备文件，它会丢弃所有写入其中的数据。因此，此部分的作用是将错误信息静默化，这样在执行命令时不会显示错误信息。）
 >
@@ -133,9 +147,13 @@ find / -group bugtracker 2>/dev/null
 
 发现存在一个/usr/bin/bugtracker文件，再看下这个文件有哪些权限
 
+```bash
 ls -al /usr/bin/bugtracker
+```
 
-![](/image/hackthebox/Oopsie-22.png)发现这个文件有s权限即suid权限，所有者为root，suid简单来说就是任何用户执行具有suid权限的文件时都会以它拥有者的权限执行
+![](/image/hackthebox/Oopsie-22.png)
+
+发现这个文件有s权限即suid权限，所有者为root，suid简单来说就是任何用户执行具有suid权限的文件时都会以它拥有者的权限执行
 
 ![](/image/hackthebox/Oopsie-23.png)
 
@@ -170,6 +188,5 @@ ls -al /usr/bin/bugtracker
 af13b0bee69f8a877c3faf667f7beacf
 
 用robert账户在home/robert/user.txt中找到用户flag
-
 
 

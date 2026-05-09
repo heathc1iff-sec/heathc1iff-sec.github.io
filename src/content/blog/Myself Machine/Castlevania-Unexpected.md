@@ -3080,15 +3080,29 @@ dirsearch -u http://10.78.22.137/ -e txt,config,bak,old,zip
 ![](/image/myself%20machine/Castlevania-Unexpected-51.jpeg)
 
 ## Mssql登录&&嵌套执行
-给出了mssql登录凭据尝试登录执⾏sql ![](/image/myself%20machine/Castlevania-Unexpected-52.png)
+给出了mssql登录凭据尝试登录执⾏sql
+
+![](/image/myself%20machine/Castlevania-Unexpected-52.png)
 
 ## 查看端口&&枚举用户
-![](/image/myself%20machine/Castlevania-Unexpected-53.png)![](/image/myself%20machine/Castlevania-Unexpected-54.png)
+![](/image/myself%20machine/Castlevania-Unexpected-53.png)
+
+![](/image/myself%20machine/Castlevania-Unexpected-54.png)
 
 ## 验证权限
-验证mowen身份权限 ![](/image/myself%20machine/Castlevania-Unexpected-55.png)![](/image/myself%20machine/Castlevania-Unexpected-56.png)![](/image/myself%20machine/Castlevania-Unexpected-57.png)![](/image/myself%20machine/Castlevania-Unexpected-58.png)
+验证mowen身份权限
 
-## 远程连接(失败)![](/image/myself%20machine/Castlevania-Unexpected-59.png)
+![](/image/myself%20machine/Castlevania-Unexpected-55.png)
+
+![](/image/myself%20machine/Castlevania-Unexpected-56.png)
+
+![](/image/myself%20machine/Castlevania-Unexpected-57.png)
+
+![](/image/myself%20machine/Castlevania-Unexpected-58.png)
+
+## 远程连接(失败)
+
+![](/image/myself%20machine/Castlevania-Unexpected-59.png)
 ## 获取hash
 写脚本进⾏远程拿⽂件在⼀个终端开启
 
@@ -4415,4 +4429,3 @@ psexec.py XMCVE/Administrator:'Xmcve#2026!'@192.168.56.101 cmd.exe
 -> Administrator 远程命令执行
 -> psexec.py 落交互 shell
 ```
-

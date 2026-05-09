@@ -720,7 +720,9 @@ Stopped: Mon Oct 11 10:54:08 2021
 
 ![](/image/tryhackme/TryHackMe-Password%20Attacks-5.png)
 
-![](/image/tryhackme/TryHackMe-Password%20Attacks-6.png)![](/image/tryhackme/TryHackMe-Password%20Attacks-7.png)
+![](/image/tryhackme/TryHackMe-Password%20Attacks-6.png)
+
+![](/image/tryhackme/TryHackMe-Password%20Attacks-7.png)
 
 ![](/image/tryhackme/TryHackMe-Password%20Attacks-8.png)
 
@@ -1341,4 +1343,3 @@ hydra -L usernames-list.txt -P AddPASS.txt ssh://10.10.65.73
 ssh burgess@10.10.65.73
 #password: Fall2021@
 ```
-

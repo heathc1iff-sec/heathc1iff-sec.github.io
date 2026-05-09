@@ -790,8 +790,7 @@ There is also a network-based <u>IDS</u>/<u>IPS</u>, which we will be covering i
 Endpoint Detection and Response (<u>EDR</u>)  
 端点检测和响应 （EDR）
 
-![](/image/tryhackme/TryHackMe-The%20Lay%20of%20the%20Land-15.png)**  
-**
+![](/image/tryhackme/TryHackMe-The%20Lay%20of%20the%20Land-15.png)
 
 It is also known as Endpoint Detection and Threat Response (EDTR). The <u>EDR</u> is a cybersecurity solution that defends against malware and other threats. EDRs can look for malicious files, monitor endpoint, system, and network events, and record them in a database for further analysis, detection, and investigation. EDRs are the next generation of antivirus and detect malicious activities on the host in real-time.  
 它也称为端点检测和威胁响应 （EDTR）。EDR 是一种网络安全解决方案，可防御恶意软件和其他威胁。EDR 可以查找恶意文件，监控端点、系统和网络事件，并将其记录在数据库中，以便进一步分析、检测和调查。EDR 是下一代防病毒软件，可实时检测主机上的恶意活动。
@@ -1139,4 +1138,3 @@ THM{DNS-15-Enumerated!}
 
 > DNS区域传输是一种DNS协议的功能，允许DNS服务器之间共享完整的DNS区域信息。攻击者可以利用这一功能来获取目标网络中所有DNS记录，包括主机名、IP地址、邮件服务器等信息，这些信息可能被用于后续的攻击、渗透测试或其他恶意活动。
 >
-

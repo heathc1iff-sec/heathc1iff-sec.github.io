@@ -21,7 +21,9 @@ tags:
 After gaining the first foothold on your target's internal network, you'll want to ensure you don't lose access to it before actually getting to the crown jewels. Establishing persistence is one of the first tasks we'll have as attackers when gaining access to a network. In simple terms, persistence refers to creating alternate ways to regain access to a host without going through the exploitation phase all over again.  
 在目标的内部网络上获得第一个立足点后，您需要确保在真正到达皇冠上的宝石之前不会失去对它的访问权限。建立持久性是我们作为攻击者在访问网络时的首要任务之一。简单来说，持久性是指创建替代方法来重新获得对主机的访问权限，而无需重新经历利用阶段。
 
-![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-2.png)cc
+![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-2.png)
+
+cc
 
 There are many reasons why you'd want to establish persistence as quick as possible, including:  
 希望尽快建立持久性的原因有很多，包括：
@@ -231,7 +233,9 @@ AttackBox 攻击盒
 user@AttackBox$ evil-winrm -i 10.10.159.200 -u Administrator -H 1cea1d7e8899f69e89088c4cb4bbdaa3
 ```
 
-![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-5.png)Using the Administrator console gained through the thmuser1, execute **C:\flags\flag1.exe** to retrieve your flag.  
+![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-5.png)
+
+Using the Administrator console gained through the thmuser1, execute **C:\flags\flag1.exe** to retrieve your flag.
 使用通过 thmuser1 获得的管理员控制台，执行 **C:\flags\flag1.exe** 以检索您的标志。
 
 Special Privileges and Security Descriptors  
@@ -258,7 +262,9 @@ secedit /export /cfg config.inf
 We open the file and add our user to the lines in the configuration regarding the SeBackupPrivilege and SeRestorePrivilege:  
 我们打开文件，将用户添加到配置中有关 SeBackupPrivilege 和 SeRestorePrivilege 的行中：
 
-![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-6.png)  
+![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-6.png)
+
+
 
 
 We finally convert the .inf file into a .sdb file which is then used to load the configuration back into the system:  
@@ -283,7 +289,9 @@ Set-PSSessionConfiguration -Name Microsoft.PowerShell -showSecurityDescriptorUI
 This will open a window where you can add thmuser2 and assign it full privileges to connect to WinRM:  
 这将打开一个窗口，您可以在其中添加 thmuser2 并为其分配连接到 WinRM 的完全权限：
 
-![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-7.png)  
+![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-7.png)
+
+
 
 
 Once we have done this, our user can connect via WinRM. Since the user has the SeBackup and SeRestore privileges, we can repeat the steps to recover the password hashes from the SAM and connect back with the Administrator user.  
@@ -318,7 +326,9 @@ Once again, we'll assume we have already dumped the credentials on the server an
 We can log in with those credentials to obtain the flag.  
 我们可以使用这些凭据登录以获取标志。
 
-![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-9.png)Log in to the machine via WinRM using thmuser2 and execute **C:\flags\flag2.exe** to retrieve your flag.  
+![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-9.png)
+
+Log in to the machine via WinRM using thmuser2 and execute **C:\flags\flag2.exe** to retrieve your flag.
 使用 thmuser2 通过 WinRM 登录到计算机，然后执行 **C:\flags\flag2.exe** 以检索您的标志。
 
 RID Hijacking RID 劫持
@@ -364,7 +374,9 @@ C:\tools\pstools> PsExec64.exe -i -s regedit
 From Regedit, we will go to **HKLM\SAM\SAM\Domains\Account\Users\** where there will be a key for each user in the machine. Since we want to modify thmuser3, we need to search for a key with its RID in hex (1010 = 0x3F2). Under the corresponding key, there will be a value called **F**, which holds the user's effective RID at position 0x30:  
 从 Regedit 中，我们将转到 **HKLM\SAM\SAM\Domains\Account\Users\** 机器中每个用户都有一个密钥的位置。由于我们想修改 thmuser3，我们需要搜索一个 RID 为十六进制 （1010 = 0x3F2） 的键。在相应的键下，将有一个名为 F 的值，该值将用户的有效 RID 保持在位置 0x30：
 
-![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-10.png)  
+![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-10.png)
+
+
 
 
 Notice the RID is stored using little-endian notation, so its bytes appear reversed.  
@@ -373,7 +385,9 @@ Notice the RID is stored using little-endian notation, so its bytes appear rever
 We will now replace those two bytes with the RID of Administrator in hex (500 = 0x01F4), switching around the bytes (F401):  
 现在，我们将用十六进制 （500 = 0x01F4） 的 Administrator 的 RID 替换这两个字节，并在字节 （F401） 之间切换：
 
-![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-11.png)  
+![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-11.png)
+
+
 
 
 The next time thmuser3 logs in, LSASS will associate it with the same RID as Administrator and grant them the same privileges.  
@@ -396,7 +410,9 @@ If you did everything correctly, you should be logged in to the Administrator's 
 **Note:** When you log in via <u>RDP</u>, the existing in-browser view will be disconnected. After you terminate your <u>RDP</u> session you can get the in-browser view back by pressing **Reconnect**  
 注意：当您通过 RDP 登录时，现有的浏览器内视图将断开连接。终止 RDP 会话后，可以通过按“重新连接”来恢复浏览器内视图.
 
-![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-13.png)Log in to the machine via <u>RDP</u> using thmuser3 and execute **C:\flags\flag3.exe** to retrieve your flag.  
+![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-13.png)
+
+Log in to the machine via <u>RDP</u> using thmuser3 and execute **C:\flags\flag3.exe** to retrieve your flag.
 使用 thmuser3 通过 RDP 登录到机器并执行 **C:\flags\flag3.exe** 以检索您的标志。
 
 Answer the questions below  
@@ -444,7 +460,9 @@ If we don't want to alter the executable, we can always tamper with the shortcut
 For this task, let's check the shortcut to **calc** on the Administrator's desktop. If we right-click it and go to properties, we'll see where it is pointing:  
 对于此任务，让我们检查管理员桌面上的计算快捷方式。如果我们右键单击它并转到属性，我们将看到它指向的位置：
 
-![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-14.png)  
+![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-14.png)
+
+
 
 
 Before hijacking the shortcut's target, let's create a simple Powershell script in **C:\Windows\System32** or any other sneaky location. The script will execute a reverse shell and then run calc.exe from the original location on the shortcut's properties:  
@@ -463,7 +481,9 @@ Finally, we'll change the shortcut to point to our script. Notice that the short
 powershell.exe -WindowStyle hidden C:\Windows\System32\backdoor.ps1
 ```
 
-![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-15.png)  
+![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-15.png)
+
+
 
 
 Let's start an nc listener to receive our reverse shell on our attacker's machine:  
@@ -478,7 +498,9 @@ user@AttackBox$ nc -lvp 4445
 If you double-click the shortcut, you should get a connection back to your attacker's machine. Meanwhile, the user will get a calculator just as expected by them. You will probably notice a command prompt flashing up and disappearing immediately on your screen. A regular user might not mind too much about that, hopefully.   
 如果双击快捷方式，则应会重新连接到攻击者的计算机。同时，用户将按照他们的期望获得一个计算器。您可能会注意到命令提示符在屏幕上闪烁并立即消失。希望普通用户可能不会太介意这一点。
 
-![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-16.png)Execute **C:\flags\flag5.exe** from your reverse shell to get your flag!  
+![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-16.png)
+
+Execute **C:\flags\flag5.exe** from your reverse shell to get your flag!
 从你的反向外壳执行 **C:\flags\flag5.exe** 以获得你的旗帜！
 
 Hijacking File Associations  
@@ -490,7 +512,9 @@ In addition to persisting through executables or shortcuts, we can hijack any fi
 The default operating system file associations are kept inside the registry, where a key is stored for every single file type under **HKLM\Software\Classes\**. Let's say we want to check which program is used to open .txt files; we can just go and check for the **.txt** subkey and find which **Programmatic ID (ProgID)** is associated with it. A ProgID is simply an identifier to a program installed on the system. For .txt files, we will have the following ProgID:  
 默认的操作系统文件关联保存在注册表中，注册表中为每个文件类型存储 **HKLM\Software\Classes\** 一个键。假设我们要检查哪个程序用于打开.txt文件;我们可以去检查 **.txt** 子项，并找到与它关联的编程 ID （ProgID）。ProgID 只是安装在系统上的程序的标识符。对于.txt文件，我们将具有以下 ProgID：
 
-![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-17.png)  
+![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-17.png)
+
+
 
 
 We can then search for a subkey for the corresponding ProgID (also under **HKLM\Software\Classes\**), in this case, **txtfile**, where we will find a reference to the program in charge of handling .txt files. Most ProgID entries will have a subkey under **shell\open\command** where the default command to be run for files with that extension is specified:  
@@ -513,13 +537,17 @@ Notice how in Powershell, we have to pass **$args[0]** to notepad, as it will co
 Now let's change the registry key to run our backdoor script in a hidden window:  
 现在，让我们更改注册表项以在隐藏窗口中运行后门脚本：
 
-![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-18.png)  
+![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-18.png)
+
+
 
 
 Finally, create a listener for your reverse shell and try to open any .txt file on the victim machine (create one if needed). You should receive a reverse shell with the privileges of the user opening the file.  
 最后，为您的反向 shell 创建一个侦听器，并尝试在受害计算机上打开任何.txt文件（如果需要，请创建一个）。您应该会收到一个具有打开文件的用户权限的反向 shell。
 
-![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-19.png)Once you have backdoored the .txt file handler and spawned a reverse shell, run **C:\flags\flag6.exe** to get a flag!  
+![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-19.png)
+
+Once you have backdoored the .txt file handler and spawned a reverse shell, run **C:\flags\flag6.exe** to get a flag!
 一旦你对.txt文件处理程序进行了后门并生成了一个反向shell，就运行 **C:\flags\flag6.exe** 去获取一个标志！
 
 Answer the questions below  
@@ -581,7 +609,9 @@ sc.exe start THMservice2
 This should create a connection back to your attacker's machine.  
 这应该会创建与攻击者计算机的连接。
 
-![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-20.png)Use the reverse shell you just gained to execute **C:\flags\flag7.exe**  
+![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-20.png)
+
+Use the reverse shell you just gained to execute **C:\flags\flag7.exe**
 使用您刚刚获得的反向 shell 来执行 **C:\flags\flag7.exe**
 
 Modifying existing services  
@@ -677,7 +707,9 @@ SERVICE_NAME: THMservice3
         SERVICE_START_NAME : LocalSystem
 ```
 
-![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-21.png)Start a Metasploit listener on your attacker's machine and manually start the service to receive a reverse shell. From there, run **C:\flags\flag8.exe** to get a flag!  
+![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-21.png)
+
+Start a Metasploit listener on your attacker's machine and manually start the service to receive a reverse shell. From there, run **C:\flags\flag8.exe** to get a flag!
 在攻击者的计算机上启动 Metasploit 侦听器，并手动启动服务以接收反向 shell。从那里，跑 **C:\flags\flag8.exe** 去拿一面旗帜！
 
 Answer the questions below  
@@ -794,7 +826,9 @@ AttackBox 攻击盒
 user@AttackBox$ nc -lvp 4449
 ```
 
-![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-23.png)Use the reverse shell obtained through the task scheduler and execute **C:\flags\flag9.exe** to retrieve a flag.  
+![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-23.png)
+
+Use the reverse shell obtained through the task scheduler and execute **C:\flags\flag9.exe** to retrieve a flag.
 使用通过任务调度程序获取的反向 shell 并执行 **C:\flags\flag9.exe** 以检索标志。
 
 Answer the questions below  
@@ -849,7 +883,9 @@ Now be sure to sign out of your session from the start menu (closing the <u>RDP<
 And log back via RDP. You should immediately receive a connection back to your attacker's machine.  
 并通过 RDP 重新登录。您应该立即收到返回攻击者计算机的连接。
 
-![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-25.png)Use your newly obtained shell to execute **C:\flags\flag10.exe** and get your flag!  
+![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-25.png)
+
+Use your newly obtained shell to execute **C:\flags\flag10.exe** and get your flag!
 使用你新获得的shell来执行 **C:\flags\flag10.exe** 并获得你的标志！
 
 Run / RunOnce 运行/运行一次
@@ -894,7 +930,9 @@ Let's then create a **REG_EXPAND_SZ** registry entry under **HKLM\Software\Micro
 After doing this, sign out of your current session and log in again, and you should receive a shell (it will probably take around 10-20 seconds).  
 完成此操作后，注销当前会话并重新登录，您应该会收到一个 shell（可能需要大约 10-20 秒）。
 
-![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-27.png)Using your newly obtained shell, execute **C:\flags\flag11.exe** to get a flag!  
+![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-27.png)
+
+Using your newly obtained shell, execute **C:\flags\flag11.exe** to get a flag!
 使用您新获得的 shell，执行 **C:\flags\flag11.exe** 以获得一个标志！
 
 Winlogon Winlogon的
@@ -944,7 +982,9 @@ We then alter either **shell** or **Userinit** in **HKLM\Software\Microsoft\Wind
 After doing this, sign out of your current session and log in again, and you should receive a shell (it will probably take around 10 seconds).  
 完成此操作后，注销当前会话并重新登录，您应该会收到一个 shell（可能需要大约 10 秒）。
 
-![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-30.png)Using your newly obtained shell, execute **C:\flags\flag12.exe** to get a flag!  
+![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-30.png)
+
+Using your newly obtained shell, execute **C:\flags\flag12.exe** to get a flag!
 使用您新获得的 shell，执行 **C:\flags\flag12.exe** 以获得一个标志！
 
 Logon scripts 登录脚本
@@ -984,7 +1024,9 @@ Notice that this registry key has no equivalent in **HKLM**, making your backdoo
 After doing this, sign out of your current session and log in again, and you should receive a shell (it will probably take around 10 seconds).  
 完成此操作后，注销当前会话并重新登录，您应该会收到一个 shell（可能需要大约 10 秒）。
 
-![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-32.png)Using your newly obtained shell, execute **C:\flags\flag13.exe** to get a flag!  
+![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-32.png)
+
+Using your newly obtained shell, execute **C:\flags\flag13.exe** to get a flag!
 使用您新获得的 shell，执行 **C:\flags\flag13.exe** 以获得一个标志！
 
 Answer the questions below  
@@ -1067,7 +1109,9 @@ You should now be able to press **SHIFT** five times to access a terminal with S
 
 ![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-35.png)
 
-![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-36.png)From your newly obtained terminal, execute **C:\flags\flag14.exe** to get your flag!  
+![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-36.png)
+
+From your newly obtained terminal, execute **C:\flags\flag14.exe** to get your flag!
 从你新获得的终端，执行 **C:\flags\flag14.exe** 以获得你的旗帜！
 
 Utilman 乌蒂尔曼
@@ -1109,7 +1153,9 @@ And finally, proceed to click on the "Ease of Access" button. Since we replaced 
 
 ![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-39.png)
 
-![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-40.png)From your newly obtained terminal, execute **C:\flags\flag15.exe** to get your flag!  
+![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-40.png)
+
+From your newly obtained terminal, execute **C:\flags\flag15.exe** to get your flag!
 从你新获得的终端，执行 **C:\flags\flag15.exe** 以获得你的旗帜！
 
 Answer the questions below  
@@ -1156,7 +1202,9 @@ We can then run commands from the web server by pointing to the following URL:
 
 ![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-41.png)
 
-![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-42.png)Use your web shell to execute **C:\flags\flag16.exe** to get your flag!  
+![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-42.png)
+
+Use your web shell to execute **C:\flags\flag16.exe** to get your flag!
 使用您的 Web shell 执行 **C:\flags\flag16.exe** 以获取您的标志！
 
 While web shells provide a simple way to leave a backdoor on a system, it is usual for blue teams to check file integrity in the web directories. Any change to a file in there will probably trigger an alert.  
@@ -1255,7 +1303,9 @@ We will need to open two terminals to handle the connections involved in this ex
 With all that ready, let's navigate to **http://10.10.247.82/** and insert an employee into the web application. Since the web application will send an INSERT statement to the database, our TRIGGER will provide us access to the system's console.  
 准备好所有这些内容后，让我们导航到 **http://10.10.247.82/** 员工并将其插入 Web 应用程序。由于 Web 应用程序将向数据库发送 INSERT 语句，因此我们的 TRIGGER 将为我们提供对系统控制台的访问。
 
-![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-44.png)Use your web shell to execute **C:\flags\flag17.exe** to get your flag!  
+![](/image/tryhackme/TryHackMe-Windows%20Local%20Persistence-44.png)
+
+Use your web shell to execute **C:\flags\flag17.exe** to get your flag!
 使用您的 Web shell 执行 **C:\flags\flag17.exe** 以获取您的标志！
 
 Answer the questions below  
