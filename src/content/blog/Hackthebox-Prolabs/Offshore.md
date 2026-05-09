@@ -6,6 +6,7 @@ image: /Pro-Labs/offshore.png
 certificate: /certificate/prolabs-offshore-certificate.png
 categories:
   - Documentation
+  - Hackthebox
   - Hackthebox Prolabs
 tags:
   - Hackthebox

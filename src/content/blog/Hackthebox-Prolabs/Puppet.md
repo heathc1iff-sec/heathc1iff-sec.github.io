@@ -6,6 +6,7 @@ image: /Pro-Labs/Puppet.png
 certificate: /certificate/Puppet.jpg
 categories:
   - Documentation
+  - Hackthebox
   - Hackthebox Prolabs
 tags:
   - Hackthebox

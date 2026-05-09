@@ -6,6 +6,7 @@ image: /Pro-Labs/rastalabs.png
 certificate: /certificate/prolabs-rastalabs-certificate.png
 categories:
   - Documentation
+  - Hackthebox
   - Hackthebox Prolabs
 tags:
   - Hackthebox

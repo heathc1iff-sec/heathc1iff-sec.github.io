@@ -5,6 +5,8 @@ pubDate: 2026-01-13
 image: /machine/Influencer.png
 categories:
   - Documentation
+  - Hackmyvm
+  - HMVMachines
 tags:
   - Hackmyvm
   - Linux Machine

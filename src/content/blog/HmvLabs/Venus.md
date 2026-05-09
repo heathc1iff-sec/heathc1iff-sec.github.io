@@ -5,6 +5,8 @@ pubDate: 2026-01-14
 image: /machine/Venus.jpg
 categories:
   - Documentation
+  - Hackmyvm
+  - HMVLabs
 tags:
   - Hackmyvm
   - HMVLabs

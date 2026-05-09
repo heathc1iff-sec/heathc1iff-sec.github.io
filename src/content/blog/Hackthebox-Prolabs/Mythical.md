@@ -6,6 +6,7 @@ image: /Pro-Labs/Mythical.png
 certificate: /certificate/Mythical.jpg
 categories:
   - Documentation
+  - Hackthebox
   - Hackthebox Prolabs
 tags:
   - Hackthebox

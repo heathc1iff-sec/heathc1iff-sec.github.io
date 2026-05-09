@@ -5,6 +5,8 @@ pubDate: 2026-01-11
 image: /machine/Corrosion3.png
 categories:
   - Documentation
+  - Hackmyvm
+  - HMVMachines
 tags:
   - Hackmyvm
   - Linux Machine

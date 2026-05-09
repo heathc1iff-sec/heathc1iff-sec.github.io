@@ -6,6 +6,7 @@ image: /Pro-Labs/Hades.png
 certificate: /certificate/Hades.jpg
 categories:
   - Documentation
+  - Hackthebox
   - Hackthebox Prolabs
 tags:
   - Hackthebox

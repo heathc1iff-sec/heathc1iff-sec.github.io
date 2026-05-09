@@ -6,6 +6,7 @@ image: /Pro-Labs/Intercept.png
 certificate: /certificate/Intercept.jpg
 categories:
   - Documentation
+  - Hackthebox
   - Hackthebox Prolabs
 tags:
   - Hackthebox

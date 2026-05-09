@@ -39,10 +39,10 @@ site:
           href: /blog/tags
           svg: "lucide:tag"
           target: _self
-        - id: documentation
-          text: Documentation
-          href: /blog/category/Documentation
-          svg: "material-symbols:unknown-document-outline-rounded"
+        - id: categories
+          text: Category
+          href: /blog/categories
+          svg: "lucide:folder"
           target: _self
         - id: experiences
           text: Experiences

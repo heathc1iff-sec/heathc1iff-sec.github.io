@@ -5,6 +5,8 @@ pubDate: 2026-01-24
 image: /machine/Matrioshka.png
 categories:
   - Documentation
+  - Hackmyvm
+  - HMVMachines
 tags:
   - Hackmyvm
   - Linux Machine

@@ -5,6 +5,8 @@ pubDate: 2025-08-19
 image: /machine/Inkplot.png
 categories:
   - Documentation
+  - Hackmyvm
+  - HMVMachines
 tags:
   - Hackmyvm
   - Linux Machine

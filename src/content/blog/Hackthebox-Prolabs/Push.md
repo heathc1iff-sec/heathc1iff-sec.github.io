@@ -6,6 +6,7 @@ image: /Pro-Labs/Push.png
 certificate: /certificate/Push.jpg
 categories:
   - Documentation
+  - Hackthebox
   - Hackthebox Prolabs
 tags:
   - Hackthebox

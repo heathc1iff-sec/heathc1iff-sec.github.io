@@ -6,6 +6,7 @@ image: /Pro-Labs/Reflection.png
 certificate: /certificate/Reflection.jpg
 categories:
   - Documentation
+  - Hackthebox
   - Hackthebox Prolabs
 tags:
   - Hackthebox

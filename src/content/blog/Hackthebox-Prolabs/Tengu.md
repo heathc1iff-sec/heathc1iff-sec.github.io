@@ -6,6 +6,7 @@ image: /Pro-Labs/Tengu.png
 certificate: /certificate/Tengu.jpg
 categories:
   - Documentation
+  - Hackthebox
   - Hackthebox Prolabs
 tags:
   - Hackthebox

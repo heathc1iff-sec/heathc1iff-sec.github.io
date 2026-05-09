@@ -5,6 +5,7 @@ pubDate: 2024-02-28
 image: /hackthebox/Responder.png
 categories:
   - Documentation
+  - Hackthebox
 tags:
   - Hackthebox
   - Windows Machine

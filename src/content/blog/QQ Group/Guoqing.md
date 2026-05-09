@@ -5,6 +5,7 @@ pubDate: 2026-01-21
 image: /image/fengmian/QQ.png
 categories:
   - Documentation
+  - MazeSec
 tags:
   - MazeSec
   - Linux Machine

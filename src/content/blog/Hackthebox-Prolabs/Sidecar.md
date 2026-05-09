@@ -6,6 +6,7 @@ image: /Pro-Labs/Sidecar.png
 certificate: /certificate/Sidecar.jpg
 categories:
   - Documentation
+  - Hackthebox
   - Hackthebox Prolabs
 tags:
   - Hackthebox

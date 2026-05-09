@@ -5,6 +5,8 @@ pubDate: 2026-01-28
 image: /machine/TriplAdvisor.png
 categories:
   - Documentation
+  - Hackmyvm
+  - HMVMachines
 tags:
   - Hackmyvm
   - Windows Machine

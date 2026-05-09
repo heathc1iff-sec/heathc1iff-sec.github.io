@@ -6,6 +6,7 @@ image: /Pro-Labs/aptlabs.png
 certificate: /certificate/prolabs-aptlabs-certificate.png
 categories:
   - Documentation
+  - Hackthebox
   - Hackthebox Prolabs
 tags:
   - Hackthebox

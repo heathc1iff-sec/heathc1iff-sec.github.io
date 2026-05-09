@@ -6,6 +6,7 @@ image: /Pro-Labs/dante.png
 certificate: /certificate/prolabs-dante-certificate.png
 categories:
   - Documentation
+  - Hackthebox
   - Hackthebox Prolabs
 tags:
   - Hackthebox

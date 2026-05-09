@@ -6,6 +6,7 @@ image: /Pro-Labs/Xen.png
 certificate: /certificate/prolabs-xen-certificate.png
 categories:
   - Documentation
+  - Hackthebox
   - Hackthebox Prolabs
 tags:
   - Hackthebox

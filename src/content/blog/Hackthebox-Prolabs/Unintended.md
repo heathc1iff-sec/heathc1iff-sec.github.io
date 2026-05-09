@@ -6,6 +6,7 @@ image: /Pro-Labs/Unintended.png
 certificate: /certificate/prolabs-unintended-certificate.png
 categories:
   - Documentation
+  - Hackthebox
   - Hackthebox Prolabs
 tags:
   - Hackthebox

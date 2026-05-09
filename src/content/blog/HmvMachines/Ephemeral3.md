@@ -5,6 +5,8 @@ pubDate: 2026-01-14
 image: /machine/Ephemeral3.png
 categories:
   - Documentation
+  - Hackmyvm
+  - HMVMachines
 tags:
   - Hackmyvm
   - Linux Machine

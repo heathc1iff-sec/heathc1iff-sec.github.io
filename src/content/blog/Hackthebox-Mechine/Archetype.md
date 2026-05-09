@@ -5,6 +5,7 @@ pubDate: 2024-03-04
 image: /hackthebox/Archetype.png
 categories:
   - Documentation
+  - Hackthebox
 tags:
   - Hackthebox
   - Windows Machine

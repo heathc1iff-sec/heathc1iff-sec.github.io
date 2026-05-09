@@ -6,6 +6,7 @@ image: /Pro-Labs/zephyr.png
 certificate: /certificate/prolabs-zephyr-certificate.png
 categories:
   - Documentation
+  - Hackthebox
   - Hackthebox Prolabs
 tags:
   - Hackthebox

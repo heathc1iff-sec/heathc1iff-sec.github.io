@@ -6,6 +6,7 @@ image: /Pro-Labs/FullHouse.png
 certificate: /certificate/FullHouse.jpg
 categories:
   - Documentation
+  - Hackthebox
   - Hackthebox Prolabs
 tags:
   - Hackthebox

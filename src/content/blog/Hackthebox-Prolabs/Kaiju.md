@@ -6,6 +6,7 @@ image: /Pro-Labs/Kaiju.png
 certificate: /certificate/prolabs-kaiju-certificate.png
 categories:
   - Documentation
+  - Hackthebox
   - Hackthebox Prolabs
 tags:
   - Hackthebox

@@ -5,6 +5,7 @@ pubDate: 2024-04-25
 image: /image/fengmian/tryhackme.jpg
 categories:
   - Documentation
+  - Tryhackme
 tags:
   - Tryhackme
   - Privilege Escalation

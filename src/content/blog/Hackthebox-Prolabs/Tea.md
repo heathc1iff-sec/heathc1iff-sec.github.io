@@ -6,6 +6,7 @@ image: /Pro-Labs/Tea.png
 certificate: /certificate/Tea.jpg
 categories:
   - Documentation
+  - Hackthebox
   - Hackthebox Prolabs
 tags:
   - Hackthebox

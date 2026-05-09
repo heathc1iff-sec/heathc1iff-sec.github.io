@@ -5,6 +5,8 @@ pubDate: 2025-12-13
 image: /machine/Chromee.png
 categories:
   - Documentation
+  - Hackmyvm
+  - HMVMachines
 tags:
   - Hackmyvm
   - Linux Machine

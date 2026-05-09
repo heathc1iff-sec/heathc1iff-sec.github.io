@@ -6,6 +6,7 @@ image: /Pro-Labs/Odyssey.png
 certificate: /certificate/Odyssey.jpg
 categories:
   - Documentation
+  - Hackthebox
   - Hackthebox Prolabs
 tags:
   - Hackthebox

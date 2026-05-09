@@ -6,6 +6,7 @@ image: /Pro-Labs/Heron.png
 certificate: /certificate/Heron.jpg
 categories:
   - Documentation
+  - Hackthebox
   - Hackthebox Prolabs
 tags:
   - Hackthebox

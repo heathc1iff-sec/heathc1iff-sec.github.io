@@ -1,7 +1,7 @@
 ---
 title: OSEP-02-Windows概念
 description: '02-操作系统与编程理论 | 02-Windows概念'
-pubDate: 2026-05-08T10:00:00+08:00
+pubDate: 2026-01-30T00:00:02+08:00
 image: /image/fengmian/OSEP.png
 categories:
   - Documentation
@@ -470,9 +470,9 @@ AppLocker 规则类型：
 
 | 机制 | 后续章节 |
 |---|---|
-| AV/Defender | `08-杀软绕过` |
-| AMSI/CLM | `09-AMSI绕过` |
-| AppLocker | `10-应用白名单绕过` |
+| AV/Defender | `07-杀软绕过` |
+| AMSI/CLM | `08-AMSI绕过` |
+| AppLocker | `09-应用白名单绕过` |
 
 ---
 
@@ -526,7 +526,7 @@ OpenProcess
 | 目标崩溃 | 架构不匹配、payload 错误 |
 | 无回连 | 网络、监听器、出站限制、payload 类型不一致 |
 
-详细内容见 `07-进程注入`。
+详细内容见 `06-进程注入`。
 
 ---
 
@@ -534,14 +534,14 @@ OpenProcess
 
 | 本篇概念 | 直接对应章节 |
 |---|---|
-| 进程、线程、内存 | `04-Office宏攻击`、`07-进程注入` |
-| Win32 API | `04-Office宏攻击`、`06-反射式PowerShell`、`07-进程注入` |
-| 托管/非托管 | `06-反射式PowerShell` |
-| WOW64 | `04-Office宏攻击`、`07-进程注入`、`14-Windows凭证` |
-| 注册表 | `10-应用白名单绕过`、权限维持、枚举 |
-| AMSI/CLM | `09-AMSI绕过` |
-| AppLocker | `10-应用白名单绕过` |
-| 远程线程 | `07-进程注入` |
+| 进程、线程、内存 | `03-Office宏攻击`、`06-进程注入` |
+| Win32 API | `03-Office宏攻击`、`05-反射式PowerShell`、`06-进程注入` |
+| 托管/非托管 | `05-反射式PowerShell` |
+| WOW64 | `03-Office宏攻击`、`06-进程注入`、`13-Windows凭证` |
+| 注册表 | `09-应用白名单绕过`、权限维持、枚举 |
+| AMSI/CLM | `08-AMSI绕过` |
+| AppLocker | `09-应用白名单绕过` |
+| 远程线程 | `06-进程注入` |
 
 ---
 

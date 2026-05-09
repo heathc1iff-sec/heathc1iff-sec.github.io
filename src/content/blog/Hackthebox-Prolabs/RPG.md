@@ -6,6 +6,7 @@ image: /Pro-Labs/RPG.png
 certificate: /certificate/RPG.jpg
 categories:
   - Documentation
+  - Hackthebox
   - Hackthebox Prolabs
 tags:
   - Hackthebox

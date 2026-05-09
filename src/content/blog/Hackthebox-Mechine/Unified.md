@@ -5,6 +5,7 @@ pubDate: 2024-03-03
 image: /hackthebox/Unified.png
 categories:
   - Documentation
+  - Hackthebox
 tags:
   - Hackthebox
   - Linux Machine

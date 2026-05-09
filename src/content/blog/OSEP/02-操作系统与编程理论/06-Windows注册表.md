@@ -1,7 +1,7 @@
 ---
 title: OSEP-02-Windows注册表
 description: '02-操作系统与编程理论 | 06-Windows注册表'
-pubDate: 2026-05-08T14:00:00+08:00
+pubDate: 2026-01-30T00:00:06+08:00
 image: /image/fengmian/OSEP.png
 categories:
   - Documentation

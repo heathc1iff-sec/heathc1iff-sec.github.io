@@ -5,6 +5,7 @@ pubDate: 2026-04-10
 image: /image/fengmian/QQ.png
 categories:
   - Documentation
+  - MazeSec
 tags:
   - MazeSec
   - Windows Machine

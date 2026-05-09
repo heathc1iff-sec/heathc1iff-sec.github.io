@@ -5,6 +5,8 @@ pubDate: 2026-01-12
 image: /machine/Deba.png
 categories:
   - Documentation
+  - Hackmyvm
+  - HMVMachines
 tags:
   - Hackmyvm
   - Linux Machine

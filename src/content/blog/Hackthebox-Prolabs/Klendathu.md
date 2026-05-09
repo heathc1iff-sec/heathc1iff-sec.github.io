@@ -6,6 +6,7 @@ image: /Pro-Labs/Klendathu.png
 certificate: /certificate/Klendathu.jpg
 categories:
   - Documentation
+  - Hackthebox
   - Hackthebox Prolabs
 tags:
   - Hackthebox

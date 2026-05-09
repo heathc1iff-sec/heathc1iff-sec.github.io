@@ -6,6 +6,7 @@ image: /Pro-Labs/Ascension.png
 certificate: /certificate/prolabs-ascension-certificate.png
 categories:
   - Documentation
+  - Hackthebox
   - Hackthebox Prolabs
 tags:
   - Hackthebox

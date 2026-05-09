@@ -6,6 +6,7 @@ image: /Pro-Labs/Control.png
 certificate: /certificate/Control.jpg
 categories:
   - Documentation
+  - Hackthebox
   - Hackthebox Prolabs
 tags:
   - Hackthebox

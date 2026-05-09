@@ -5,6 +5,8 @@ pubDate: 2026-01-17
 image: /machine/Lookup.png
 categories:
   - Documentation
+  - Hackmyvm
+  - HMVMachines
 tags:
   - Hackmyvm
   - Linux Machine

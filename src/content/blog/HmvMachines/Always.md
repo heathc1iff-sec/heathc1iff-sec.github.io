@@ -5,6 +5,8 @@ pubDate: 2025-12-13
 image: /machine/Always.png
 categories:
   - Documentation
+  - Hackmyvm
+  - HMVMachines
 tags:
   - Hackmyvm
   - Windows Machine

@@ -6,6 +6,7 @@ image: /Pro-Labs/cybernetics.png
 certificate: /certificate/Cybernetics.jpg
 categories:
   - Documentation
+  - Hackthebox
   - Hackthebox Prolabs
 tags:
   - Hackthebox

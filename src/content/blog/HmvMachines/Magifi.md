@@ -5,6 +5,8 @@ pubDate: 2026-01-25
 image: /machine/Magifi.png
 categories:
   - Documentation
+  - Hackmyvm
+  - HMVMachines
 tags:
   - Hackmyvm
   - Linux Machine

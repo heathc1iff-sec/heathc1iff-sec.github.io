@@ -6,6 +6,7 @@ image: /Pro-Labs/Trusted.png
 certificate: /certificate/Trusted.jpg
 categories:
   - Documentation
+  - Hackthebox
   - Hackthebox Prolabs
 tags:
   - Hackthebox

@@ -5,6 +5,8 @@ pubDate: 2025-12-10
 image: /machine/Aqua.png
 categories:
   - Documentation
+  - Hackmyvm
+  - HMVMachines
 tags:
   - Hackmyvm
   - Linux Machine

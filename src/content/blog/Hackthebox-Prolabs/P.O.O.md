@@ -6,6 +6,7 @@ image: /Pro-Labs/poo.png
 certificate: /certificate/prolabs-poo-certificate.png
 categories:
   - Documentation
+  - Hackthebox
   - Hackthebox Prolabs
 tags:
   - Hackthebox

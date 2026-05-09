@@ -5,6 +5,8 @@ pubDate: 2026-01-29
 image: /machine/Nessus.png
 categories:
   - Documentation
+  - Hackmyvm
+  - HMVMachines
 tags:
   - Hackmyvm
   - Windows Machine

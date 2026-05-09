@@ -5,6 +5,7 @@ pubDate: 2024-05-21
 image: /image/fengmian/tryhackme.jpg
 categories:
   - Documentation
+  - Tryhackme
 tags:
   - Tryhackme
   - Persistence
