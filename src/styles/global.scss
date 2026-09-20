@@ -75,25 +75,42 @@ summary:focus-visible,
 
 /* 核心排版升级 */
 article, .prose {
-  @apply leading-[1.8] tracking-tight text-base-content/80;
+  @apply leading-[1.85] text-base-content/80;
+  letter-spacing: 0.01em;
   font-feature-settings: "pnum" on, "lnum" on;
-  
-  p { @apply mb-6; }
-  
-  h1, h2, h3, h4 { @apply font-black tracking-tighter text-base-content mt-12 mb-6; line-height: 1.2; }
-  h1 { @apply text-4xl lg:text-5xl; }
-  h2 { @apply text-3xl lg:text-4xl border-b border-base-content/5 pb-2; }
-  h3 { @apply text-2xl lg:text-3xl; }
-  
+  overflow-wrap: break-word;
+
+  p { @apply mb-7; }
+
+  h1, h2, h3, h4 {
+    @apply font-black tracking-tight text-base-content mt-12 mb-6;
+    line-height: 1.35;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    text-wrap: balance;
+  }
+  h1 { @apply text-3xl lg:text-5xl; }
+  h2 { @apply text-2xl lg:text-4xl border-b border-base-content/5 pb-2; }
+  h3 { @apply text-xl lg:text-3xl; }
+
   code:not(pre code) {
     @apply bg-primary/10 text-primary px-1.5 py-0.5 rounded-md font-bold text-[0.9em];
   }
-  
+
   blockquote {
     @apply border-l-4 border-primary/30 bg-primary/5 px-6 py-4 rounded-r-xl italic text-base-content/70 my-8;
   }
-  
+
   img { @apply rounded-2xl shadow-2xl my-10 border border-base-content/5; }
+}
+
+[data-theme-type="dark"] article,
+[data-theme-type="dark"] .prose {
+  @apply text-base-content/90;
+
+  blockquote {
+    @apply text-base-content/80;
+  }
 }
 
 /* 全局卡片基类 - 极致轻盈 */
