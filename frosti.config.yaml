@@ -72,17 +72,9 @@ user:
         ariaLabel: Github
         title: Github
         svg: "ri:github-line"
-      - href: "https://x.com/"
-        ariaLabel: X(twitter)
-        title: X(twitter)
-        svg: "ri:twitter-line"
   footer:
     social:
       - href: "https://github.com/heathc1iff-sec"
         ariaLabel: Github
         title: Github
         svg: "ri:github-line"
-      - href: "https://x.com/"
-        ariaLabel: X(twitter)
-        title: X(twitter)
-        svg: "ri:twitter-line"
