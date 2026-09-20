@@ -124,6 +124,7 @@ const sidebarClass = isBlogRoute
   </head>
 
   <body class="flex flex-col min-h-screen">
+    <a class="skip-to-content" href="#main-content">Skip to content</a>
     <div class="theme-background theme-background--lite" aria-hidden="true">
       <div class="theme-background__gradient"></div>
       <div class="theme-background__stars theme-background__stars--lite"></div>
@@ -136,7 +137,7 @@ const sidebarClass = isBlogRoute
 
       <div class={shellClass}>
         <div class={gridClass}>
-          <main class={mainClass}>
+          <main id="main-content" class={mainClass} tabindex="-1">
             <div
               class={mainContentClass}
               {...isIndexed ? { "data-pagefind-body": true } : {}}

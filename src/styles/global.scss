@@ -38,6 +38,41 @@
   --shadow-lg: 0 22px 56px -22px rgba(72, 118, 163, 0.26);
 }
 
+.skip-to-content {
+  position: absolute;
+  left: 0.75rem;
+  top: 0.75rem;
+  z-index: 9999;
+  padding: 0.5rem 1rem;
+  border-radius: 0.75rem;
+  background-color: oklch(var(--p));
+  color: oklch(var(--pc));
+  font-weight: 700;
+  text-decoration: none;
+  transform: translateY(-200%);
+  transition: transform 0.15s ease;
+}
+
+.skip-to-content:focus,
+.skip-to-content:focus-visible {
+  transform: translateY(0);
+  outline: 2px solid oklch(var(--p));
+  outline-offset: 3px;
+}
+
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible,
+[href]:focus-visible,
+[tabindex]:not([tabindex="-1"]):focus-visible {
+  outline: 2px solid oklch(var(--p) / 0.85);
+  outline-offset: 2px;
+}
+
+#main-content:focus {
+  outline: none;
+}
+
 /* 核心排版升级 */
 article, .prose {
   @apply leading-[1.8] tracking-tight text-base-content/80;
