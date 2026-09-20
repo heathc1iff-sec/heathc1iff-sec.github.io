@@ -2,20 +2,15 @@
 import { Icon } from "astro-icon/components";
 import MainCard from "@/components/MainCard.astro";
 import FriendCard from "@/components/mdx/FriendCard.astro";
-import LinkCard from "@/components/mdx/LinkCard.astro";
-import Showcase from "@/components/mdx/Showcase.astro";
-import Card from "@/components/temple/Card.astro";
 import CardGroup from "@/components/temple/CardGroup.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-
-const sites = [{ name: "Frosti Demo", url: "https://frosti.saroprock.com/" }];
 ---
 
 <BaseLayout title="Friends">
   <CardGroup cols="1">
     <MainCard
       title="Friends"
-      description="我的好朋友们."
+      description="Friends and teammates."
       image="/image/friends-banner.png"
       infoIcon="lucide:link"
     >
