@@ -38,7 +38,7 @@
   --shadow-lg: 0 22px 56px -22px rgba(72, 118, 163, 0.26);
 }
 
-/* 鏍稿績鎺掔増鍗囩骇 */
+/* 核心排版升级 */
 article, .prose {
   @apply leading-[1.8] tracking-tight text-base-content/80;
   font-feature-settings: "pnum" on, "lnum" on;
@@ -61,7 +61,7 @@ article, .prose {
   img { @apply rounded-2xl shadow-2xl my-10 border border-base-content/5; }
 }
 
-/* 鍏ㄥ眬鍗＄墖鍩虹被 - 鏋佽嚧杞荤泩 */
+/* 全局卡片基类 - 极致轻盈 */
 .frosti-card {
   @apply backdrop-blur-[var(--glass-blur)] border border-[var(--glass-border)] shadow-[var(--shadow-md)] transition-all duration-500;
   background: var(--glass-bg);
@@ -3079,7 +3079,7 @@ pre.preview-code-j::before {
   color: rgba(221, 214, 254, 0.66) !important;
 }
 
-/* 鎸夐挳涓庝氦浜掔簿淇?*/
+/* 按钮与交互精修 */
 .btn {
   @apply rounded-xl font-bold tracking-tight transition-all duration-300;
 }
@@ -3300,7 +3300,7 @@ pre.preview-code-j::before {
   background: rgba(245, 252, 255, 0.74);
 }
 
-/* 鍒嗛〉绯荤粺鍗囩骇 */
+/* 分页系统升级 */
 .join {
   @apply gap-2 bg-transparent border-none;
   .join-item {
@@ -3311,7 +3311,7 @@ pre.preview-code-j::before {
   }
 }
 
-/* TOC 涓庝晶杈规爮灏忛儴浠?*/
+/* TOC 与侧边栏小部件 */
 .toc-link {
   @apply text-sm py-1.5 px-3 rounded-lg border-l-2 border-transparent transition-all opacity-60;
   &:hover { @apply opacity-100 bg-primary/5; }
