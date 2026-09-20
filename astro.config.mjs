@@ -12,6 +12,7 @@ import remarkMath from "remark-math";
 
 import { CODE_THEME, USER_SITE } from "./src/config.ts";
 import updateConfig from "./src/integration/updateConfig.ts";
+import { rehypeOptimizeImages } from "./src/plugins/rehype-optimize-images.ts";
 import { remarkReadingTime } from "./src/plugins/remark-reading-time";
 
 // https://astro.build/config
@@ -43,6 +44,7 @@ export default defineConfig({
     remarkPlugins: [remarkMath, remarkReadingTime],
     rehypePlugins: [
       rehypeKatex,
+      rehypeOptimizeImages,
       [
         rehypeExternalLinks,
         {

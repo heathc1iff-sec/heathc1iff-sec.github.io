@@ -1,6 +1,12 @@
 ---
+import "@fontsource/outfit/latin-700.css";
+import "@fontsource/outfit/latin-800.css";
+import "@fontsource/outfit/latin-900.css";
+import "@fontsource/satisfy/latin-400.css";
+import "@fontsource/space-grotesk/latin-400.css";
+import "@fontsource/space-grotesk/latin-500.css";
+import "@fontsource/space-grotesk/latin-700.css";
 import "../styles/global.scss";
-import "/node_modules/katex/dist/katex.min.css";
 import { SITE_DESCRIPTION, SITE_LANGUAGE, SITE_TAB } from "@config";
 import type { HeaderProps } from "@interfaces/data";
 
@@ -31,29 +37,6 @@ const ogLocale = SITE_LANGUAGE.toLowerCase().startsWith("zh")
 <meta name="referrer" content="strict-origin-when-cross-origin" />
 <meta name="theme-color" content="#f6f9ff" media="(prefers-color-scheme: light)" />
 <meta name="theme-color" content="#0a1020" media="(prefers-color-scheme: dark)" />
-
-<!-- Font Preconnect -->
-<link rel="dns-prefetch" href="//fonts.googleapis.com" />
-<link rel="dns-prefetch" href="//fonts.gstatic.com" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link
-  rel="preload"
-  as="style"
-  href="https://fonts.googleapis.com/css2?family=Outfit:wght@700;800;900&family=Space+Grotesk:wght@400;500;700&family=Noto+Sans+SC:wght@400;700&family=Satisfy&display=swap"
-/>
-<link
-  rel="stylesheet"
-  media="print"
-  onload="this.media='all'"
-  href="https://fonts.googleapis.com/css2?family=Outfit:wght@700;800;900&family=Space+Grotesk:wght@400;500;700&family=Noto+Sans+SC:wght@400;700&family=Satisfy&display=swap"
-/>
-<noscript>
-  <link
-    rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Outfit:wght@700;800;900&family=Space+Grotesk:wght@400;500;700&family=Noto+Sans+SC:wght@400;700&family=Satisfy&display=swap"
-  />
-</noscript>
 
 <!-- Primary Meta Tags -->
 <title>{pageTitle}</title>

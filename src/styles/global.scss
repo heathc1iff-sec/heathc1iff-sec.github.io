@@ -74,6 +74,27 @@ article, .prose {
   border-color: oklch(var(--p) / 0.3);
 }
 
+html[data-performance-mode="lite"] .frosti-card {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .theme-background,
+  .theme-background *,
+  .theme-background *::before,
+  .theme-background *::after,
+  .frosti-card,
+  .animate-slide-up {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
 .frosti-card::before {
   content: "";
   position: absolute;
@@ -116,7 +137,7 @@ article, .prose {
 /* Global styles with nesting support */
 html {
   @apply scroll-smooth;
-  font-family: "Space Grotesk", "Noto Sans SC", "Segoe UI", sans-serif;
+  font-family: "Space Grotesk", "Segoe UI", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
 }
 
 body {
@@ -1613,7 +1634,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "Outfit", "Space Grotesk", "Noto Sans SC", sans-serif;
+  font-family: "Outfit", "Space Grotesk", "Segoe UI", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
   letter-spacing: -0.01em;
 }
 

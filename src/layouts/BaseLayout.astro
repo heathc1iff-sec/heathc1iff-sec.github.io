@@ -9,11 +9,8 @@ import {
   SITE_DESCRIPTION,
   SITE_FAVICON,
   SITE_LANGUAGE,
-  SITE_TAB,
   SITE_THEME,
 } from "@config";
-import ElementCrossing from "astro-vtbot/components/ElementCrossing.astro";
-import PointerOnNavigation from "astro-vtbot/components/PointerOnNavigation.astro";
 
 const {
   title,
@@ -53,13 +50,17 @@ const sidebarClass = isBlogRoute
   data-theme-type="light"
   data-page-type={pageType}
   data-page-path={currentPathname}
-  data-performance-mode={isBlogRoute ? "lite" : "normal"}
+  data-performance-mode="lite"
 >
   <head>
     <ClientRouter />
-    {!isBlogRoute && <ElementCrossing />}
-    {!isBlogRoute && <PointerOnNavigation />}
-    <Header title={title} description={description} favicon={SITE_FAVICON} image={image} />
+    <Header
+      title={title}
+      description={description}
+      favicon={SITE_FAVICON}
+      image={image}
+    />
+    <slot name="head" />
 
     <script define:vars={{ SITE_THEME }} is:inline>
       (function () {
@@ -123,41 +124,12 @@ const sidebarClass = isBlogRoute
   </head>
 
   <body class="flex flex-col min-h-screen">
-    {
-      isBlogRoute ? (
-        <div class="theme-background theme-background--lite" aria-hidden="true">
-          <div class="theme-background__gradient"></div>
-          <div class="theme-background__stars theme-background__stars--lite"></div>
-          <div class="theme-background__moon"></div>
-          <div class="theme-background__vignette"></div>
-        </div>
-      ) : (
-        <div class="theme-background" aria-hidden="true">
-          <div class="theme-background__gradient"></div>
-          <!-- Animated Blobs for Light Mode -->
-          <div class="glass-blobs" aria-hidden="true">
-            <div class="glass-blob glass-blob--1"></div>
-            <div class="glass-blob glass-blob--2"></div>
-            <div class="glass-blob glass-blob--3"></div>
-            <div class="glass-blob glass-blob--4"></div>
-          </div>
-          <div class="theme-background__mesh"></div>
-          <div class="theme-background__aurora theme-background__aurora--a"></div>
-          <div class="theme-background__aurora theme-background__aurora--b"></div>
-          <div class="theme-background__sun"></div>
-          <div class="theme-background__glow theme-background__glow--a"></div>
-          <div class="theme-background__glow theme-background__glow--b"></div>
-          <div class="theme-background__stars" data-starfield></div>
-          <div class="theme-background__particles"></div>
-          <span class="theme-background__meteor theme-background__meteor--a"></span>
-          <span class="theme-background__meteor theme-background__meteor--b"></span>
-          <span class="theme-background__meteor theme-background__meteor--c"></span>
-          <span class="theme-background__meteor theme-background__meteor--d"></span>
-          <div class="theme-background__grain"></div>
-          <div class="theme-background__vignette"></div>
-        </div>
-      )
-    }
+    <div class="theme-background theme-background--lite" aria-hidden="true">
+      <div class="theme-background__gradient"></div>
+      <div class="theme-background__stars theme-background__stars--lite"></div>
+      <div class="theme-background__moon"></div>
+      <div class="theme-background__vignette"></div>
+    </div>
 
     <div class="site-content-layer">
       <Navbar />
