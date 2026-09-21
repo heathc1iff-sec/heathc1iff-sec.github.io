@@ -49,6 +49,8 @@ function readFirstFont(candidates: string[]) {
 
 function getLocalFallbackFonts() {
   const regular = readFirstFont([
+    "./src/assets/fonts/NotoSansSC-Regular.ttf",
+    "./src/assets/fonts/NotoSansSC-Regular.otf",
     "./public/fonts/NotoSansSC-Regular.ttf",
     "./public/fonts/NotoSansSC-Regular.otf",
     "C:/Windows/Fonts/Noto Sans SC (TrueType).otf",
@@ -66,6 +68,8 @@ function getLocalFallbackFonts() {
   ]);
 
   const bold = readFirstFont([
+    "./src/assets/fonts/NotoSansSC-Bold.ttf",
+    "./src/assets/fonts/NotoSansSC-Bold.otf",
     "./public/fonts/NotoSansSC-Bold.ttf",
     "./public/fonts/NotoSansSC-Bold.otf",
     "C:/Windows/Fonts/Noto Sans SC Bold (TrueType).otf",

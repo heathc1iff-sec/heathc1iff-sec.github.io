@@ -1964,7 +1964,8 @@ code {
 // Empty state component
 .empty {
   &-state {
-    @apply flex flex-col items-center justify-center min-h-[200px] p-8 text-center text-base-content/60 bg-base-100/50 rounded-xl border border-dashed border-base-300/20;
+    @apply flex flex-col items-center justify-center min-h-[200px] p-8 text-center text-base-content/60 rounded-[var(--radius-card)] border border-dashed border-[var(--glass-border)] shadow-[var(--shadow-sm)];
+    background: var(--glass-bg);
   }
 
   &-icon {
@@ -3256,15 +3257,15 @@ pre.preview-code-j::before {
 [data-theme-type="light"] .maincard-hero-overlay {
   background: linear-gradient(
     to top,
-    rgba(24, 53, 89, 0.52) 0%,
-    rgba(24, 53, 89, 0.2) 45%,
-    rgba(24, 53, 89, 0.03) 100%
+    rgba(10, 22, 40, 0.88) 0%,
+    rgba(10, 22, 40, 0.46) 48%,
+    rgba(10, 22, 40, 0.12) 100%
   ) !important;
-  opacity: 0.7 !important;
+  opacity: 0.92 !important;
 }
 
 [data-theme-type="light"] .group:hover .maincard-hero-overlay {
-  opacity: 0.8 !important;
+  opacity: 0.96 !important;
 }
 
 .post-meta-row {

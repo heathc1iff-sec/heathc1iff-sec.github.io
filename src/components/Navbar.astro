@@ -112,34 +112,30 @@ const typedMenu = SITE_MENU as MenuItem[];
     const menuToggle = document.getElementById("menu-toggle") as HTMLInputElement | null;
 
     if (!navbar || !headerMenu || !menuToggle) return;
+    if (navbar.dataset.navBound === "1") return;
+    navbar.dataset.navBound = "1";
+
+    const setMenuOpen = (open: boolean) => {
+      menuToggle.checked = open;
+      menuToggle.setAttribute("aria-expanded", String(open));
+      headerMenu.classList.toggle("-translate-x-full", !open);
+      headerMenu.classList.toggle("translate-x-0", open);
+      document.body.classList.toggle("overflow-hidden", open);
+    };
 
     // Toggle menu visibility
     menuToggle.addEventListener("change", () => {
-      const isChecked = menuToggle.checked;
-      menuToggle.setAttribute("aria-expanded", isChecked.toString());
-      if (isChecked) {
-        headerMenu.classList.remove("-translate-x-full");
-        headerMenu.classList.add("translate-x-0");
-      } else {
-        headerMenu.classList.add("-translate-x-full");
-        headerMenu.classList.remove("translate-x-0");
-      }
+      setMenuOpen(menuToggle.checked);
     });
 
     function handleScroll() {
       if (!navbar || !headerMenu || !menuToggle) return;
+      if (menuToggle.checked) return;
 
       if (window.scrollY > lastScrollY && window.scrollY > 50) {
         navbar.classList.add("-translate-y-full", "duration-500");
         navbar.classList.remove("translate-y-0");
 
-        // Close menu when hiding navbar
-        if (menuToggle.checked) {
-          menuToggle.checked = false;
-          menuToggle.setAttribute("aria-expanded", "false");
-          headerMenu.classList.add("-translate-x-full");
-          headerMenu.classList.remove("translate-x-0");
-        }
       } else if (window.scrollY < lastScrollY) {
         navbar.classList.remove("-translate-y-full");
         navbar.classList.add("translate-y-0", "duration-300");
@@ -166,10 +162,7 @@ const typedMenu = SITE_MENU as MenuItem[];
 
       const target = event.target as Node;
       if (!navbar.contains(target) && headerMenu.classList.contains("translate-x-0")) {
-        menuToggle.checked = false;
-        menuToggle.setAttribute("aria-expanded", "false");
-        headerMenu.classList.add("-translate-x-full");
-        headerMenu.classList.remove("translate-x-0");
+        setMenuOpen(false);
       }
     });
 
@@ -180,10 +173,7 @@ const typedMenu = SITE_MENU as MenuItem[];
         if (!headerMenu || !menuToggle) return;
 
         if (menuToggle.checked) {
-          menuToggle.checked = false;
-          menuToggle.setAttribute("aria-expanded", "false");
-          headerMenu.classList.add("-translate-x-full");
-          headerMenu.classList.remove("translate-x-0");
+          setMenuOpen(false);
         }
       });
     });
